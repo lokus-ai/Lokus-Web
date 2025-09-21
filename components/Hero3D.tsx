@@ -3,167 +3,95 @@
 import { Suspense, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera, useProgress, Html, Environment } from '@react-three/drei'
-import { Mesh, BufferGeometry, MeshStandardMaterial, Vector3 } from 'three'
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
-import { useLoader } from '@react-three/fiber'
-import * as THREE from 'three'
+import { Mesh } from 'three'
 import { ErrorBoundary } from 'react-error-boundary'
 
 function Loader() {
   const { progress } = useProgress()
   return (
     <Html center>
-      <div className="text-white text-sm">
-        Loading... {progress.toFixed(0)}%
+      <div className="text-white text-center">
+        <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+        <div className="text-sm">Loading 3D Scene...</div>
+        <div className="text-xs text-gray-400">{Math.round(progress)}%</div>
       </div>
     </Html>
   )
 }
 
-
-function FallbackModel() {
+function SimpleModel() {
   const meshRef = useRef<Mesh>(null)
   
+  // Simple cursor following - just rotate to face cursor
   useFrame((state) => {
     if (meshRef.current) {
-      const mouse = state.mouse
-      meshRef.current.rotation.y = mouse.x * 0.8
-      meshRef.current.rotation.x = mouse.y * 0.3
+      const pointer = state.pointer
+      meshRef.current.rotation.y = pointer.x * 0.3
+      meshRef.current.rotation.x = -pointer.y * 0.3
     }
   })
-  
+
   return (
-    <mesh ref={meshRef} scale={1.5}>
-      <icosahedronGeometry args={[1.5, 1]} />
-      <meshStandardMaterial
-        color="#ffffff"
-        metalness={0.7}
-        roughness={0.2}
-        emissive="#ffffff"
-        emissiveIntensity={0.05}
-        wireframe
+    <mesh ref={meshRef}>
+      <boxGeometry args={[2, 2, 2]} />
+      <meshStandardMaterial 
+        color="#4c64e4" 
+        roughness={0.2} 
+        metalness={0.8}
       />
     </mesh>
   )
 }
 
-function STLModel({ url }: { url: string }) {
-  const meshRef = useRef<Mesh>(null)
-  const geometry = useLoader(STLLoader, url)
-  
-  // Don't rotate the geometry itself, we'll handle it on the mesh
-  geometry.center()
-  geometry.computeBoundingBox()
-  const box = geometry.boundingBox!
-  const size = box.getSize(new THREE.Vector3())
-  const maxDim = Math.max(size.x, size.y, size.z)
-  const scale = 2.5 / maxDim // Scale to fit nicely in view
-  
-  // Simple cursor following - just rotate to face cursor
-  useFrame((state) => {
-    if (meshRef.current) {
-      const mouse = state.mouse
-      
-      // Only rotate on Y axis (left/right) to face cursor
-      const targetRotationY = mouse.x * 0.8 // More responsive
-      
-      // Keep base X rotation for upright position, add small tilt
-      const targetRotationX = -Math.PI / 2 + (mouse.y * 0.3)
-      
-      // Smooth rotation using lerp
-      meshRef.current.rotation.y = THREE.MathUtils.lerp(
-        meshRef.current.rotation.y,
-        targetRotationY,
-        0.15 // Faster response
-      )
-      
-      meshRef.current.rotation.x = THREE.MathUtils.lerp(
-        meshRef.current.rotation.x,
-        targetRotationX,
-        0.15
-      )
-    }
-  })
-  
+function Scene() {
   return (
-    <mesh 
-      ref={meshRef} 
-      geometry={geometry} 
-      scale={scale}
-      rotation={[-Math.PI / 2, 0, 0]} // Rotate to stand upright
-    >
-      <meshStandardMaterial
-        color="#ffffff"
-        metalness={0.7}
-        roughness={0.2}
-        emissive="#ffffff"
-        emissiveIntensity={0.05}
+    <>
+      <PerspectiveCamera makeDefault position={[0, 0, 8]} />
+      <OrbitControls 
+        enablePan={false} 
+        enableZoom={false} 
+        enableRotate={false}
+        autoRotate={false}
       />
-    </mesh>
+      
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[10, 10, 5]} intensity={1} />
+      
+      <Suspense fallback={<Loader />}>
+        <SimpleModel />
+        <Environment preset="studio" />
+      </Suspense>
+    </>
+  )
+}
+
+function ErrorFallback({ error }: { error: Error }) {
+  return (
+    <div className="flex items-center justify-center h-full text-white text-center">
+      <div>
+        <div className="text-xl mb-2">⚠️</div>
+        <div className="text-sm">3D Scene Error</div>
+        <div className="text-xs text-gray-400 mt-1">
+          {error.message || 'Failed to load 3D content'}
+        </div>
+      </div>
+    </div>
   )
 }
 
 export function Hero3D() {
   return (
-    <div className="absolute inset-0 -z-10">
-      <ErrorBoundary fallback={
-        <div className="absolute inset-0 flex items-center justify-center">
-          <p className="text-gray-500">3D Model Loading...</p>
-        </div>
-      }>
-        <Canvas className="opacity-70" shadows>
-          <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-          <OrbitControls 
-            enableZoom={false} 
-            enablePan={false}
-            autoRotate={false}
-          />
-          
-          {/* Lighting setup */}
-          <ambientLight intensity={0.3} />
-          
-          {/* Key light */}
-          <directionalLight
-            position={[5, 5, 5]}
-            intensity={1}
-            color="#ffffff"
-            castShadow
-            shadow-mapSize={[1024, 1024]}
-          />
-          
-          {/* Fill light */}
-          <directionalLight
-            position={[-5, 3, -5]}
-            intensity={0.5}
-            color="#a78bfa"
-          />
-          
-          {/* Rim light */}
-          <pointLight
-            position={[0, 10, -10]}
-            intensity={0.8}
-            color="#ec4899"
-          />
-          
-          {/* Bottom light for glow effect */}
-          <pointLight
-            position={[0, -5, 0]}
-            intensity={0.5}
-            color="#6b46c1"
-          />
-          
-          {/* Environment for reflections */}
-          <Environment preset="city" />
-          
-          <ErrorBoundary fallback={<FallbackModel />}>
-            <Suspense fallback={<Loader />}>
-              {/* STL Model - ensure smk-kas-43.stl is in public/models/ directory */}
-              <STLModel url="/models/smk-kas-43.stl" />
-            </Suspense>
-          </ErrorBoundary>
-          
-          {/* Add some fog for atmosphere */}
-          <fog attach="fog" args={['#000000', 5, 15]} />
+    <div className="w-full h-full">
+      <ErrorBoundary 
+        FallbackComponent={ErrorFallback}
+        onError={(error) => console.error('3D Hero Error:', error)}
+      >
+        <Canvas
+          dpr={[1, 2]}
+          camera={{ position: [0, 0, 8], fov: 45 }}
+          style={{ background: 'transparent' }}
+        >
+          <Scene />
         </Canvas>
       </ErrorBoundary>
     </div>

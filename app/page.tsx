@@ -6,17 +6,8 @@ import { Hero3D } from "@/components/Hero3D"
 import { Check, Zap, Link2, Palette, Puzzle, Shield, Sparkles } from "lucide-react"
 import { useAuth } from "@/components/auth/AuthProvider"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { Navbar } from "@/components/Navbar"
 
-const features = [
-  "Inspect and organize your notes with intelligent linking",
-  "Tweak themes and layouts in real-time",
-  "Customize every aspect of your editing experience",
-  "Extend functionality with powerful plugins",
-  "Automatic sync across all your devices",
-  "Lightning-fast search and navigation"
-]
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -207,7 +198,7 @@ export default function LandingPage() {
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <p className="text-sm text-gray-400 mb-4 leading-relaxed">
-                  The best knowledge management tool I've used. Lokus makes it effortless to build a personal wiki that actually works.
+                  The best knowledge management tool I&apos;ve used. Lokus makes it effortless to build a personal wiki that actually works.
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-gray-800 rounded-full"></div>
@@ -326,7 +317,7 @@ export default function LandingPage() {
               >
                 <h3 className="text-xl font-semibold text-white">Plugins</h3>
                 <p className="text-sm text-gray-400 leading-relaxed">
-                  Build your ideal thinking space. With thousands of plugins and our easy to build ecosystem it's easy to find, customize or develop the exact solution you need.
+                  Build your ideal thinking space. With thousands of plugins and our easy to build ecosystem it&apos;s easy to find, customize or develop the exact solution you need.
                 </p>
                 <div className="relative h-40 overflow-hidden rounded-lg">
                   <div className="absolute inset-0 bg-gray-800 transform scale-150 origin-top-left rounded-lg p-6">
