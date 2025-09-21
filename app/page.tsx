@@ -4,6 +4,10 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Hero3D } from "@/components/Hero3D"
 import { Check, Zap, Link2, Palette, Puzzle, Shield, Sparkles } from "lucide-react"
+import { useAuth } from "@/components/auth/AuthProvider"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { Navbar } from "@/components/Navbar"
 
 const features = [
   "Inspect and organize your notes with intelligent linking",
@@ -29,10 +33,23 @@ const staggerChildren = {
 }
 
 export default function LandingPage() {
+  const { user } = useAuth()
+  const router = useRouter()
+
+  const handleGetStarted = () => {
+    if (user) {
+      router.push('/dashboard')
+    } else {
+      router.push('/signup')
+    }
+  }
+
   return (
-    <main className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Background gradient */}
-      <div className="fixed inset-0 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20" />
+    <>
+      <Navbar />
+      <main className="min-h-screen bg-black text-white overflow-hidden">
+        {/* Background gradient */}
+        <div className="fixed inset-0 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20" />
       
       {/* Grid pattern overlay */}
       <div className="fixed inset-0 opacity-20" style={{
@@ -88,8 +105,9 @@ export default function LandingPage() {
                 size="xl" 
                 variant="gradient"
                 className="text-lg px-8 py-6 rounded-full shadow-2xl hover:shadow-purple-500/25 transition-all duration-300"
+                onClick={handleGetStarted}
               >
-                Get Early Access
+                {user ? 'Open Lokus' : 'Get Early Access'}
                 <Sparkles className="ml-2 w-5 h-5" />
               </Button>
             </motion.div>
@@ -379,8 +397,9 @@ export default function LandingPage() {
                   size="lg" 
                   variant="gradient"
                   className="px-8 py-4 rounded-xl"
+                  onClick={handleGetStarted}
                 >
-                  Try Lokus Free
+                  {user ? 'Open Dashboard' : 'Try Lokus Free'}
                   <Sparkles className="ml-2 w-4 h-4" />
                 </Button>
               </motion.div>
@@ -538,5 +557,6 @@ export default function LandingPage() {
         </section>
       </div>
     </main>
+    </>
   )
 }

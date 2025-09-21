@@ -17,6 +17,10 @@
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
     "@react-three/postprocessing": "^3.0.4",
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/auth-ui-shared": "^0.1.8",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.57.4",
     "@types/three": "^0.180.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -25,6 +29,7 @@
     "next": "^15.5.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-error-boundary": "^6.0.0",
     "tailwind-merge": "^3.3.1",
     "three": "^0.180.0"
   },
