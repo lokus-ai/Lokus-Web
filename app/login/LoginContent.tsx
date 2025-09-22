@@ -14,9 +14,12 @@ export default function LoginContent() {
   const searchParams = useSearchParams()
   const supabase = createClient()
   
-  // Check if this is a redirect from Lokus app
-  const redirectParam = searchParams.get('redirect')
-  const isAppRedirect = redirectParam && redirectParam.startsWith('lokus://auth-callback')
+  // Check if this is an OAuth flow from Lokus app
+  const redirectUri = searchParams.get('redirect_uri')
+  const state = searchParams.get('state')
+  const codeChallenge = searchParams.get('code_challenge')
+  const scope = searchParams.get('scope')
+  const isOAuthFlow = redirectUri && state && codeChallenge
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,20 +35,52 @@ export default function LoginContent() {
       setError(error.message)
       setLoading(false)
     } else if (data.session) {
-      // If this is an app redirect, redirect to the app with tokens
-      if (isAppRedirect) {
-        const { access_token, refresh_token, expires_at, user } = data.session
-        const params = new URLSearchParams({
-          token: access_token,
-          refresh_token: refresh_token || '',
-          expires_in: expires_at ? String(Math.floor((expires_at * 1000 - Date.now()) / 1000)) : '',
-          user_id: user.id
-        })
-        
-        window.location.href = `lokus://auth-callback?${params.toString()}`
+      // If this is an OAuth flow, generate authorization code and redirect
+      if (isOAuthFlow) {
+        await handleOAuthCallback(data.session)
       } else {
         router.push('/dashboard')
       }
+    }
+  }
+
+  const handleOAuthCallback = async (session: any) => {
+    try {
+      // Generate authorization code
+      const authCode = crypto.randomUUID()
+      
+      // Store the authorization code with user data
+      const response = await fetch('/api/auth/store-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: authCode,
+          codeChallenge: codeChallenge,
+          redirectUri: redirectUri,
+          state: state,
+          userId: session.user.id,
+          email: session.user.email,
+          name: session.user.user_metadata?.full_name || session.user.email,
+          avatarUrl: session.user.user_metadata?.avatar_url,
+          scope: scope || 'read write'
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to store authorization code')
+      }
+
+      // Redirect to the app with authorization code
+      const params = new URLSearchParams({
+        code: authCode,
+        state: state!
+      })
+      
+      window.location.href = `${redirectUri}?${params.toString()}`
+    } catch (error) {
+      console.error('OAuth callback error:', error)
+      setError('Failed to complete authentication')
+      setLoading(false)
     }
   }
 
@@ -53,10 +88,13 @@ export default function LoginContent() {
     setLoading(true)
     setError(null)
 
-    // Build callback URL with redirect parameter if coming from app
+    // Build callback URL with OAuth parameters if coming from app
     const callbackUrl = new URL(`${window.location.origin}/auth/callback`)
-    if (isAppRedirect) {
-      callbackUrl.searchParams.set('redirect', redirectParam!)
+    if (isOAuthFlow) {
+      callbackUrl.searchParams.set('redirect_uri', redirectUri!)
+      callbackUrl.searchParams.set('state', state!)
+      callbackUrl.searchParams.set('code_challenge', codeChallenge!)
+      if (scope) callbackUrl.searchParams.set('scope', scope)
     }
 
     const { error } = await supabase.auth.signInWithOAuth({
@@ -79,15 +117,15 @@ export default function LoginContent() {
         <div className="w-full max-w-md">
           <div className="mb-10">
             <h1 className="text-4xl font-normal text-white mb-2">
-              {isAppRedirect ? 'Sign in to Lokus' : 'Welcome back'}
+              {isOAuthFlow ? 'Sign in to Lokus' : 'Welcome back'}
             </h1>
             <p className="text-gray-400">
-              {isAppRedirect 
+              {isOAuthFlow 
                 ? 'Sign in to sync your notes and unlock collaboration features' 
                 : 'Enter your email to sign in to your account'
               }
             </p>
-            {isAppRedirect && (
+            {isOAuthFlow && (
               <div className="mt-4 flex items-center gap-2 text-sm text-blue-400 bg-blue-900/20 border border-blue-900/50 rounded px-3 py-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

@@ -1,29 +1,61 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import crypto from 'crypto'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/'
-  const redirect = searchParams.get('redirect')
+  
+  // OAuth parameters from the desktop app flow
+  const redirectUri = searchParams.get('redirect_uri')
+  const state = searchParams.get('state')
+  const codeChallenge = searchParams.get('code_challenge')
+  const scope = searchParams.get('scope')
 
   if (code) {
     const supabase = await createClient()
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
     
     if (!error && data.session) {
-      const { access_token, refresh_token, expires_at, user } = data.session
-      
-      // Check if this is a redirect to the Lokus app
-      if (redirect && redirect.startsWith('lokus://auth-callback')) {
-        const params = new URLSearchParams({
-          token: access_token,
-          refresh_token: refresh_token || '',
-          expires_in: expires_at ? String(Math.floor((expires_at * 1000 - Date.now()) / 1000)) : '',
-          user_id: user.id
-        })
+      // Check if this is an OAuth flow from the desktop app
+      if (redirectUri && state && codeChallenge) {
+        // Generate authorization code for OAuth flow
+        const authCode = crypto.randomUUID()
         
-        return NextResponse.redirect(`lokus://auth-callback?${params.toString()}`)
+        try {
+          // Store the authorization code with user data
+          const storeResponse = await fetch(`${origin}/api/auth/store-code`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              code: authCode,
+              codeChallenge: codeChallenge,
+              redirectUri: redirectUri,
+              state: state,
+              userId: data.session.user.id,
+              email: data.session.user.email,
+              name: data.session.user.user_metadata?.full_name || data.session.user.email,
+              avatarUrl: data.session.user.user_metadata?.avatar_url,
+              scope: scope || 'read write'
+            })
+          })
+
+          if (!storeResponse.ok) {
+            throw new Error('Failed to store authorization code')
+          }
+
+          // Redirect to the app with authorization code
+          const params = new URLSearchParams({
+            code: authCode,
+            state: state
+          })
+          
+          return NextResponse.redirect(`${redirectUri}?${params.toString()}`)
+        } catch (error) {
+          console.error('OAuth callback error:', error)
+          return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+        }
       }
       
       // Regular web redirect
