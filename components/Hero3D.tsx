@@ -2,7 +2,8 @@
 
 import { Suspense, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, PerspectiveCamera, useProgress, Html, Environment } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera, useProgress, Html, Environment, useLoader } from '@react-three/drei'
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js'
 import { Mesh } from 'three'
 import { ErrorBoundary } from 'react-error-boundary'
 
@@ -19,7 +20,8 @@ function Loader() {
   )
 }
 
-function SimpleModel() {
+function STLModel() {
+  const geometry = useLoader(STLLoader, '/models/smk-kas-43.stl')
   const meshRef = useRef<Mesh>(null)
   
   // Simple cursor following - just rotate to face cursor
@@ -32,8 +34,7 @@ function SimpleModel() {
   })
 
   return (
-    <mesh ref={meshRef}>
-      <boxGeometry args={[2, 2, 2]} />
+    <mesh ref={meshRef} geometry={geometry} scale={[0.05, 0.05, 0.05]}>
       <meshStandardMaterial 
         color="#4c64e4" 
         roughness={0.2} 
@@ -58,7 +59,7 @@ function Scene() {
       <directionalLight position={[10, 10, 5]} intensity={1} />
       
       <Suspense fallback={<Loader />}>
-        <SimpleModel />
+        <STLModel />
         <Environment preset="studio" />
       </Suspense>
     </>
