@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Hero3D } from "@/components/Hero3D"
-import { ArrowRight, Brain, Link, Zap, Users, Lock, Download, Github } from "lucide-react"
+import { ArrowRight, Brain, Link2, Zap, Users, Lock, Download, Github } from "lucide-react"
 import Link from "next/link"
 
 export default function LandingPage() {
@@ -135,7 +135,7 @@ export default function LandingPage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 hover:border-gray-700 transition-colors"
             >
-              <Link className="w-12 h-12 text-blue-400 mb-4" />
+              <Link2 className="w-12 h-12 text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold mb-2">Linked Thinking</h3>
               <p className="text-gray-400">
                 Connect your ideas with bidirectional links. Build a web of knowledge that grows with you.
