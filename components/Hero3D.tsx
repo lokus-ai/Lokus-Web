@@ -1,8 +1,8 @@
 "use client"
 
 import { Suspense, useRef } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, PerspectiveCamera, useProgress, Html, Environment, useLoader } from '@react-three/drei'
+import { Canvas, useFrame, useLoader } from '@react-three/fiber'
+import { OrbitControls, PerspectiveCamera, useProgress, Html, Environment } from '@react-three/drei'
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js'
 import { Mesh } from 'three'
 import { ErrorBoundary } from 'react-error-boundary'
