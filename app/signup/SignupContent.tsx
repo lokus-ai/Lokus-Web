@@ -1,44 +1,74 @@
 "use client"
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 
-export default function LoginPage() {
+export default function SignupContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [fullName, setFullName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
+  const [message, setMessage] = useState<string | null>(null)
+  const searchParams = useSearchParams()
   const supabase = createClient()
+  
+  // Check if this is a redirect from Lokus app
+  const redirectParam = searchParams.get('redirect')
+  const isAppRedirect = redirectParam && redirectParam.startsWith('lokus://auth-callback')
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
+    setMessage(null)
 
-    const { error } = await supabase.auth.signInWithPassword({
+    // Build callback URL with redirect parameter if coming from app
+    const callbackUrl = new URL(`${window.location.origin}/auth/callback`)
+    if (isAppRedirect) {
+      callbackUrl.searchParams.set('redirect', redirectParam!)
+    }
+
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+        emailRedirectTo: callbackUrl.toString(),
+      },
     })
 
     if (error) {
       setError(error.message)
       setLoading(false)
-    } else {
-      router.push('/dashboard')
+    } else if (data.user) {
+      if (isAppRedirect) {
+        setMessage('Check your email to confirm your account, then you&apos;ll be redirected to Lokus')
+      } else {
+        setMessage('Check your email to confirm your account')
+      }
+      setLoading(false)
     }
   }
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignup = async () => {
     setLoading(true)
     setError(null)
+
+    // Build callback URL with redirect parameter if coming from app
+    const callbackUrl = new URL(`${window.location.origin}/auth/callback`)
+    if (isAppRedirect) {
+      callbackUrl.searchParams.set('redirect', redirectParam!)
+    }
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: callbackUrl.toString(),
       },
     })
 
@@ -54,18 +84,53 @@ export default function LoginPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center px-8 lg:px-16">
         <div className="w-full max-w-md">
           <div className="mb-10">
-            <h1 className="text-4xl font-normal text-white mb-2">Welcome back</h1>
-            <p className="text-gray-400">Enter your email to sign in to your account</p>
+            <h1 className="text-4xl font-normal text-white mb-2">
+              {isAppRedirect ? 'Create your Lokus account' : 'Create an account'}
+            </h1>
+            <p className="text-gray-400">
+              {isAppRedirect 
+                ? 'Create an account to sync your notes and unlock collaboration features' 
+                : 'Enter your email to get started with Lokus'
+              }
+            </p>
+            {isAppRedirect && (
+              <div className="mt-4 flex items-center gap-2 text-sm text-blue-400 bg-blue-900/20 border border-blue-900/50 rounded px-3 py-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                You&apos;ll be redirected back to the Lokus app after confirming your email
+              </div>
+            )}
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleSignup} className="space-y-6">
             {error && (
               <div className="bg-red-900/20 border border-red-900/50 text-red-400 px-4 py-3 rounded text-sm">
                 {error}
               </div>
             )}
 
+            {message && (
+              <div className="bg-green-900/20 border border-green-900/50 text-green-400 px-4 py-3 rounded text-sm">
+                {message}
+              </div>
+            )}
+
             <div className="space-y-4">
+              <div>
+                <label htmlFor="fullName" className="block text-sm text-gray-400 mb-2">
+                  Full name
+                </label>
+                <input
+                  id="fullName"
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="w-full px-3 py-2 bg-transparent border border-gray-800 rounded text-white placeholder-gray-600 focus:outline-none focus:border-gray-600 transition-colors"
+                  placeholder="Your full name"
+                />
+              </div>
+
               <div>
                 <label htmlFor="email" className="block text-sm text-gray-400 mb-2">
                   Email address
@@ -97,18 +162,12 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-sm">
-              <Link href="/forgot-password" className="text-gray-400 hover:text-white transition-colors">
-                Forgot your password?
-              </Link>
-            </div>
-
             <button
               type="submit"
               disabled={loading}
               className="w-full py-2 bg-white text-black rounded font-medium hover:bg-gray-200 transition-colors disabled:opacity-50"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? 'Creating account...' : 'Create account'}
             </button>
 
             <div className="relative">
@@ -122,7 +181,7 @@ export default function LoginPage() {
 
             <button
               type="button"
-              onClick={handleGoogleLogin}
+              onClick={handleGoogleSignup}
               disabled={loading}
               className="w-full py-2 bg-transparent border border-gray-800 text-white rounded hover:bg-gray-900 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
@@ -148,9 +207,9 @@ export default function LoginPage() {
             </button>
 
             <p className="text-center text-sm text-gray-400">
-              Don&apos;t have an account?{' '}
-              <Link href="/signup" className="text-white hover:underline">
-                Sign up
+              Already have an account?{' '}
+              <Link href="/login" className="text-white hover:underline">
+                Sign in
               </Link>
             </p>
           </form>
@@ -172,9 +231,9 @@ export default function LoginPage() {
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white p-8">
-            <h2 className="text-3xl font-light mb-4">Build your second brain</h2>
+            <h2 className="text-3xl font-light mb-4">Join thousands of thinkers</h2>
             <p className="text-gray-300 max-w-md">
-              Connect your thoughts, organize your knowledge, and accelerate your learning with Lokus.
+              Transform how you capture, connect, and create with your ideas using Lokus.
             </p>
           </div>
         </div>

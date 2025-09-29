@@ -1,52 +1,106 @@
 "use client"
 
 import { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 
-export default function SignupPage() {
+export default function LoginContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [fullName, setFullName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [message, setMessage] = useState<string | null>(null)
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
+  
+  // Check if this is an OAuth flow from Lokus app
+  const redirectUri = searchParams.get('redirect_uri')
+  const state = searchParams.get('state')
+  const codeChallenge = searchParams.get('code_challenge')
+  const scope = searchParams.get('scope')
+  const isOAuthFlow = redirectUri && state && codeChallenge
 
-  const handleSignup = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
-    setMessage(null)
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
-      options: {
-        data: {
-          full_name: fullName,
-        },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
     })
 
     if (error) {
       setError(error.message)
       setLoading(false)
-    } else if (data.user) {
-      setMessage('Check your email to confirm your account')
+    } else if (data.session) {
+      // If this is an OAuth flow, generate authorization code and redirect
+      if (isOAuthFlow) {
+        await handleOAuthCallback(data.session)
+      } else {
+        router.push('/dashboard')
+      }
+    }
+  }
+
+  const handleOAuthCallback = async (session: any) => {
+    try {
+      // Generate authorization code
+      const authCode = crypto.randomUUID()
+      
+      // Store the authorization code with user data
+      const response = await fetch('/api/auth/store-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: authCode,
+          codeChallenge: codeChallenge,
+          redirectUri: redirectUri,
+          state: state,
+          userId: session.user.id,
+          email: session.user.email,
+          name: session.user.user_metadata?.full_name || session.user.email,
+          avatarUrl: session.user.user_metadata?.avatar_url,
+          scope: scope || 'read write'
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to store authorization code')
+      }
+
+      // Redirect to the app with authorization code
+      const params = new URLSearchParams({
+        code: authCode,
+        state: state!
+      })
+      
+      window.location.href = `${redirectUri}?${params.toString()}`
+    } catch (error) {
+      console.error('OAuth callback error:', error)
+      setError('Failed to complete authentication')
       setLoading(false)
     }
   }
 
-  const handleGoogleSignup = async () => {
+  const handleGoogleLogin = async () => {
     setLoading(true)
     setError(null)
+
+    // Build callback URL with OAuth parameters if coming from app
+    const callbackUrl = new URL(`${window.location.origin}/auth/callback`)
+    if (isOAuthFlow) {
+      callbackUrl.searchParams.set('redirect_uri', redirectUri!)
+      callbackUrl.searchParams.set('state', state!)
+      callbackUrl.searchParams.set('code_challenge', codeChallenge!)
+      if (scope) callbackUrl.searchParams.set('scope', scope)
+    }
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: callbackUrl.toString(),
       },
     })
 
@@ -62,39 +116,33 @@ export default function SignupPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center px-8 lg:px-16">
         <div className="w-full max-w-md">
           <div className="mb-10">
-            <h1 className="text-4xl font-normal text-white mb-2">Create an account</h1>
-            <p className="text-gray-400">Enter your email to get started with Lokus</p>
+            <h1 className="text-4xl font-normal text-white mb-2">
+              {isOAuthFlow ? 'Sign in to Lokus' : 'Welcome back'}
+            </h1>
+            <p className="text-gray-400">
+              {isOAuthFlow 
+                ? 'Sign in to sync your notes and unlock collaboration features' 
+                : 'Enter your email to sign in to your account'
+              }
+            </p>
+            {isOAuthFlow && (
+              <div className="mt-4 flex items-center gap-2 text-sm text-blue-400 bg-blue-900/20 border border-blue-900/50 rounded px-3 py-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                You&apos;ll be redirected back to the Lokus app after signing in
+              </div>
+            )}
           </div>
 
-          <form onSubmit={handleSignup} className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-6">
             {error && (
               <div className="bg-red-900/20 border border-red-900/50 text-red-400 px-4 py-3 rounded text-sm">
                 {error}
               </div>
             )}
-            
-            {message && (
-              <div className="bg-green-900/20 border border-green-900/50 text-green-400 px-4 py-3 rounded text-sm">
-                {message}
-              </div>
-            )}
 
             <div className="space-y-4">
-              <div>
-                <label htmlFor="fullName" className="block text-sm text-gray-400 mb-2">
-                  Full name
-                </label>
-                <input
-                  id="fullName"
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="w-full px-3 py-2 bg-transparent border border-gray-800 rounded text-white placeholder-gray-600 focus:outline-none focus:border-gray-600 transition-colors"
-                  placeholder="John Doe"
-                  required
-                />
-              </div>
-
               <div>
                 <label htmlFor="email" className="block text-sm text-gray-400 mb-2">
                   Email address
@@ -122,20 +170,22 @@ export default function SignupPage() {
                   className="w-full px-3 py-2 bg-transparent border border-gray-800 rounded text-white placeholder-gray-600 focus:outline-none focus:border-gray-600 transition-colors"
                   placeholder="••••••••"
                   required
-                  minLength={8}
                 />
-                <p className="text-xs text-gray-600 mt-1">
-                  Use 8 or more characters
-                </p>
               </div>
+            </div>
+
+            <div className="flex items-center justify-between text-sm">
+              <Link href="/forgot-password" className="text-gray-400 hover:text-white transition-colors">
+                Forgot your password?
+              </Link>
             </div>
 
             <button
               type="submit"
-              disabled={loading || !!message}
+              disabled={loading}
               className="w-full py-2 bg-white text-black rounded font-medium hover:bg-gray-200 transition-colors disabled:opacity-50"
             >
-              {loading ? 'Creating account...' : 'Create account'}
+              {loading ? 'Signing in...' : 'Sign in'}
             </button>
 
             <div className="relative">
@@ -149,8 +199,8 @@ export default function SignupPage() {
 
             <button
               type="button"
-              onClick={handleGoogleSignup}
-              disabled={loading || !!message}
+              onClick={handleGoogleLogin}
+              disabled={loading}
               className="w-full py-2 bg-transparent border border-gray-800 text-white rounded hover:bg-gray-900 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -175,20 +225,9 @@ export default function SignupPage() {
             </button>
 
             <p className="text-center text-sm text-gray-400">
-              Already have an account?{' '}
-              <Link href="/login" className="text-white hover:underline">
-                Sign in
-              </Link>
-            </p>
-
-            <p className="text-xs text-gray-600 text-center">
-              By creating an account, you agree to our{' '}
-              <Link href="/terms" className="underline hover:text-gray-400">
-                Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link href="/privacy" className="underline hover:text-gray-400">
-                Privacy Policy
+              Don&apos;t have an account?{' '}
+              <Link href="/signup" className="text-white hover:underline">
+                Sign up
               </Link>
             </p>
           </form>
@@ -210,9 +249,9 @@ export default function SignupPage() {
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white p-8">
-            <h2 className="text-3xl font-light mb-4">Start your journey</h2>
+            <h2 className="text-3xl font-light mb-4">Build your second brain</h2>
             <p className="text-gray-300 max-w-md">
-              Join thousands of users who are already transforming their note-taking experience with Lokus.
+              Connect your thoughts, organize your knowledge, and accelerate your learning with Lokus.
             </p>
           </div>
         </div>
