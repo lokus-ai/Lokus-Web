@@ -9,9 +9,14 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Lokus - Lightning-Fast Extensible Markdown Editor",
-  description: "The future of note-taking with blazing fast performance, intelligent linking, and unlimited extensibility.",
-  keywords: ["markdown editor", "note-taking", "knowledge management", "wiki", "second brain"],
+  title: "Lokus - Think. Connect. Create.",
+  description: "The future of knowledge management. Build your personal wiki, connect ideas, and unleash your creativity with our local-first note-taking platform.",
+  keywords: ["markdown editor", "note-taking", "knowledge management", "wiki", "second brain", "local-first", "privacy"],
+  icons: {
+    icon: "/lokus-logo.svg",
+    shortcut: "/lokus-logo.svg",
+    apple: "/lokus-logo.svg",
+  },
 }
 
 export default function RootLayout({
