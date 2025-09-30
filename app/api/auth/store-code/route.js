@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
-
-// In-memory storage for authorization codes (in production, use Redis or database)
-const authCodes = new Map()
+import { storeAuthCode } from '@/lib/auth-store'
 
 export async function POST(request) {
   try {
@@ -28,7 +26,7 @@ export async function POST(request) {
     }
 
     // Store authorization code data
-    const codeData = {
+    storeAuthCode(code, {
       codeChallenge,
       redirectUri,
       state,
@@ -36,17 +34,8 @@ export async function POST(request) {
       email,
       name,
       avatarUrl,
-      scope: scope || 'read write',
-      createdAt: Date.now(),
-      expiresAt: Date.now() + 10 * 60 * 1000 // 10 minutes
-    }
-
-    authCodes.set(code, codeData)
-    
-    // Auto-cleanup after expiration
-    setTimeout(() => {
-      authCodes.delete(code)
-    }, 10 * 60 * 1000)
+      scope: scope || 'read write'
+    })
 
     return NextResponse.json({ success: true })
   } catch (error) {
@@ -56,13 +45,4 @@ export async function POST(request) {
       error_description: 'Internal server error' 
     }, { status: 500 })
   }
-}
-
-// Export function to be used by token endpoint
-export function getStoredAuthCode(code) {
-  return authCodes.get(code)
-}
-
-export function deleteAuthCode(code) {
-  authCodes.delete(code)
 }

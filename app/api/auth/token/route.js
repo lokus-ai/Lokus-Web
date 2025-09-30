@@ -1,12 +1,6 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
-import { getStoredAuthCode, deleteAuthCode } from '../store-code/route.js'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
+import { getStoredAuthCode, deleteAuthCode, storeAccessToken, storeRefreshToken } from '@/lib/auth-store'
 
 export async function POST(request) {
   try {
@@ -86,7 +80,6 @@ export async function POST(request) {
     const expiresIn = 3600 // 1 hour
 
     // Store access token for profile endpoint
-    const { storeAccessToken } = await import('../profile/route.js')
     storeAccessToken(accessToken, {
       userId: storedCodeData.userId,
       email: storedCodeData.email,
@@ -95,7 +88,6 @@ export async function POST(request) {
     })
 
     // Store refresh token for refresh endpoint
-    const { storeRefreshToken } = await import('../refresh/route.js')
     storeRefreshToken(refreshToken, {
       userId: storedCodeData.userId,
       email: storedCodeData.email,

@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
-
-// In-memory token storage (in production, use Redis or database)
-const refreshTokens = new Map()
+import { getStoredRefreshToken, deleteRefreshToken, storeRefreshToken, storeAccessToken } from '@/lib/auth-store'
 
 export async function POST(request) {
   try {
@@ -29,7 +27,7 @@ export async function POST(request) {
     }
 
     // Validate refresh token
-    const storedTokenData = refreshTokens.get(refreshToken)
+    const storedTokenData = getStoredRefreshToken(refreshToken)
     if (!storedTokenData) {
       return NextResponse.json({ 
         error: 'invalid_grant', 
@@ -39,7 +37,7 @@ export async function POST(request) {
 
     // Check token expiration (refresh tokens typically last 30 days)
     if (Date.now() > storedTokenData.expiresAt) {
-      refreshTokens.delete(refreshToken)
+      deleteRefreshToken(refreshToken)
       return NextResponse.json({ 
         error: 'invalid_grant', 
         error_description: 'Refresh token has expired' 
@@ -52,17 +50,18 @@ export async function POST(request) {
     const expiresIn = 3600 // 1 hour
 
     // Store new refresh token
-    const newTokenData = {
-      ...storedTokenData,
-      expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000 // 30 days
-    }
-    refreshTokens.set(newRefreshToken, newTokenData)
+    storeRefreshToken(newRefreshToken, {
+      userId: storedTokenData.userId,
+      email: storedTokenData.email,
+      name: storedTokenData.name,
+      avatarUrl: storedTokenData.avatarUrl,
+      scope: storedTokenData.scope
+    })
     
     // Remove old refresh token
-    refreshTokens.delete(refreshToken)
+    deleteRefreshToken(refreshToken)
 
     // Store new access token for profile endpoint
-    const { storeAccessToken } = await import('../profile/route.js')
     storeAccessToken(newAccessToken, {
       userId: storedTokenData.userId,
       email: storedTokenData.email,
@@ -84,15 +83,4 @@ export async function POST(request) {
       error_description: 'Internal server error' 
     }, { status: 500 })
   }
-}
-
-// Helper function to store refresh tokens (called from token endpoint)
-export function storeRefreshToken(token, userData) {
-  const expiresAt = Date.now() + 30 * 24 * 60 * 60 * 1000 // 30 days
-  refreshTokens.set(token, { ...userData, expiresAt })
-  
-  // Clean up expired tokens
-  setTimeout(() => {
-    refreshTokens.delete(token)
-  }, 30 * 24 * 60 * 60 * 1000)
 }
