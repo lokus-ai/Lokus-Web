@@ -43,8 +43,13 @@ export default function DemoPage() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => {
-                if (window.LokusDemo && window.LokusDemo.resetDemo) {
-                  window.LokusDemo.resetDemo();
+                const iframe = document.querySelector('iframe[title="Lokus Demo"]') as HTMLIFrameElement;
+                if (iframe && iframe.contentWindow) {
+                  try {
+                    (iframe.contentWindow as any).resetLokusDemo?.();
+                  } catch (e) {
+                    console.log('Reset function not available yet');
+                  }
                 }
               }}
               className="px-4 py-2 text-sm bg-secondary hover:bg-secondary/80 rounded-md transition-colors"
@@ -94,7 +99,7 @@ export default function DemoPage() {
 
         {!isLoading && !error && (
           <iframe
-            src="/lokus-demo/index.html"
+            src="/lokus-demo/index-web.html"
             className="w-full h-full border-0"
             title="Lokus Demo"
             allow="clipboard-write"
@@ -121,8 +126,6 @@ export default function DemoPage() {
 // Extend window type for demo functions
 declare global {
   interface Window {
-    LokusDemo?: {
-      resetDemo?: () => void;
-    };
+    resetLokusDemo?: () => void;
   }
 }
