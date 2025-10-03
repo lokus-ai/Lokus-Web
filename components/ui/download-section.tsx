@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Download, Monitor, ArrowRight } from "lucide-react";
+import { Download, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
@@ -17,16 +17,19 @@ const AppleIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const LinuxIcon = ({ className }: { className?: string }) => (
+const WindowsIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}
     viewBox="0 0 24 24"
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
-    {/* Tux penguin simplified icon */}
-    <path d="M12 3C10.34 3 9 4.34 9 6C9 6.35 9.07 6.69 9.19 7H9C7.9 7 7 7.9 7 9V10C7 10.55 7.23 11.05 7.59 11.41L8 11.82V13C7.16 13.06 6.49 13.32 6 13.75V14.5C6 15.33 6.67 16 7.5 16C7.67 16 7.83 15.97 7.97 15.91C8.31 16.55 8.97 17 9.75 17C10.53 17 11.19 16.55 11.53 15.91C11.67 15.97 11.83 16 12 16C12.17 16 12.33 15.97 12.47 15.91C12.81 16.55 13.47 17 14.25 17C15.03 17 15.69 16.55 16.03 15.91C16.17 15.97 16.33 16 16.5 16C17.33 16 18 15.33 18 14.5V13.75C17.51 13.32 16.84 13.06 16 13V11.82L16.41 11.41C16.77 11.05 17 10.55 17 10V9C17 7.9 16.1 7 15 7H14.81C14.93 6.69 15 6.35 15 6C15 4.34 13.66 3 12 3M11.5 6.5C11.78 6.5 12 6.72 12 7S11.78 7.5 11.5 7.5 11 7.28 11 7 11.22 6.5 11.5 6.5M12.5 6.5C12.78 6.5 13 6.72 13 7S12.78 7.5 12.5 7.5 12 7.28 12 7 12.22 6.5 12.5 6.5M12 9.5C12.55 9.5 13 9.95 13 10.5C13 11.05 12.55 11.5 12 11.5S11 11.05 11 10.5C11 9.95 11.45 9.5 12 9.5M7.5 18V21H9.5V19.5H14.5V21H16.5V18C16.5 17.45 16.05 17 15.5 17H8.5C7.95 17 7.5 17.45 7.5 18Z" />
+    <path d="M3,12V6.75L9,5.43V11.91L3,12M20,3V11.75L10,11.9V5.21L20,3M3,13L9,13.09V19.9L3,18.75V13M20,13.25V22L10,20.09V13.1L20,13.25Z" />
   </svg>
+);
+
+const LinuxIcon = ({ className }: { className?: string }) => (
+  <img src="/linux-icon.svg" className={className} alt="Linux" />
 );
 
 interface Platform {
@@ -52,7 +55,7 @@ const platforms: Platform[] = [
   {
     id: "windows",
     name: "Windows",
-    icon: Monitor,
+    icon: WindowsIcon,
     downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.2.3/Lokus_1.2.3_x64-setup.exe",
     size: "96.3 MB",
     version: "v1.2.3",
@@ -297,7 +300,7 @@ export function DownloadSection({ className }: { className?: string }) {
             </motion.a>
             <span className="text-gray-600">•</span>
             <motion.a
-              href="https://docs-iota-two-79.vercel.app/installation"
+              href="https://docs.lokusmd.com/installation"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group"

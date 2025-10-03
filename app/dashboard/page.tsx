@@ -68,7 +68,7 @@ const quickLinks = [
   {
     title: "Documentation",
     description: "Learn how to use Lokus effectively",
-    href: "https://docs-iota-two-79.vercel.app/",
+    href: "https://docs.lokusmd.com",
     icon: BookOpen,
     color: "from-blue-500/20 to-blue-600/20"
   },
@@ -230,7 +230,7 @@ export default function DashboardPage() {
               </a>
               <span className="text-gray-600">•</span>
               <a
-                href="https://docs-iota-two-79.vercel.app/installation"
+                href="https://docs.lokusmd.com/installation"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
@@ -328,7 +328,7 @@ export default function DashboardPage() {
               </p>
               <div className="flex gap-4 justify-center">
                 <Button
-                  onClick={() => window.open("https://docs-iota-two-79.vercel.app/getting-started", "_blank")}
+                  onClick={() => window.open("https://docs.lokusmd.com/getting-started", "_blank")}
                   className="bg-white text-black hover:bg-gray-200"
                 >
                   <BookOpen className="w-4 h-4 mr-2" />

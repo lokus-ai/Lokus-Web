@@ -50,7 +50,7 @@ export function Navbar() {
   const navItems: Array<{ href: string; label: string; external?: boolean }> = [
     { href: "/demo", label: "Try Demo" },
     { href: "#features", label: "Features" },
-    { href: "https://docs-iota-two-79.vercel.app/", label: "Docs", external: true },
+    { href: "https://docs.lokusmd.com", label: "Docs", external: true },
     { href: "#download", label: "Download", external: false },
     { href: "https://github.com/lokus-ai/lokus", label: "GitHub", external: true }
   ]

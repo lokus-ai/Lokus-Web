@@ -18,7 +18,7 @@ export function Footer() {
       title: "Product",
       links: [
         { href: "#download", label: "Download", external: false },
-        { href: "https://docs-iota-two-79.vercel.app/", label: "Documentation", external: true },
+        { href: "https://docs.lokusmd.com", label: "Documentation", external: true },
         { href: "https://github.com/lokus-ai/lokus", label: "GitHub", external: true },
         { href: "#features", label: "Features" }
       ]
@@ -26,8 +26,8 @@ export function Footer() {
     {
       title: "Resources",
       links: [
-        { href: "https://docs-iota-two-79.vercel.app/getting-started", label: "Getting Started", external: true },
-        { href: "https://docs-iota-two-79.vercel.app/user-guide", label: "User Guide", external: true },
+        { href: "https://docs.lokusmd.com/getting-started", label: "Getting Started", external: true },
+        { href: "https://docs.lokusmd.com/user-guide", label: "User Guide", external: true },
         { href: "https://github.com/lokus-ai/lokus/releases", label: "Releases", external: true },
         { href: "https://github.com/lokus-ai/lokus/issues", label: "Support", external: true }
       ]
