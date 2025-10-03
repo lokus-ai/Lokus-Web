@@ -300,7 +300,7 @@ export function DownloadSection({ className }: { className?: string }) {
             </motion.a>
             <span className="text-gray-600">•</span>
             <motion.a
-              href="https://docs.lokusmd.com/installation"
+              href="https://github.com/lokus-ai/lokus/releases"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group"

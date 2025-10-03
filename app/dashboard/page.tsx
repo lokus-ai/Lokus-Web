@@ -230,7 +230,7 @@ export default function DashboardPage() {
               </a>
               <span className="text-gray-600">•</span>
               <a
-                href="https://docs.lokusmd.com/installation"
+                href="https://github.com/lokus-ai/lokus/releases"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
