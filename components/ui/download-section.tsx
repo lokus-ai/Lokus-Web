@@ -47,27 +47,27 @@ const platforms: Platform[] = [
     id: "macos",
     name: "macOS",
     icon: AppleIcon,
-    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.2.3/Lokus_1.2.3_aarch64.dmg",
+    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.2.3/Lokus_1.0.3_aarch64.dmg",
     size: "117 MB",
-    version: "v1.2.3",
+    version: "v1.0.3",
     features: ["macOS 11+", "Apple Silicon native", "Native performance", "Spotlight search"]
   },
   {
     id: "windows",
     name: "Windows",
     icon: WindowsIcon,
-    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.2.3/Lokus_1.2.3_x64-setup.exe",
+    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.2.3/Lokus_1.0.3_x64-setup.exe",
     size: "96.3 MB",
-    version: "v1.2.3",
+    version: "v1.0.3",
     features: ["Windows 10/11", "Auto-updates", "Native performance", "System tray support"]
   },
   {
     id: "linux",
     name: "Linux",
     icon: LinuxIcon,
-    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.2.3/lokus_1.2.3_amd64.AppImage",
+    downloadUrl: "https://github.com/lokus-ai/lokus/releases/latest",
     size: "144 MB",
-    version: "v1.2.3",
+    version: "v1.0.3",
     features: ["AppImage universal", "Most distributions", "Native performance", "Desktop integration"]
   }
 ];
