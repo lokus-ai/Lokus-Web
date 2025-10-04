@@ -22,7 +22,7 @@ export default function DemoPage() {
           </div>
 
           <p className="text-lg text-gray-500 max-w-xl mx-auto">
-            We're working on an interactive browser demo so you can try Lokus without downloading.
+            We&apos;re working on an interactive browser demo so you can try Lokus without downloading.
             In the meantime, download the desktop app to experience the full power of Lokus.
           </p>
 

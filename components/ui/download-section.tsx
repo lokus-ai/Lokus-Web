@@ -29,6 +29,7 @@ const WindowsIcon = ({ className }: { className?: string }) => (
 );
 
 const LinuxIcon = ({ className }: { className?: string }) => (
+  // eslint-disable-next-line @next/next/no-img-element
   <img src="/linux-icon.svg" className={className} alt="Linux" />
 );
 
