@@ -73,7 +73,7 @@ export const GoogleGeminiEffect = ({
         height="600"
         viewBox="0 300 1440 400"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute -top-20 sm:-top-10 md:top-0 lg:top-10 w-full"
+        className="absolute -top-20 sm:-top-10 md:top-0 lg:top-10 w-full -z-10"
         preserveAspectRatio="xMidYMid meet"
       >
         <motion.path
