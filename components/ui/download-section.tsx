@@ -138,8 +138,9 @@ export function DownloadSection({ className }: { className?: string }) {
               WebkitBackgroundClip: "text" as any
             }}
           >
-            Ready to start?
+            
           </motion.h2>
+          <h1 className="text-6xl mb-4">Download Lokus</h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Download Lokus for your platform and experience the future of note-taking
           </p>

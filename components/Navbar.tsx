@@ -39,7 +39,7 @@ export function Navbar() {
         setScrollDirection(direction)
       }
       
-      setIsScrolled(scrollY > 80)
+      setIsScrolled(scrollY > window.innerHeight * 4)
       setLastScrollY(scrollY > 0 ? scrollY : 0)
     }
 
@@ -70,41 +70,54 @@ export function Navbar() {
       >
         {/* Main header */}
         <motion.div 
-          className="relative"
+          className="relative mx-auto"
           animate={{
-            scale: isScrolled ? 0.95 : 1,
-            borderRadius: isScrolled ? "0 0 24px 24px" : "0 0 0 0"
+            scale: isScrolled ? 0.98 : 1,
+            borderRadius: isScrolled ? "24px" : "0",
+            marginTop: isScrolled ? "32px" : "0",
+            marginLeft: isScrolled ? "24px" : "0",
+            marginRight: isScrolled ? "24px" : "0",
+            maxWidth: isScrolled ? "calc(100% - 48px)" : "100%"
           }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           {/* Background with advanced blur and gradient */}
           <motion.div 
-            className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80"
+            className="absolute inset-0"
             style={{
-              backdropFilter: `blur(${backgroundBlur.get()}px)`,
+              backdropFilter: isScrolled ? "blur(20px)" : "blur(8px)",
+              borderRadius: isScrolled ? "24px" : "0",
             }}
             animate={{
               background: isScrolled 
-                ? "linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(10,10,10,0.9) 50%, rgba(0,0,0,0.95) 100%)"
-                : "linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.6), rgba(0,0,0,0.8))"
+                ? "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.08) 100%)"
+                : "linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.6), rgba(0,0,0,0.8))",
+              border: isScrolled ? "1px solid rgba(255,255,255,0.1)" : "none",
+              boxShadow: isScrolled 
+                ? "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)" 
+                : "none"
             }}
             transition={{ duration: 0.8 }}
           />
           
-          {/* Animated border */}
+          {/* Animated border - hide when floating */}
           <motion.div 
             className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent"
-            style={{ opacity: borderOpacity }}
+            style={{ opacity: isScrolled ? 0 : borderOpacity.get() }}
           />
           
-          {/* Floating orbs background */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Floating orbs background - only show when not scrolled */}
+          <motion.div 
+            className="absolute inset-0 overflow-hidden pointer-events-none"
+            animate={{ opacity: isScrolled ? 0 : 1 }}
+            transition={{ duration: 0.6 }}
+          >
             <motion.div 
               className="absolute -top-40 -left-40 w-80 h-80 bg-gradient-to-br from-gray-600/5 to-gray-800/5 rounded-full blur-3xl"
               animate={{ 
                 x: isScrolled ? -100 : 0,
                 scale: isScrolled ? 0.5 : 1,
-                opacity: isScrolled ? 0.3 : 0.6
+                opacity: isScrolled ? 0 : 0.6
               }}
               transition={{ duration: 1.2 }}
             />
@@ -113,11 +126,11 @@ export function Navbar() {
               animate={{ 
                 x: isScrolled ? 100 : 0,
                 scale: isScrolled ? 0.5 : 1,
-                opacity: isScrolled ? 0.3 : 0.6
+                opacity: isScrolled ? 0 : 0.6
               }}
               transition={{ duration: 1.2, delay: 0.1 }}
             />
-          </div>
+          </motion.div>
 
           <div className="relative z-10">
             <motion.div 
@@ -329,12 +342,14 @@ export function Navbar() {
             </motion.div>
           </div>
 
-          {/* Scroll progress indicator */}
+          {/* Scroll progress indicator - hide when floating */}
           <motion.div
             className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-gray-400 via-gray-300 to-gray-400 origin-left"
             style={{
-              scaleX: useTransform(scrollY, [0, 3000], [0, 1])
+              scaleX: useTransform(scrollY, [0, 3000], [0, 1]),
+              opacity: isScrolled ? 0 : 1
             }}
+            transition={{ duration: 0.6 }}
           />
         </motion.div>
       </motion.nav>

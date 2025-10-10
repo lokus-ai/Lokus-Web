@@ -245,8 +245,6 @@ export function PowerfulFeatures({ className }: { className?: string }) {
                 */}
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="text-gray-600 text-sm text-center">
-                    <div className="mb-2">📁 Upload your &ldquo;Powerful Features&rdquo; image here</div>
-                    <div className="text-xs">Path: /public/images/sections/powerful-features.png</div>
                   </div>
                 </div>
               </div>

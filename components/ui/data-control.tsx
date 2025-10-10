@@ -327,8 +327,7 @@ export function DataControl({ className }: { className?: string }) {
                 */}
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="text-gray-600 text-sm text-center">
-                    <div className="mb-2">📁 Upload your &ldquo;Data Control&rdquo; image here</div>
-                    <div className="text-xs">Path: /public/images/sections/data-control.png</div>
+
                   </div>
                 </div>
               </div>
