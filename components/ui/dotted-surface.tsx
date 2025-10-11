@@ -88,11 +88,10 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
         scene.add(points);
 
         let count = 0;
-        let animationId: number;
 
         // Animation function
-        const animate = () => {
-            animationId = requestAnimationFrame(animate);
+        const animate = (): void => {
+            sceneRef.current!.animationId = requestAnimationFrame(animate);
 
             const positionAttribute = geometry.attributes.position;
             const positions = positionAttribute.array as Float32Array;
@@ -142,7 +141,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
             camera,
             renderer,
             particles: [points],
-            animationId,
+            animationId: 0, // Will be set by animate function
             count,
         };
 
