@@ -5,11 +5,13 @@ import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Play, Pause, Maximize2 } from "lucide-react";
 import { useState } from "react";
+import { DitheringShader } from "./dithering-shader";
 
 export function VideoShowcase({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
+  const [shaderInView, setShaderInView] = useState(false);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -26,23 +28,29 @@ export function VideoShowcase({ className }: { className?: string }) {
       ref={containerRef}
       className={cn("relative py-24 bg-black overflow-hidden", className)}
     >
-      {/* Background gradient effects */}
-      <motion.div 
+      {/* Dithering Shader Background */}
+      <motion.div
         className="absolute inset-0"
-        style={{ opacity }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 0.3 }}
+        onViewportEnter={() => setShaderInView(true)}
+        onViewportLeave={() => setShaderInView(false)}
+        viewport={{ once: false, margin: "-30%" }}
+        transition={{ duration: 2 }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900/20 to-black" />
-        <motion.div
-          className="absolute inset-0"
-          animate={{
-            background: [
-              "radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 40%)",
-              "radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 40%)",
-              "radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 40%)",
-            ],
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        />
+        {shaderInView && (
+          <DitheringShader
+            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
+            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
+            shape="ripple"
+            type="4x4"
+            colorBack="#000000"
+            colorFront="#1a1a2e"
+            pxSize={4}
+            speed={0.4}
+            className="w-full h-full"
+          />
+        )}
       </motion.div>
 
       <div className="container max-w-7xl mx-auto px-4 relative z-10">

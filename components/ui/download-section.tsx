@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Download, ArrowRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Download, ArrowRight, Sparkles, Zap, Shield, Cpu } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { DitheringShader } from "./dithering-shader";
 
 // Custom icon components
 const AppleIcon = ({ className }: { className?: string }) => (
@@ -41,6 +42,8 @@ interface Platform {
   size: string;
   version: string;
   features: string[];
+  gradient: string;
+  iconColor: string;
 }
 
 const platforms: Platform[] = [
@@ -51,7 +54,9 @@ const platforms: Platform[] = [
     downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.2.3/Lokus_1.0.3_aarch64.dmg",
     size: "117 MB",
     version: "v1.0.3",
-    features: ["macOS 11+", "Apple Silicon native", "Native performance", "Spotlight search"]
+    features: ["macOS 11+", "Apple Silicon native", "Native performance", "Spotlight search"],
+    gradient: "from-gray-500 via-gray-300 to-gray-500",
+    iconColor: "text-gray-300"
   },
   {
     id: "windows",
@@ -59,8 +64,10 @@ const platforms: Platform[] = [
     icon: WindowsIcon,
     downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.2.3/Lokus_1.0.3_x64-setup.exe",
     size: "96.3 MB",
-    version: "v1.0.3",
-    features: ["Windows 10/11", "Auto-updates", "Native performance", "System tray support"]
+    version: "v1.0.3", 
+    features: ["Windows 10/11", "Auto-updates", "Native performance", "System tray support"],
+    gradient: "from-gray-600 via-gray-400 to-gray-600",
+    iconColor: "text-gray-400"
   },
   {
     id: "linux",
@@ -69,15 +76,27 @@ const platforms: Platform[] = [
     downloadUrl: "https://github.com/lokus-ai/lokus/releases/latest",
     size: "144 MB",
     version: "v1.0.3",
-    features: ["AppImage universal", "Most distributions", "Native performance", "Desktop integration"]
+    features: ["AppImage universal", "Most distributions", "Native performance", "Desktop integration"],
+    gradient: "from-gray-700 via-gray-500 to-gray-700", 
+    iconColor: "text-gray-500"
   }
 ];
 
 export function DownloadSection({ className }: { className?: string }) {
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(null);
   const [hoveredPlatform, setHoveredPlatform] = useState<string | null>(null);
+  const [shaderInView, setShaderInView] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
 
-  // Auto-detect platform (default to macOS)
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+
+  // Auto-detect platform
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
     if (userAgent.includes("mac")) {
@@ -92,231 +111,330 @@ export function DownloadSection({ className }: { className?: string }) {
   }, []);
 
   const handleDownload = (platform: Platform) => {
-    // Direct download from GitHub releases
     window.open(platform.downloadUrl, '_blank');
   };
 
+  // Floating orbs animation
+  const FloatingOrb = ({ delay = 0, size = "w-96 h-96", className = "" }) => (
+    <motion.div
+      className={`absolute rounded-full blur-3xl opacity-20 ${size} ${className}`}
+      animate={{
+        x: [0, 100, -50, 0],
+        y: [0, -100, 50, 0],
+        scale: [1, 1.2, 0.8, 1],
+      }}
+      transition={{
+        duration: 20,
+        delay,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+    />
+  );
+
+  const FeatureIcon = ({ feature }: { feature: string }) => {
+    if (feature.includes("native") || feature.includes("Native")) return <Cpu className="w-4 h-4" />;
+    if (feature.includes("Auto") || feature.includes("update")) return <Zap className="w-4 h-4" />;
+    if (feature.includes("universal") || feature.includes("distributions")) return <Shield className="w-4 h-4" />;
+    return <Sparkles className="w-4 h-4" />;
+  };
+
   return (
-    <section id="download" className={cn("relative py-24 bg-black overflow-hidden", className)}>
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute inset-0"
-          animate={{
-            background: [
-              "radial-gradient(circle at 20% 50%, rgba(120, 120, 120, 0.1) 0%, transparent 50%)",
-              "radial-gradient(circle at 80% 50%, rgba(120, 120, 120, 0.1) 0%, transparent 50%)",
-              "radial-gradient(circle at 20% 50%, rgba(120, 120, 120, 0.1) 0%, transparent 50%)",
-            ],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+    <motion.section 
+      ref={sectionRef}
+      id="download" 
+      className={cn("relative py-32 bg-black overflow-hidden", className)}
+      style={{ opacity }}
+    >
+      {/* Dithering Shader Background */}
+      <motion.div
+        className="absolute inset-0"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 0.15 }}
+        onViewportEnter={() => setShaderInView(true)}
+        onViewportLeave={() => setShaderInView(false)}
+        viewport={{ once: false, margin: "-30%" }}
+        transition={{ duration: 2 }}
+      >
+        {shaderInView && (
+          <DitheringShader
+            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
+            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
+            shape="warp"
+            type="2x2"
+            colorBack="#000000"
+            colorFront="#1a1a3a"
+            pxSize={4}
+            speed={0.6}
+            className="w-full h-full"
+          />
+        )}
+      </motion.div>
+
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden z-10">
+        <FloatingOrb 
+          delay={0} 
+          size="w-96 h-96" 
+          className="bg-gradient-to-br from-gray-800 to-gray-900 -top-48 -left-48" 
         />
+        <FloatingOrb 
+          delay={5} 
+          size="w-80 h-80" 
+          className="bg-gradient-to-br from-gray-700 to-gray-800 -top-32 -right-32" 
+        />
+        <FloatingOrb 
+          delay={10} 
+          size="w-64 h-64" 
+          className="bg-gradient-to-br from-gray-600 to-gray-700 -bottom-32 -left-32" 
+        />
+        <FloatingOrb 
+          delay={15} 
+          size="w-72 h-72" 
+          className="bg-gradient-to-br from-gray-800 to-gray-900 -bottom-48 -right-48" 
+        />
+        
+        {/* Grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black_40%,transparent_100%)]" />
       </div>
 
-      <div className="container max-w-6xl mx-auto px-4 relative z-10">
+      <motion.div 
+        className="container max-w-7xl mx-auto px-4 relative z-10"
+        style={{ y }}
+      >
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <motion.h2 
-            className="text-5xl md:text-7xl font-bold mb-6"
-            animate={{
-              background: [
-                "linear-gradient(to right, #fff, #fff)",
-                "linear-gradient(to right, #fff, #d1d5db, #fff)",
-                "linear-gradient(to right, #fff, #fff)",
-              ],
-            }}
-            transition={{ duration: 3, repeat: Infinity }}
-            style={{ 
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text" as any
-            }}
+          <motion.div
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full mb-8"
+            whileHover={{ scale: 1.05 }}
           >
-            
+            <Sparkles className="w-4 h-4 text-gray-400" />
+            <span className="text-sm text-gray-300">Ready to experience the future?</span>
+          </motion.div>
+          
+          <motion.h2 
+            className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent"
+            animate={{
+              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+            }}
+            transition={{ duration: 5, repeat: Infinity }}
+            style={{ backgroundSize: "200% 200%" }}
+          >
+            Download Lokus
           </motion.h2>
-          <h1 className="text-6xl mb-4">Download Lokus</h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Download Lokus for your platform and experience the future of note-taking
-          </p>
+          <motion.p 
+            className="text-xl text-gray-400 max-w-2xl mx-auto"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            Choose your platform and unlock the power of connected thinking
+          </motion.p>
         </motion.div>
 
-        {/* Main download area */}
-        <div className="max-w-4xl mx-auto">
-          {/* Quick download for detected platform */}
-          {selectedPlatform && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="mb-12 text-center"
+        {/* Hero download button */}
+        {selectedPlatform && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="flex justify-center mb-16"
+          >
+            <motion.button
+              onClick={() => handleDownload(selectedPlatform)}
+              className="group relative"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <motion.button
-                onClick={() => handleDownload(selectedPlatform)}
-                className="group relative inline-flex items-center gap-3 px-12 py-6 bg-gradient-to-r from-white to-gray-200 hover:from-gray-100 hover:to-white text-black font-bold text-xl rounded-2xl shadow-2xl transition-all duration-300"
-                whileHover={{ scale: 1.05, y: -5 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <selectedPlatform.icon className="w-8 h-8" />
-                <span>Download for {selectedPlatform.name}</span>
-                <motion.div
-                  className="absolute inset-0 rounded-2xl bg-white"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 0.2 }}
-                />
-              </motion.button>
-              <motion.p 
-                className="mt-4 text-sm text-gray-500"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
-                {selectedPlatform.size} • {selectedPlatform.version}
-              </motion.p>
-            </motion.div>
-          )}
-
-          {/* All platforms grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {platforms.map((platform, index) => {
-              const Icon = platform.icon;
-              const isHovered = hoveredPlatform === platform.id;
-              const isSelected = selectedPlatform?.id === platform.id;
-              
-              return (
-                <motion.div
-                  key={platform.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  onMouseEnter={() => setHoveredPlatform(platform.id)}
-                  onMouseLeave={() => setHoveredPlatform(null)}
-                  className="relative"
-                >
+              {/* Button */}
+              <div className="relative px-12 py-6 bg-black border border-white/20 rounded-2xl backdrop-blur-xl">
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <selectedPlatform.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-xl font-bold text-white">
+                      Download for {selectedPlatform.name}
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      {selectedPlatform.size} • {selectedPlatform.version}
+                    </div>
+                  </div>
                   <motion.div
-                    className={cn(
-                      "relative p-6 rounded-xl border-2 transition-all duration-300 cursor-pointer overflow-hidden",
-                      isSelected 
-                        ? "bg-gray-900/50 border-gray-600" 
-                        : "bg-gray-900/30 border-gray-800 hover:border-gray-700"
-                    )}
-                    animate={{
-                      y: isHovered ? -5 : 0,
-                    }}
-                    onClick={() => handleDownload(platform)}
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
                   >
-                    {/* Glow effect */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-gray-700/20 to-transparent"
-                      animate={{
-                        opacity: isHovered ? 1 : 0,
-                      }}
-                      transition={{ duration: 0.3 }}
-                    />
+                    <ArrowRight className="w-6 h-6 text-white" />
+                  </motion.div>
+                </div>
+              </div>
+            </motion.button>
+          </motion.div>
+        )}
 
-                    {/* Content */}
-                    <div className="relative z-10">
-                      <div className="flex items-center justify-between mb-4">
-                        <Icon className="w-12 h-12 text-gray-400" />
-                        {isSelected && (
-                          <motion.span
-                            initial={{ opacity: 0, scale: 0 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full"
-                          >
-                            Detected
-                          </motion.span>
-                        )}
-                      </div>
-                      
-                      <h3 className="text-xl font-semibold text-white mb-2">{platform.name}</h3>
-                      
-                      <div className="space-y-2 mb-4">
-                        {platform.features.slice(0, 2).map((feature) => (
-                          <p key={feature} className="text-sm text-gray-500">
-                            • {feature}
-                          </p>
-                        ))}
-                      </div>
+        {/* Platform cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {platforms.map((platform, index) => {
+            const Icon = platform.icon;
+            const isHovered = hoveredPlatform === platform.id;
+            const isSelected = selectedPlatform?.id === platform.id;
+            
+            return (
+              <motion.div
+                key={platform.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2, duration: 0.6 }}
+                onMouseEnter={() => setHoveredPlatform(platform.id)}
+                onMouseLeave={() => setHoveredPlatform(null)}
+                className="relative group"
+              >
+                <motion.div
+                  className={cn(
+                    "relative p-8 rounded-2xl border-2 transition-all duration-300 cursor-pointer overflow-hidden",
+                    "bg-gradient-to-br from-gray-900/50 via-gray-800/30 to-gray-900/50 backdrop-blur-xl",
+                    isSelected 
+                      ? "border-gray-500/50 shadow-2xl shadow-gray-500/20" 
+                      : "border-white/10 hover:border-white/20"
+                  )}
+                  whileHover={{ y: -8 }}
+                  onClick={() => handleDownload(platform)}
+                >
+                  {/* Animated background pattern */}
+                  <motion.div
+                    className="absolute inset-0 opacity-5"
+                    animate={{
+                      backgroundPosition: isHovered ? ["0% 0%", "100% 100%"] : "0% 0%",
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
+                    style={{
+                      backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)",
+                      backgroundSize: "20px 20px"
+                    }}
+                  />
 
+                  <div className="relative z-10">
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-6">
                       <motion.div
-                        className="flex items-center gap-2 text-gray-400"
+                        className="p-4 rounded-xl bg-gray-800/50"
+                        whileHover={{ rotate: 5, scale: 1.1 }}
+                      >
+                        <Icon className={`w-8 h-8 ${platform.iconColor}`} />
+                      </motion.div>
+                      
+                      {isSelected && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="px-3 py-1 bg-gray-500/20 border border-gray-500/30 rounded-full"
+                        >
+                          <span className="text-xs text-gray-300 font-medium">Detected</span>
+                        </motion.div>
+                      )}
+                    </div>
+                    
+                    <h3 className="text-2xl font-bold text-white mb-2">{platform.name}</h3>
+                    <p className="text-gray-400 text-sm mb-6">{platform.size} • {platform.version}</p>
+                    
+                    {/* Features */}
+                    <div className="space-y-3 mb-8">
+                      {platform.features.slice(0, 3).map((feature, featureIndex) => (
+                        <motion.div
+                          key={feature}
+                          className="flex items-center gap-3"
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ delay: featureIndex * 0.1 }}
+                        >
+                          <div className="p-1 rounded bg-gray-700/50">
+                            <FeatureIcon feature={feature} />
+                          </div>
+                          <span className="text-sm text-gray-300">{feature}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Download button */}
+                    <motion.div
+                      className="flex items-center gap-3 text-white group-hover:text-gray-200 transition-colors"
+                      animate={{
+                        x: isHovered ? 5 : 0,
+                      }}
+                    >
+                      <Download className="w-5 h-5" />
+                      <span className="font-medium">Download</span>
+                      <motion.div
                         animate={{
                           x: isHovered ? 5 : 0,
+                          opacity: isHovered ? 1 : 0.7,
                         }}
                       >
-                        <Download className="w-4 h-4" />
-                        <span className="text-sm font-medium">
-                          Download {platform.size}
-                        </span>
-                        <ArrowRight className={cn(
-                          "w-4 h-4 transition-all duration-300",
-                          isHovered ? "translate-x-1 opacity-100" : "opacity-0"
-                        )} />
+                        <ArrowRight className="w-4 h-4" />
                       </motion.div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  </div>
                 </motion.div>
-              );
-            })}
-          </div>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Alternative download options */}
+        {/* Alternative downloads */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
           className="text-center"
         >
-          <p className="text-gray-400 mb-4">
-            Looking for other options?
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 mb-6">
-            <motion.a
-              href="https://github.com/lokus-ai/lokus/releases/tag/v1.2.3"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group"
-              whileHover={{ x: 5 }}
-            >
-              All v1.2.3 downloads
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </motion.a>
-            <span className="text-gray-600">•</span>
-            <motion.a
-              href="https://github.com/lokus-ai/lokus/releases/download/v1.2.3/Lokus_1.2.3_x64.dmg"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group"
-              whileHover={{ x: 5 }}
-            >
-              macOS Intel (x64)
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </motion.a>
-            <span className="text-gray-600">•</span>
-            <motion.a
-              href="https://github.com/lokus-ai/lokus/releases"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group"
-              whileHover={{ x: 5 }}
-            >
-              Installation guide
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </motion.a>
+          <div className="inline-flex flex-col items-center gap-6 p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+            <h3 className="text-lg font-semibold text-white">Looking for other options?</h3>
+            
+            <div className="flex flex-wrap justify-center gap-6">
+              {[
+                { label: "All v1.2.3 downloads", url: "https://github.com/lokus-ai/lokus/releases/tag/v1.2.3" },
+                { label: "macOS Intel (x64)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.2.3/Lokus_1.2.3_x64.dmg" },
+                { label: "Installation guide", url: "https://github.com/lokus-ai/lokus/releases" }
+              ].map((link, index) => (
+                <motion.a
+                  key={link.label}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/20 text-gray-300 hover:text-white hover:border-white/40 transition-all group"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <span className="text-sm">{link.label}</span>
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </motion.a>
+              ))}
+            </div>
+            
+            <p className="text-xs text-gray-500">
+              Latest release: v1.2.3 • 
+              <a 
+                href="https://github.com/lokus-ai/lokus/releases" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-400 hover:text-white transition-colors ml-1"
+              >
+                View all releases
+              </a>
+            </p>
           </div>
-          <p className="text-sm text-gray-500">
-            Latest release: v1.2.3 • <a href="https://github.com/lokus-ai/lokus/releases" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">View all releases</a>
-          </p>
         </motion.div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }

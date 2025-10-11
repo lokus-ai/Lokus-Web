@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Edit3, Search, Zap, FileText, Code, Layers2, Brain, Network } from "lucide-react";
+import { DitheringShader } from "./dithering-shader";
 
 const features = [
   {
@@ -200,10 +201,36 @@ const features = [
 
 export function PowerfulFeatures({ className }: { className?: string }) {
   const [activeFeature, setActiveFeature] = useState("editing");
+  const [shaderInView, setShaderInView] = useState(false);
 
   return (
-    <section className={cn("relative py-24 bg-gradient-to-b from-black to-gray-900/20", className)}>
-      <div className="container max-w-7xl mx-auto px-4">
+    <section className={cn("relative py-24 bg-gradient-to-b from-black to-gray-900/20 overflow-hidden", className)}>
+      {/* Dithering Shader Background */}
+      <motion.div
+        className="absolute inset-0"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 0.2 }}
+        onViewportEnter={() => setShaderInView(true)}
+        onViewportLeave={() => setShaderInView(false)}
+        viewport={{ once: false, margin: "-30%" }}
+        transition={{ duration: 2 }}
+      >
+        {shaderInView && (
+          <DitheringShader
+            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
+            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
+            shape="sphere"
+            type="8x8"
+            colorBack="#000000"
+            colorFront="#4a1a1a"
+            pxSize={6}
+            speed={0.3}
+            className="w-full h-full"
+          />
+        )}
+      </motion.div>
+
+      <div className="container max-w-7xl mx-auto px-4 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

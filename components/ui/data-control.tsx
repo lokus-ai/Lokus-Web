@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { FolderOpen, GitBranch, Shield, Palette, FileText } from "lucide-react";
+import { DitheringShader } from "./dithering-shader";
 
 const features = [
   {
@@ -223,10 +224,36 @@ const features = [
 
 export function DataControl({ className }: { className?: string }) {
   const [activeFeature, setActiveFeature] = useState("local");
+  const [shaderInView, setShaderInView] = useState(false);
 
   return (
-    <section className={cn("relative py-24 bg-black", className)}>
-      <div className="container max-w-7xl mx-auto px-4">
+    <section className={cn("relative py-24 bg-black overflow-hidden", className)}>
+      {/* Dithering Shader Background */}
+      <motion.div
+        className="absolute inset-0"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 0.35 }}
+        onViewportEnter={() => setShaderInView(true)}
+        onViewportLeave={() => setShaderInView(false)}
+        viewport={{ once: false, margin: "-30%" }}
+        transition={{ duration: 2 }}
+      >
+        {shaderInView && (
+          <DitheringShader
+            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
+            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
+            shape="swirl"
+            type="4x4"
+            colorBack="#000000"
+            colorFront="#1a4a1a"
+            pxSize={3}
+            speed={0.5}
+            className="w-full h-full"
+          />
+        )}
+      </motion.div>
+
+      <div className="container max-w-7xl mx-auto px-4 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { DitheringShader } from "./dithering-shader";
 
 const universities = [
   { 
@@ -38,10 +39,37 @@ const universities = [
 
 export function UsedBy({ className }: { className?: string }) {
   const duplicatedUniversities = [...universities, ...universities, ...universities];
+  const [shaderInView, setShaderInView] = useState(false);
 
   return (
-    <section className={cn("relative py-24 bg-black", className)}>
-      {/* Markdown-style separator */}
+    <section className={cn("relative py-24 bg-black overflow-hidden", className)}>
+      {/* Dithering Shader Background */}
+      <motion.div
+        className="absolute inset-0"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 0.25 }}
+        onViewportEnter={() => setShaderInView(true)}
+        onViewportLeave={() => setShaderInView(false)}
+        viewport={{ once: false, margin: "-30%" }}
+        transition={{ duration: 2 }}
+      >
+        {shaderInView && (
+          <DitheringShader
+            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
+            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
+            shape="dots"
+            type="2x2"
+            colorBack="#000000"
+            colorFront="#2d1b69"
+            pxSize={5}
+            speed={0.2}
+            className="w-full h-full"
+          />
+        )}
+      </motion.div>
+
+      <div className="relative z-10">
+        {/* Markdown-style separator */}
       <div className="max-w-4xl mx-auto px-4 mb-20 pt-16">
         <div className="flex items-center gap-8">
           <div className="flex-1 h-[2px] bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
@@ -98,7 +126,6 @@ export function UsedBy({ className }: { className?: string }) {
                 transition={{ duration: 0.5, delay: (index % universities.length) * 0.05 }}
               >
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-xl opacity-0 group-hover/item:opacity-100 transition-opacity duration-500" />
                   <div className="relative w-24 h-24 grayscale opacity-60 group-hover/item:grayscale-0 group-hover/item:opacity-100 transition-all duration-300">
                     <Image 
                       src={uni.logo} 
@@ -118,9 +145,10 @@ export function UsedBy({ className }: { className?: string }) {
         </div>
       </div>
 
-      {/* Bottom separator */}
-      <div className="max-w-4xl mx-auto px-4 mt-20">
-        <div className="h-[1px] bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
+        {/* Bottom separator */}
+        <div className="max-w-4xl mx-auto px-4 mt-20">
+          <div className="h-[1px] bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
+        </div>
       </div>
     </section>
   );
