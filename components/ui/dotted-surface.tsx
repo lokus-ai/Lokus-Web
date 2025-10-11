@@ -48,7 +48,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
         containerRef.current.appendChild(renderer.domElement);
 
         // Create particles
-        const particles: THREE.Points[] = [];
+        const _particles: THREE.Points[] = [];
 
         // Create geometry for all particles
         const geometry = new THREE.BufferGeometry();
@@ -166,8 +166,9 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
 
                 sceneRef.current.renderer.dispose();
 
-                if (containerRef.current && sceneRef.current.renderer.domElement) {
-                    containerRef.current.removeChild(
+                const container = containerRef.current;
+                if (container && sceneRef.current.renderer.domElement) {
+                    container.removeChild(
                         sceneRef.current.renderer.domElement,
                     );
                 }

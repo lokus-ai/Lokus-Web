@@ -4,16 +4,14 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Search, Plus, X, ChevronDown, ChevronRight, MoreHorizontal, 
-  FileText, Folder, Settings, RotateCcw, Grid3x3, Database,
+  Search, Plus, ChevronDown, ChevronRight, MoreHorizontal, 
+  FileText, Folder, RotateCcw, Grid3x3, Database,
   Settings2, Mail, GitBranch
 } from 'lucide-react';
 
 export default function DemoPage() {
   const [currentView, setCurrentView] = useState('explorer');
   const [selectedFile, setSelectedFile] = useState('Book Review - The Lean Startup.md');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [expandedFolders, setExpandedFolders] = useState(new Set(['Classes']));
 
   // Kanban data matching the screenshot
   const kanbanColumns = [

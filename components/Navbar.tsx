@@ -22,7 +22,6 @@ export function Navbar() {
   // Advanced transform values
   const headerY = useTransform(scrollY, [0, 100], [0, -10])
   const logoScale = useTransform(scrollY, [0, 200], [1, 0.8])
-  const backgroundBlur = useTransform(scrollY, [0, 100], [0, 20])
   const borderOpacity = useTransform(scrollY, [0, 100], [0, 0.3])
 
   const handleSignOut = async () => {
