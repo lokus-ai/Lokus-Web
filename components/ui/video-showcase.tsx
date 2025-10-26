@@ -1,16 +1,12 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Play, Pause, Maximize2 } from "lucide-react";
-import { useState } from "react";
 import { DitheringShader } from "./dithering-shader";
 
 export function VideoShowcase({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isHovered, setIsHovered] = useState(false);
   const [shaderInView, setShaderInView] = useState(false);
   
   const { scrollYProgress } = useScroll({
@@ -71,8 +67,6 @@ export function VideoShowcase({ className }: { className?: string }) {
         <motion.div
           style={{ y, scale }}
           className="relative max-w-6xl mx-auto"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
         >
           {/* Macbook Pro Frame */}
           <div className="relative">
@@ -83,127 +77,16 @@ export function VideoShowcase({ className }: { className?: string }) {
               
               {/* Screen */}
               <div className="relative bg-gray-900 rounded-[2rem] overflow-hidden aspect-[16/10]">
-                {/* Video placeholder with aesthetic background */}
-                <div className="relative w-full h-full bg-gradient-to-br from-gray-800 to-gray-900">
-                  {/* Aesthetic placeholder content */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative">
-                      {/* Animated circles */}
-                      <motion.div
-                        className="absolute -top-20 -left-20 w-40 h-40 bg-gradient-to-br from-gray-600/20 to-gray-700/20 rounded-full blur-3xl"
-                        animate={{
-                          scale: [1, 1.2, 1],
-                          opacity: [0.3, 0.5, 0.3],
-                        }}
-                        transition={{ duration: 4, repeat: Infinity }}
-                      />
-                      <motion.div
-                        className="absolute -bottom-20 -right-20 w-60 h-60 bg-gradient-to-tl from-gray-500/20 to-gray-600/20 rounded-full blur-3xl"
-                        animate={{
-                          scale: [1.2, 1, 1.2],
-                          opacity: [0.5, 0.3, 0.5],
-                        }}
-                        transition={{ duration: 4, repeat: Infinity, delay: 2 }}
-                      />
-                      
-                      {/* Play button */}
-                      <motion.button
-                        className="relative z-10 w-24 h-24 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center group"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setIsPlaying(!isPlaying)}
-                      >
-                        <motion.div
-                          className="w-20 h-20 bg-gradient-to-br from-white to-gray-300 rounded-full flex items-center justify-center shadow-2xl"
-                          whileHover={{ 
-                            boxShadow: "0 0 40px rgba(255,255,255,0.3)"
-                          }}
-                        >
-                          {isPlaying ? (
-                            <Pause className="w-8 h-8 text-black ml-0" />
-                          ) : (
-                            <Play className="w-8 h-8 text-black ml-1" />
-                          )}
-                        </motion.div>
-                      </motion.button>
-                    </div>
-                  </div>
-
-                  {/* Fake UI elements */}
-                  <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    animate={{ opacity: isHovered ? 0.8 : 0.6 }}
-                  >
-                    {/* Top bar */}
-                    <div className="absolute top-0 left-0 right-0 h-12 bg-gray-800/50 backdrop-blur-sm border-b border-gray-700/50">
-                      <div className="flex items-center h-full px-4 gap-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500" />
-                        <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                        <div className="w-3 h-3 rounded-full bg-green-500" />
-                      </div>
-                    </div>
-
-                    {/* Side panel */}
-                    <div className="absolute left-0 top-12 bottom-0 w-64 bg-gray-800/30 backdrop-blur-sm border-r border-gray-700/50">
-                      <div className="p-4 space-y-2">
-                        {[1, 2, 3, 4].map((i) => (
-                          <motion.div
-                            key={i}
-                            className="h-8 bg-gray-700/30 rounded"
-                            initial={{ x: -20, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            transition={{ delay: i * 0.1 }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Main content area */}
-                    <div className="absolute left-64 top-12 right-0 bottom-0 p-8">
-                      <motion.div
-                        className="h-full bg-gray-800/20 rounded-lg p-6"
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                      >
-                        <div className="space-y-4">
-                          {[1, 2, 3].map((i) => (
-                            <div key={i} className="h-4 bg-gray-700/20 rounded w-3/4" />
-                          ))}
-                        </div>
-                      </motion.div>
-                    </div>
-                  </motion.div>
+                <div className="relative h-full w-full bg-gradient-to-br from-gray-800 to-gray-900">
+                  <iframe
+                    src="https://app.supademo.com/embed/cmh0jxcz91u6r6nxt6ychgkcg?v_email=EMAIL&embed_v=2&utm_source=embed&mute=1"
+                    title="Lokus product walkthrough"
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full border-0"
+                    allow="clipboard-write"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-black/10" aria-hidden="true" />
                 </div>
-
-                {/* Video controls overlay */}
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="flex items-center justify-between">
-                    <button 
-                      onClick={() => setIsPlaying(!isPlaying)}
-                      className="text-white hover:text-gray-300 transition-colors"
-                    >
-                      {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                    </button>
-                    <div className="flex-1 mx-4">
-                      <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
-                        <motion.div
-                          className="h-full bg-white"
-                          animate={{ width: isPlaying ? "100%" : "40%" }}
-                          transition={{ duration: isPlaying ? 30 : 0 }}
-                        />
-                      </div>
-                    </div>
-                    <button className="text-white hover:text-gray-300 transition-colors">
-                      <Maximize2 className="w-5 h-5" />
-                    </button>
-                  </div>
-                </motion.div>
               </div>
             </div>
 
