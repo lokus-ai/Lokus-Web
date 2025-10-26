@@ -1,16 +1,12 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Play, Pause, Maximize2 } from "lucide-react";
-import { useState } from "react";
 import { DitheringShader } from "./dithering-shader";
 
 export function VideoShowcase({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isHovered, setIsHovered] = useState(false);
   const [shaderInView, setShaderInView] = useState(false);
   
   const { scrollYProgress } = useScroll({
@@ -19,23 +15,23 @@ export function VideoShowcase({ className }: { className?: string }) {
   });
 
   // Parallax effects
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+  const y = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1, 0.85]);
 
   return (
-    <section 
+    <section
       ref={containerRef}
-      className={cn("relative py-24 bg-black overflow-hidden", className)}
+      className={cn("relative py-24 overflow-hidden bg-black", className)}
     >
       {/* Dithering Shader Background */}
       <motion.div
         className="absolute inset-0"
         initial={{ opacity: 0 }}
-        whileInView={{ opacity: 0.3 }}
+        whileInView={{ opacity: 0.2 }}
         onViewportEnter={() => setShaderInView(true)}
         onViewportLeave={() => setShaderInView(false)}
         viewport={{ once: false, margin: "-30%" }}
-        transition={{ duration: 2 }}
+        transition={{ duration: 1.4 }}
       >
         {shaderInView && (
           <DitheringShader
@@ -44,9 +40,9 @@ export function VideoShowcase({ className }: { className?: string }) {
             shape="ripple"
             type="4x4"
             colorBack="#000000"
-            colorFront="#1a1a2e"
+            colorFront="#0f111a"
             pxSize={4}
-            speed={0.4}
+            speed={0.9}
             className="w-full h-full"
           />
         )}
@@ -60,7 +56,7 @@ export function VideoShowcase({ className }: { className?: string }) {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent">
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
             See Lokus in Action
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
@@ -71,147 +67,35 @@ export function VideoShowcase({ className }: { className?: string }) {
         <motion.div
           style={{ y, scale }}
           className="relative max-w-6xl mx-auto"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Macbook Pro Frame */}
+          {/* MacBook Pro Frame */}
           <div className="relative">
-            {/* Screen bezel */}
-            <div className="relative bg-black rounded-[2.5rem] p-3 shadow-2xl">
+            <div className="relative rounded-[2.75rem] bg-zinc-950 p-[18px] shadow-[0_40px_120px_-60px_rgba(0,0,0,0.7)] ring-1 ring-white/10">
+              <div className="absolute inset-x-20 -top-3 h-6 rounded-full bg-white/10" />
+              <div className="absolute inset-x-6 bottom-4 h-1 rounded-full bg-white/5" />
+
               {/* Notch */}
-              <div className="absolute top-3 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-black rounded-b-2xl z-20" />
-              
+              <div className="absolute top-[22px] left-1/2 h-6 w-32 -translate-x-1/2 rounded-b-3xl bg-black/90" />
+
               {/* Screen */}
-              <div className="relative bg-gray-900 rounded-[2rem] overflow-hidden aspect-[16/10]">
-                {/* Video placeholder with aesthetic background */}
-                <div className="relative w-full h-full bg-gradient-to-br from-gray-800 to-gray-900">
-                  {/* Aesthetic placeholder content */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative">
-                      {/* Animated circles */}
-                      <motion.div
-                        className="absolute -top-20 -left-20 w-40 h-40 bg-gradient-to-br from-gray-600/20 to-gray-700/20 rounded-full blur-3xl"
-                        animate={{
-                          scale: [1, 1.2, 1],
-                          opacity: [0.3, 0.5, 0.3],
-                        }}
-                        transition={{ duration: 4, repeat: Infinity }}
-                      />
-                      <motion.div
-                        className="absolute -bottom-20 -right-20 w-60 h-60 bg-gradient-to-tl from-gray-500/20 to-gray-600/20 rounded-full blur-3xl"
-                        animate={{
-                          scale: [1.2, 1, 1.2],
-                          opacity: [0.5, 0.3, 0.5],
-                        }}
-                        transition={{ duration: 4, repeat: Infinity, delay: 2 }}
-                      />
-                      
-                      {/* Play button */}
-                      <motion.button
-                        className="relative z-10 w-24 h-24 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center group"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setIsPlaying(!isPlaying)}
-                      >
-                        <motion.div
-                          className="w-20 h-20 bg-gradient-to-br from-white to-gray-300 rounded-full flex items-center justify-center shadow-2xl"
-                          whileHover={{ 
-                            boxShadow: "0 0 40px rgba(255,255,255,0.3)"
-                          }}
-                        >
-                          {isPlaying ? (
-                            <Pause className="w-8 h-8 text-black ml-0" />
-                          ) : (
-                            <Play className="w-8 h-8 text-black ml-1" />
-                          )}
-                        </motion.div>
-                      </motion.button>
-                    </div>
-                  </div>
-
-                  {/* Fake UI elements */}
-                  <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    animate={{ opacity: isHovered ? 0.8 : 0.6 }}
-                  >
-                    {/* Top bar */}
-                    <div className="absolute top-0 left-0 right-0 h-12 bg-gray-800/50 backdrop-blur-sm border-b border-gray-700/50">
-                      <div className="flex items-center h-full px-4 gap-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500" />
-                        <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                        <div className="w-3 h-3 rounded-full bg-green-500" />
-                      </div>
-                    </div>
-
-                    {/* Side panel */}
-                    <div className="absolute left-0 top-12 bottom-0 w-64 bg-gray-800/30 backdrop-blur-sm border-r border-gray-700/50">
-                      <div className="p-4 space-y-2">
-                        {[1, 2, 3, 4].map((i) => (
-                          <motion.div
-                            key={i}
-                            className="h-8 bg-gray-700/30 rounded"
-                            initial={{ x: -20, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            transition={{ delay: i * 0.1 }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Main content area */}
-                    <div className="absolute left-64 top-12 right-0 bottom-0 p-8">
-                      <motion.div
-                        className="h-full bg-gray-800/20 rounded-lg p-6"
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                      >
-                        <div className="space-y-4">
-                          {[1, 2, 3].map((i) => (
-                            <div key={i} className="h-4 bg-gray-700/20 rounded w-3/4" />
-                          ))}
-                        </div>
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                </div>
-
-                {/* Video controls overlay */}
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="flex items-center justify-between">
-                    <button 
-                      onClick={() => setIsPlaying(!isPlaying)}
-                      className="text-white hover:text-gray-300 transition-colors"
-                    >
-                      {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                    </button>
-                    <div className="flex-1 mx-4">
-                      <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
-                        <motion.div
-                          className="h-full bg-white"
-                          animate={{ width: isPlaying ? "100%" : "40%" }}
-                          transition={{ duration: isPlaying ? 30 : 0 }}
-                        />
-                      </div>
-                    </div>
-                    <button className="text-white hover:text-gray-300 transition-colors">
-                      <Maximize2 className="w-5 h-5" />
-                    </button>
-                  </div>
-                </motion.div>
+              <div className="relative overflow-hidden rounded-[2.1rem] border border-white/10 bg-zinc-950 aspect-[16/10]">
+                <div className="absolute inset-0 bg-white/5" aria-hidden="true" style={{ opacity: 0.04 }} />
+                <iframe
+                  src="https://app.supademo.com/embed/cmh0jxcz91u6r6nxt6ychgkcg?embed_v=2&utm_source=embed&autoplay=1&muted=1"
+                  title="Lokus product walkthrough"
+                  loading="eager"
+                  className="relative h-full w-full border-0"
+                  allow="autoplay; clipboard-write"
+                  allowFullScreen={false}
+                />
               </div>
             </div>
 
-            {/* Macbook base */}
-            <div className="relative mt-[-2px]">
-              <div className="h-6 bg-gray-800 rounded-b-xl">
-                <div className="h-1 bg-gray-700 rounded-b-xl" />
-              </div>
+            {/* MacBook base */}
+            <div className="relative mx-auto -mt-2 h-10 w-[90%]">
+              <div className="absolute inset-0 rounded-b-[2.5rem] bg-zinc-900" />
+              <div className="absolute left-1/2 top-2 h-2 w-32 -translate-x-1/2 rounded-full bg-zinc-700" />
+              <div className="absolute inset-x-10 bottom-0 h-2 rounded-full bg-black/70 blur-lg" />
             </div>
           </div>
 
@@ -219,7 +103,7 @@ export function VideoShowcase({ className }: { className?: string }) {
           <motion.div
             className="absolute -left-20 top-20"
             animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 3, repeat: Infinity }}
+            transition={{ duration: 2.2, repeat: Infinity }}
           >
             <div className="bg-gray-800/80 backdrop-blur-md rounded-lg px-4 py-2 shadow-xl">
               <p className="text-sm text-gray-300">Native macOS App</p>
@@ -229,7 +113,7 @@ export function VideoShowcase({ className }: { className?: string }) {
           <motion.div
             className="absolute -right-20 bottom-40"
             animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+            transition={{ duration: 2.2, repeat: Infinity, delay: 1 }}
           >
             <div className="bg-gray-800/80 backdrop-blur-md rounded-lg px-4 py-2 shadow-xl">
               <p className="text-sm text-gray-300">Blazing Fast</p>
