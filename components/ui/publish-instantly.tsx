@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Edit3, Search, Zap, FileText, Code, Layers2, Brain, Network } from "lucide-react";
-import { DitheringShader } from "./dithering-shader";
 
 const features = [
   {
@@ -201,34 +200,9 @@ const features = [
 
 export function PowerfulFeatures({ className }: { className?: string }) {
   const [activeFeature, setActiveFeature] = useState("editing");
-  const [shaderInView, setShaderInView] = useState(false);
 
   return (
-    <section className={cn("relative py-24 bg-gradient-to-b from-black to-gray-900/20 overflow-hidden", className)}>
-      {/* Dithering Shader Background */}
-      <motion.div
-        className="absolute inset-0"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 0.2 }}
-        onViewportEnter={() => setShaderInView(true)}
-        onViewportLeave={() => setShaderInView(false)}
-        viewport={{ once: false, margin: "-30%" }}
-        transition={{ duration: 2 }}
-      >
-        {shaderInView && (
-          <DitheringShader
-            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
-            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
-            shape="sphere"
-            type="8x8"
-            colorBack="#000000"
-            colorFront="#4a1a1a"
-            pxSize={6}
-            speed={0.3}
-            className="w-full h-full"
-          />
-        )}
-      </motion.div>
+    <section className={cn("relative py-24 bg-black overflow-hidden", className)}>
 
       <div className="container max-w-7xl mx-auto px-4 relative z-10">
         {/* Header */}
@@ -250,59 +224,8 @@ export function PowerfulFeatures({ className }: { className?: string }) {
 
         {/* Interactive Features */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Dynamic Visual (Left on this section) */}
-          <div className="relative lg:sticky lg:top-32 order-2 lg:order-1">
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="relative bg-gradient-to-b from-gray-900 to-black border border-gray-800 rounded-2xl overflow-hidden h-[450px]"
-            >
-              {/* Image container - Replace this with your uploaded image */}
-              <div className="absolute inset-0 bg-gradient-to-bl from-gray-800/20 to-gray-900/40">
-                {/* TODO: Replace with your image:
-                    <Image 
-                      src="/images/sections/powerful-features.png" 
-                      alt="Lokus Powerful Features Interface"
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                */}
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="text-gray-600 text-sm text-center">
-                  </div>
-                </div>
-              </div>
-              <AnimatePresence mode="wait">
-                {features.map((feature) => 
-                  activeFeature === feature.id && (
-                    <motion.div
-                      key={feature.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute inset-0"
-                    >
-                      {feature.visual}
-                    </motion.div>
-                  )
-                )}
-              </AnimatePresence>
-              
-              {/* Decorative elements */}
-              <div className="absolute top-4 left-4">
-                <Layers2 className="w-5 h-5 text-gray-700" />
-              </div>
-              <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-gradient-to-br from-gray-800/20 to-gray-900/20 rounded-full blur-3xl" />
-              <div className="absolute -top-12 -right-12 w-28 h-28 bg-gradient-to-br from-gray-700/20 to-gray-800/20 rounded-full blur-3xl" />
-            </motion.div>
-          </div>
-
-          {/* Feature List (Right on this section) */}
-          <div className="space-y-6 order-1 lg:order-2">
+          {/* Feature List */}
+          <div className="space-y-6">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               const isActive = activeFeature === feature.id;
@@ -310,34 +233,34 @@ export function PowerfulFeatures({ className }: { className?: string }) {
               return (
                 <motion.div
                   key={feature.id}
-                  initial={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   onMouseEnter={() => setActiveFeature(feature.id)}
                   className={cn(
                     "group relative p-6 rounded-xl cursor-pointer transition-all duration-300",
-                    isActive 
-                      ? "bg-gradient-to-l from-gray-800/50 to-gray-900/50 border border-gray-700" 
-                      : "hover:bg-gray-900/30"
+                    isActive
+                      ? "bg-white/5 border border-white/10"
+                      : "hover:bg-white/[0.02]"
                   )}
                 >
                   {/* Active indicator */}
                   {isActive && (
                     <motion.div
                       layoutId="featuresActiveIndicator"
-                      className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-gradient-to-b from-gray-400 to-gray-600 rounded-l"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-white rounded-r"
                     />
                   )}
                   
                   <div className="flex items-start gap-4">
                     <div className={cn(
                       "p-3 rounded-lg transition-colors",
-                      isActive ? "bg-gray-700/50" : "bg-gray-800/50 group-hover:bg-gray-700/50"
+                      isActive ? "bg-white/10" : "bg-white/5 group-hover:bg-white/10"
                     )}>
                       <Icon className={cn(
                         "w-6 h-6 transition-colors",
-                        isActive ? "text-gray-200" : "text-gray-400 group-hover:text-gray-300"
+                        isActive ? "text-white" : "text-gray-400 group-hover:text-gray-300"
                       )} />
                     </div>
                     <div className="flex-1">
@@ -358,6 +281,34 @@ export function PowerfulFeatures({ className }: { className?: string }) {
                 </motion.div>
               );
             })}
+          </div>
+
+          {/* Dynamic Visual */}
+          <div className="relative lg:sticky lg:top-32">
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="relative bg-black border border-white/10 rounded-2xl overflow-hidden h-[500px] shadow-2xl"
+            >
+              <AnimatePresence mode="wait">
+                {features.map((feature) =>
+                  activeFeature === feature.id && (
+                    <motion.div
+                      key={feature.id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3 }}
+                      className="absolute inset-0"
+                    >
+                      {feature.visual}
+                    </motion.div>
+                  )
+                )}
+              </AnimatePresence>
+            </motion.div>
           </div>
         </div>
       </div>

@@ -3,7 +3,126 @@
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FolderOpen, FileText, Shield, Palette, ChevronRight } from "lucide-react";
+import { FolderOpen, FileText, Shield, Palette, ChevronRight, Search, Settings, BookOpen, Files } from "lucide-react";
+
+const folderContents = {
+  "Classes": ["Math 101.md", "Physics Notes.md", "Chemistry Lab.md"],
+  "Daily Notes": ["2024-01-15.md", "2024-01-14.md", "2024-01-13.md"],
+  "Data Structure And Algorithm": ["Binary Trees.md", "Graphs.md", "Sorting.md"],
+  "Hackathon": ["Ideas.md", "Team Notes.md", "Schedule.md"],
+  "Images": ["diagram.png", "screenshot.jpg"]
+};
+
+const generateExplorerVisual = (openFolders: Set<string>, toggleFolder: (folder: string) => void) => (
+  <div className="relative h-full w-full">
+    {/* Lokus-style file explorer */}
+    <div className="h-full bg-[#2c3340] rounded-lg overflow-hidden flex">
+      {/* Sidebar */}
+      <div className="w-12 bg-[#262b35] border-r border-[#1a1e27] flex flex-col items-center py-4 gap-3">
+        {/* Lokus App Icon */}
+        <div className="w-7 h-7 rounded bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-black font-bold text-sm cursor-pointer hover:scale-110 transition-transform">
+          L
+        </div>
+
+        <div className="w-full h-px bg-[#1a1e27] my-1" />
+
+        {/* Navigation Icons */}
+        <button className="w-7 h-7 text-gray-500 hover:text-gray-300 flex items-center justify-center hover:bg-[#3a4150] rounded transition-colors">
+          <Files className="w-4 h-4" />
+        </button>
+        <button className="w-7 h-7 text-gray-500 hover:text-gray-300 flex items-center justify-center hover:bg-[#3a4150] rounded transition-colors">
+          <Search className="w-4 h-4" />
+        </button>
+        <button className="w-7 h-7 text-gray-500 hover:text-gray-300 flex items-center justify-center hover:bg-[#3a4150] rounded transition-colors">
+          <BookOpen className="w-4 h-4" />
+        </button>
+        <button className="w-7 h-7 text-gray-500 hover:text-gray-300 flex items-center justify-center hover:bg-[#3a4150] rounded transition-colors">
+          <Settings className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* File explorer content */}
+      <div className="flex-1 overflow-auto">
+        <div className="p-3 border-b border-[#1a1e27] flex items-center justify-between sticky top-0 bg-[#2c3340] z-10">
+          <span className="text-xs font-semibold text-gray-300 tracking-wider">EXPLORER</span>
+          <button className="text-gray-500 hover:text-gray-300">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="p-2 space-y-0.5 text-sm">
+          {/* Folders */}
+          {Object.keys(folderContents).map((folder, i) => {
+            const isOpen = openFolders.has(folder);
+            return (
+              <div key={folder}>
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="flex items-center gap-2 px-2 py-1 text-gray-300 hover:bg-[#3a4150] rounded cursor-pointer group"
+                  onClick={() => toggleFolder(folder)}
+                >
+                  <motion.div
+                    animate={{ rotate: isOpen ? 90 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ChevronRight className="w-3 h-3 text-gray-500" />
+                  </motion.div>
+                  <FolderOpen className="w-3 h-3 text-gray-500" />
+                  <span className="text-sm">{folder}</span>
+                </motion.div>
+
+                {/* Folder contents */}
+                {isOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="ml-5 space-y-0.5"
+                  >
+                    {folderContents[folder as keyof typeof folderContents].map((file) => (
+                      <div
+                        key={file}
+                        className="flex items-center gap-2 px-2 py-1 text-gray-400 hover:bg-[#3a4150] rounded cursor-pointer"
+                      >
+                        <FileText className="w-3 h-3 text-purple-400" />
+                        <span className="text-xs truncate">{file}</span>
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </div>
+            );
+          })}
+
+          {/* Root-level Files */}
+          {[
+            "AI Tools For University.md",
+            "Claude Research on 100 Profs.md",
+            "Daily_Task_kanban",
+            "Hackathon Guide.md",
+            "Meeting Notes - Product Review.md"
+          ].map((file, i) => (
+            <motion.div
+              key={file}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: (i + Object.keys(folderContents).length) * 0.05 }}
+              className="flex items-center gap-2 px-2 py-1 text-gray-400 hover:bg-[#3a4150] rounded cursor-pointer group"
+            >
+              <FileText className="w-3 h-3 text-purple-400" />
+              <span className="text-sm truncate">{file}</span>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 const features = [
   {
@@ -11,70 +130,7 @@ const features = [
     icon: FolderOpen,
     title: "Local-First Architecture",
     description: "Your notes are stored as markdown files on your device. No cloud, no tracking - just you and your data.",
-    visual: (
-      <div className="relative h-full w-full">
-        {/* Lokus-style file explorer */}
-        <div className="h-full bg-[#2c3340] rounded-lg overflow-hidden flex">
-          {/* Sidebar */}
-          <div className="w-12 bg-[#262b35] border-r border-[#1a1e27] flex flex-col items-center py-4 gap-4">
-            <div className="w-6 h-6 rounded bg-[#3a4150] flex items-center justify-center">
-              <div className="w-3 h-3 rounded-full bg-cyan-400" />
-            </div>
-            <div className="w-6 h-6 text-gray-500 flex items-center justify-center">
-              <FolderOpen className="w-4 h-4" />
-            </div>
-          </div>
-
-          {/* File explorer content */}
-          <div className="flex-1">
-            <div className="p-3 border-b border-[#1a1e27] flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-300 tracking-wider">EXPLORER</span>
-              <button className="text-gray-500 hover:text-gray-300">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="p-2 space-y-0.5 text-sm">
-              {/* Folders */}
-              {["Classes", "Daily Notes", "Data Structure And Algorithm", "Hackathon", "Images"].map((folder, i) => (
-                <motion.div
-                  key={folder}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="flex items-center gap-2 px-2 py-1 text-gray-300 hover:bg-[#3a4150] rounded cursor-pointer group"
-                >
-                  <ChevronRight className="w-3 h-3 text-gray-500" />
-                  <span className="text-sm">{folder}</span>
-                </motion.div>
-              ))}
-
-              {/* Files */}
-              {[
-                "AI Tools For University.md",
-                "Claude Research on 100 Profs.md",
-                "Daily_Task_kanban",
-                "Hackathon Guide.md",
-                "Meeting Notes - Product Review.md"
-              ].map((file, i) => (
-                <motion.div
-                  key={file}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: (i + 5) * 0.05 }}
-                  className="flex items-center gap-2 px-2 py-1 text-gray-400 hover:bg-[#3a4150] rounded cursor-pointer group"
-                >
-                  <FileText className="w-3 h-3 text-purple-400" />
-                  <span className="text-sm truncate">{file}</span>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    visual: null // Will be generated dynamically
   },
   {
     id: "editor",
@@ -232,6 +288,17 @@ const features = [
 
 export function DataControl({ className }: { className?: string }) {
   const [activeFeature, setActiveFeature] = useState("local");
+  const [openFolders, setOpenFolders] = useState<Set<string>>(new Set(["Classes", "Daily Notes"]));
+
+  const toggleFolder = (folder: string) => {
+    const newOpenFolders = new Set(openFolders);
+    if (newOpenFolders.has(folder)) {
+      newOpenFolders.delete(folder);
+    } else {
+      newOpenFolders.add(folder);
+    }
+    setOpenFolders(newOpenFolders);
+  };
 
   return (
     <section className={cn("relative py-24 bg-black overflow-hidden", className)}>
@@ -337,7 +404,10 @@ export function DataControl({ className }: { className?: string }) {
                       transition={{ duration: 0.3 }}
                       className="absolute inset-0"
                     >
-                      {feature.visual}
+                      {feature.id === "local"
+                        ? generateExplorerVisual(openFolders, toggleFolder)
+                        : feature.visual
+                      }
                     </motion.div>
                   )
                 )}
