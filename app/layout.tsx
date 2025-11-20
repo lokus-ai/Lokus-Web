@@ -1,6 +1,9 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { AuthProvider } from "@/components/auth/AuthProvider"
+import { ThemeProvider } from "@/contexts/ThemeContext"
+import { MiniSidebar } from "@/components/ui/mini-sidebar"
+import { ThemeEditor } from "@/components/ui/theme-editor"
 import "./globals.css"
 
 const inter = Inter({ 
@@ -27,9 +30,15 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <MiniSidebar />
+            <div className="pl-16">
+              {children}
+            </div>
+            <ThemeEditor />
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
