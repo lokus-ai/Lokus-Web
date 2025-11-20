@@ -3,7 +3,6 @@
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Sparkles, Zap, Lock, Cpu } from "lucide-react";
 
 export function VideoShowcase({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,33 +37,6 @@ export function VideoShowcase({ className }: { className?: string }) {
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
-
-  const features = [
-    {
-      icon: Zap,
-      title: "Lightning Fast",
-      description: "Native performance with Tauri",
-      gradient: "from-yellow-500 to-orange-600"
-    },
-    {
-      icon: Sparkles,
-      title: "Beautiful Design",
-      description: "Crafted for macOS aesthetics",
-      gradient: "from-blue-500 to-purple-600"
-    },
-    {
-      icon: Lock,
-      title: "Privacy First",
-      description: "Your data stays on your device",
-      gradient: "from-green-500 to-emerald-600"
-    },
-    {
-      icon: Cpu,
-      title: "AI-Powered",
-      description: "Smart linking and organization",
-      gradient: "from-pink-500 to-rose-600"
-    }
-  ];
 
   return (
     <section
@@ -208,44 +180,6 @@ export function VideoShowcase({ className }: { className?: string }) {
             </div>
           </motion.div>
         </motion.div>
-
-        {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
-              className="group relative"
-            >
-              {/* Card Glow */}
-              <div
-                className={`absolute -inset-0.5 opacity-0 group-hover:opacity-100 blur transition duration-500 rounded-2xl bg-gradient-to-r ${feature.gradient}`}
-              />
-
-              <div className="relative h-full bg-zinc-950 rounded-2xl border border-white/10 p-6 backdrop-blur-xl">
-                <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${feature.gradient} mb-4`}>
-                  <feature.icon className="w-6 h-6 text-white" />
-                </div>
-
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-sm text-gray-400">
-                  {feature.description}
-                </p>
-
-                {/* Hover Effect Border */}
-                <div
-                  className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-20 transition duration-500 bg-gradient-to-r ${feature.gradient}`}
-                />
-              </div>
-            </motion.div>
-          ))}
-        </div>
       </div>
     </section>
   );
