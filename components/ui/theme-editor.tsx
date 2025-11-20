@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Palette, Check, ChevronDown } from 'lucide-react';
@@ -8,6 +8,15 @@ import { Palette, Check, ChevronDown } from 'lucide-react';
 export function ThemeEditor() {
   const { currentTheme, setTheme, availableThemes } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   const themeOptions = Object.values(availableThemes);
 
