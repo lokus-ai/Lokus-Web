@@ -18,8 +18,6 @@ export function VideoShowcase({ className }: { className?: string }) {
   // Smooth mouse tracking
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const smoothMouseX = useSpring(mouseX, { damping: 30, stiffness: 200 });
-  const smoothMouseY = useSpring(mouseY, { damping: 30, stiffness: 200 });
 
   // Parallax effects
   const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
@@ -224,11 +222,8 @@ export function VideoShowcase({ className }: { className?: string }) {
               className="group relative"
             >
               {/* Card Glow */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r opacity-0 group-hover:opacity-100 blur transition duration-500 rounded-2xl"
-                style={{
-                  background: `linear-gradient(to right, var(--tw-gradient-stops))`,
-                }}
-                className={`bg-gradient-to-r ${feature.gradient}`}
+              <div
+                className={`absolute -inset-0.5 opacity-0 group-hover:opacity-100 blur transition duration-500 rounded-2xl bg-gradient-to-r ${feature.gradient}`}
               />
 
               <div className="relative h-full bg-zinc-950 rounded-2xl border border-white/10 p-6 backdrop-blur-xl">
@@ -244,11 +239,8 @@ export function VideoShowcase({ className }: { className?: string }) {
                 </p>
 
                 {/* Hover Effect Border */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r opacity-0 group-hover:opacity-20 transition duration-500"
-                  style={{
-                    background: `linear-gradient(to right, var(--tw-gradient-stops))`,
-                  }}
-                  className={`bg-gradient-to-r ${feature.gradient}`}
+                <div
+                  className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-20 transition duration-500 bg-gradient-to-r ${feature.gradient}`}
                 />
               </div>
             </motion.div>
