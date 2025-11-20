@@ -190,7 +190,7 @@ export function VideoShowcase({ className }: { className?: string }) {
           >
             <div className="bg-zinc-900/80 backdrop-blur-xl rounded-2xl p-4 border border-white/10 shadow-xl">
               <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-                {"<10ms"}
+                <span>&lt;10ms</span>
               </div>
               <div className="text-xs text-gray-400 mt-1">Response Time</div>
             </div>
