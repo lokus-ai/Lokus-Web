@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Edit3, Search, Zap, FileText, Code, Layers2, Brain, Network } from "lucide-react";
+import { Edit3, Search, Zap, FileText, Code, Brain, Network } from "lucide-react";
 
 const features = [
   {

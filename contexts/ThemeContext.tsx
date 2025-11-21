@@ -12,18 +12,26 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [currentTheme, setCurrentTheme] = useState<string>('default');
+  // Initialize from localStorage on client side to match inline script
+  const [currentTheme, setCurrentTheme] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('lokus-theme') || 'default';
+    }
+    return 'default';
+  });
+
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Load saved theme from localStorage
+    // Theme already applied by inline script in layout, just sync state
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('lokus-theme') || 'default';
-      setCurrentTheme(savedTheme);
-      applyTheme(themes[savedTheme]);
+      if (savedTheme !== currentTheme) {
+        setCurrentTheme(savedTheme);
+      }
     }
-  }, []);
+  }, [currentTheme]);
 
   const setTheme = (themeName: string) => {
     if (themes[themeName] && typeof window !== 'undefined') {

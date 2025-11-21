@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FolderOpen, FileText, Shield, Palette, ChevronRight, Search, Settings, BookOpen, Files } from "lucide-react";
+import { FolderOpen, FileText, Palette, ChevronRight, Search, Settings, BookOpen, Files } from "lucide-react";
 
 const folderContents = {
   "Classes": ["Math 101.md", "Physics Notes.md", "Chemistry Lab.md"],
