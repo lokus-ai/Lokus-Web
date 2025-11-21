@@ -18,22 +18,20 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setMounted(true);
     // Load saved theme from localStorage
-    const savedTheme = localStorage.getItem('lokus-theme') || 'default';
-    setCurrentTheme(savedTheme);
-    applyTheme(themes[savedTheme]);
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('lokus-theme') || 'default';
+      setCurrentTheme(savedTheme);
+      applyTheme(themes[savedTheme]);
+    }
   }, []);
 
   const setTheme = (themeName: string) => {
-    if (themes[themeName]) {
+    if (themes[themeName] && typeof window !== 'undefined') {
       setCurrentTheme(themeName);
       applyTheme(themes[themeName]);
       localStorage.setItem('lokus-theme', themeName);
     }
   };
-
-  if (!mounted) {
-    return <>{children}</>;
-  }
 
   return (
     <ThemeContext.Provider value={{ currentTheme, setTheme, availableThemes: themes }}>
