@@ -5,10 +5,26 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'lokusmd.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.lokusmd.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'github.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
       },
     ],
   },
 }
 
-module.exports = nextConfig// Force fresh build: Sun Sep 21 20:21:26 EDT 2025
+module.exports = nextConfig

@@ -1,10 +1,16 @@
 import type { Metadata } from "next"
+import { Inter } from "next/font/google"
 import { AuthProvider } from "@/components/auth/AuthProvider"
 import { ThemeProvider } from "@/contexts/ThemeContext"
 import { MiniSidebar } from "@/components/ui/mini-sidebar"
 import { ThemeEditor } from "@/components/ui/theme-editor"
 import Script from "next/script"
 import "./globals.css"
+
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: "--font-inter",
+})
 
 export const metadata: Metadata = {
   title: "Lokus - Think. Connect. Create.",
@@ -195,6 +201,12 @@ export default function RootLayout({
             })();
           `}
         </Script>
+        {/* Umami Analytics */}
+        <Script
+          src="https://analytics.lokusmd.com/script.js"
+          data-website-id="1299d78a-7f04-411f-9fa2-22ffbbc3258c"
+          strategy="afterInteractive"
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -202,7 +214,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans antialiased" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
+      <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider>
           <AuthProvider>
             {children}
