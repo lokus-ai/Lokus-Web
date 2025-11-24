@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 import crypto from 'crypto'
 
 const SSO_SECRET = process.env.DISCOURSE_SSO_SECRET || 'your_sso_secret_here'
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Get the current user from Supabase
-  const supabase = createServerClient()
+  const supabase = await createClient()
   const { data: { user }, error } = await supabase.auth.getUser()
 
   if (error || !user) {

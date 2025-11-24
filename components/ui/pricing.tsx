@@ -226,7 +226,7 @@ export function PricingSection({
   description = "Choose the plan that's right for you. All plans include our core features and support.",
 }: PricingSectionProps) {
   const [isMonthly, setIsMonthly] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [mousePosition, setMousePosition] = useState<{
     x: number | null;
     y: number | null;
