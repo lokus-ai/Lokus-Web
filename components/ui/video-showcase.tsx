@@ -1,85 +1,143 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useMotionValue } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { DitheringShader } from "./dithering-shader";
 
 export function VideoShowcase({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [shaderInView, setShaderInView] = useState(false);
-  
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"]
   });
 
+  // Smooth mouse tracking
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
   // Parallax effects
-  const y = useTransform(scrollYProgress, [0, 1], [80, -80]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1, 0.85]);
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        setMousePosition({ x, y });
+        mouseX.set(x);
+        mouseY.set(y);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
 
   return (
     <section
       ref={containerRef}
-      className={cn("relative py-24 overflow-hidden bg-black", className)}
+      className={cn("relative py-32 overflow-hidden bg-black", className)}
     >
-      {/* Dithering Shader Background */}
+      {/* Animated Grid Background */}
+      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
+
+      {/* Gradient Orbs */}
       <motion.div
-        className="absolute inset-0"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 0.2 }}
-        onViewportEnter={() => setShaderInView(true)}
-        onViewportLeave={() => setShaderInView(false)}
-        viewport={{ once: false, margin: "-30%" }}
-        transition={{ duration: 1.4 }}
-      >
-        {shaderInView && (
-          <DitheringShader
-            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
-            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
-            shape="ripple"
-            type="4x4"
-            colorBack="#000000"
-            colorFront="#0f111a"
-            pxSize={4}
-            speed={0.9}
-            className="w-full h-full"
-          />
-        )}
-      </motion.div>
+        style={{ opacity }}
+        className="absolute top-1/4 -left-48 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px]"
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      <motion.div
+        style={{ opacity }}
+        className="absolute bottom-1/4 -right-48 w-96 h-96 bg-blue-500/20 rounded-full blur-[120px]"
+        animate={{
+          scale: [1.2, 1, 1.2],
+          opacity: [0.5, 0.3, 0.5],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1
+        }}
+      />
 
       <div className="container max-w-7xl mx-auto px-4 relative z-10">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
-            See Lokus in Action
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-6"
+          >
+            <span className="text-sm text-gray-300">See it in action</span>
+          </motion.div>
+
+          <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">
+            Experience Lokus
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Experience the seamless workflow and beautiful interface designed for macOS
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+            A beautiful, fast, and intelligent note-taking app designed for modern workflows
           </p>
         </motion.div>
 
+        {/* Main Demo Card with Modern Browser Frame */}
         <motion.div
-          style={{ y, scale }}
-          className="relative max-w-6xl mx-auto"
+          style={{ y }}
+          className="relative max-w-6xl mx-auto mb-24"
         >
-          {/* MacBook Pro Frame */}
-          <div className="relative">
-            <div className="relative rounded-[2.75rem] bg-zinc-950 p-[18px] shadow-[0_40px_120px_-60px_rgba(0,0,0,0.7)] ring-1 ring-white/10">
-              <div className="absolute inset-x-20 -top-3 h-6 rounded-full bg-white/10" />
-              <div className="absolute inset-x-6 bottom-4 h-1 rounded-full bg-white/5" />
+          {/* Spotlight Effect */}
+          <motion.div
+            className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
+            style={{
+              background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(139, 92, 246, 0.15), transparent 40%)`,
+            }}
+          />
 
-              {/* Notch */}
-              <div className="absolute top-[22px] left-1/2 h-6 w-32 -translate-x-1/2 rounded-b-3xl bg-black/90" />
+          {/* Browser Frame */}
+          <div className="relative group">
+            {/* Glow effect */}
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-3xl blur opacity-30 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
 
-              {/* Screen */}
-              <div className="relative overflow-hidden rounded-[2.1rem] border border-white/10 bg-zinc-950 aspect-[16/10]">
-                <div className="absolute inset-0 bg-white/5" aria-hidden="true" style={{ opacity: 0.04 }} />
+            <div className="relative bg-zinc-950 rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
+              {/* Browser Chrome */}
+              <div className="flex items-center gap-2 px-4 py-3 bg-zinc-900/80 backdrop-blur-xl border-b border-white/10">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                </div>
+                <div className="flex-1 flex justify-center">
+                  <div className="px-4 py-1 rounded-lg bg-white/5 border border-white/10 text-xs text-gray-400 max-w-md w-full text-center">
+                    lokus.app/demo
+                  </div>
+                </div>
+              </div>
+
+              {/* Video Content */}
+              <div className="relative aspect-[16/10] bg-zinc-950">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5" />
                 <iframe
                   src="https://app.supademo.com/embed/cmh0jxcz91u6r6nxt6ychgkcg?embed_v=2&utm_source=embed&autoplay=1&muted=1"
                   title="Lokus product walkthrough"
@@ -90,61 +148,36 @@ export function VideoShowcase({ className }: { className?: string }) {
                 />
               </div>
             </div>
-
-            {/* MacBook base */}
-            <div className="relative mx-auto -mt-2 h-10 w-[90%]">
-              <div className="absolute inset-0 rounded-b-[2.5rem] bg-zinc-900" />
-              <div className="absolute left-1/2 top-2 h-2 w-32 -translate-x-1/2 rounded-full bg-zinc-700" />
-              <div className="absolute inset-x-10 bottom-0 h-2 rounded-full bg-black/70 blur-lg" />
-            </div>
           </div>
 
-          {/* Floating badges */}
+          {/* Floating Stats */}
           <motion.div
-            className="absolute -left-20 top-20"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 2.2, repeat: Infinity }}
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="absolute -left-4 md:-left-20 top-1/4 hidden lg:block"
           >
-            <div className="bg-gray-800/80 backdrop-blur-md rounded-lg px-4 py-2 shadow-xl">
-              <p className="text-sm text-gray-300">Native macOS App</p>
+            <div className="bg-zinc-900/80 backdrop-blur-xl rounded-2xl p-4 border border-white/10 shadow-xl">
+              <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+                <span>&lt;10ms</span>
+              </div>
+              <div className="text-xs text-gray-400 mt-1">Response Time</div>
             </div>
           </motion.div>
 
           <motion.div
-            className="absolute -right-20 bottom-40"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2.2, repeat: Infinity, delay: 1 }}
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="absolute -right-4 md:-right-20 bottom-1/4 hidden lg:block"
           >
-            <div className="bg-gray-800/80 backdrop-blur-md rounded-lg px-4 py-2 shadow-xl">
-              <p className="text-sm text-gray-300">Blazing Fast</p>
+            <div className="bg-zinc-900/80 backdrop-blur-xl rounded-2xl p-4 border border-white/10 shadow-xl">
+              <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
+                100%
+              </div>
+              <div className="text-xs text-gray-400 mt-1">Native macOS</div>
             </div>
           </motion.div>
-        </motion.div>
-
-        {/* Features highlight */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-        >
-          {[
-            { title: "Native Performance", desc: "Built with Tauri for maximum speed" },
-            { title: "Beautiful Design", desc: "Crafted specifically for macOS aesthetics" },
-            { title: "Seamless Integration", desc: "Works perfectly with your Mac workflow" }
-          ].map((feature, i) => (
-            <motion.div
-              key={i}
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-              <p className="text-sm text-gray-500">{feature.desc}</p>
-            </motion.div>
-          ))}
         </motion.div>
       </div>
     </section>

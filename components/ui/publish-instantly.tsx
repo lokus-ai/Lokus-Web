@@ -3,8 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Edit3, Search, Zap, FileText, Code, Layers2, Brain, Network } from "lucide-react";
-import { DitheringShader } from "./dithering-shader";
+import { Edit3, Search, Zap, FileText, Code, Brain, Network } from "lucide-react";
 
 const features = [
   {
@@ -13,51 +12,94 @@ const features = [
     title: "Rich Text Editor",
     description: "Powerful TipTap-based editor with markdown support, math equations via KaTeX, and seamless writing experience.",
     visual: (
-      <div className="relative h-full w-full p-8">
-        <div className="space-y-4">
-          {/* TipTap Editor preview */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-200">research-notes.md</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full" />
-                <span className="text-xs text-gray-400">Saved</span>
-              </div>
-            </div>
-            
-            {/* Editor toolbar */}
-            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-700">
-              <motion.button whileHover={{ scale: 1.1 }} className="p-1 rounded text-gray-400 hover:text-gray-200 hover:bg-gray-700">
-                <Code className="w-3 h-3" />
-              </motion.button>
-              <motion.button whileHover={{ scale: 1.1 }} className="p-1 rounded text-gray-400 hover:text-gray-200 hover:bg-gray-700">
-                <span className="text-xs font-bold">B</span>
-              </motion.button>
-              <motion.button whileHover={{ scale: 1.1 }} className="p-1 rounded text-gray-400 hover:text-gray-200 hover:bg-gray-700">
-                <span className="text-xs italic">I</span>
-              </motion.button>
-            </div>
-            
-            {/* Mock editor content with math */}
-            <div className="space-y-2 text-xs text-gray-400">
-              <div className="text-gray-200"># Mathematical Concepts</div>
-              <div className="text-gray-400">The quadratic formula: <span className="bg-gray-700 px-1 rounded text-gray-300">$x = (-b ± √(b²-4ac))/2a$</span></div>
-              <div className="text-gray-400">This connects to [[Linear Algebra]] and [[Calculus]]...</div>
-            </div>
+      <div className="relative h-full w-full bg-[#1e1e1e] rounded-lg overflow-hidden">
+        {/* Header with file info */}
+        <div className="bg-[#2a2a2a] border-b border-[#3a3a3a] px-4 py-2 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <FileText className="w-4 h-4 text-[#7c3aed]" />
+            <span className="text-sm text-[#dcddde] font-medium">research-notes.md</span>
           </div>
-          
-          {/* Math rendering preview */}
-          <div className="bg-gray-900 rounded-lg p-4 border border-gray-800">
-            <div className="flex items-center gap-2 mb-3">
-              <Brain className="w-3 h-3 text-gray-500" />
-              <span className="text-xs text-gray-400">KaTeX Math Rendering</span>
-            </div>
-            <div className="text-center">
-              <div className="text-gray-200 font-serif text-lg">x = (-b ± √(b²-4ac))/2a</div>
-            </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+            <span className="text-xs text-[#888888]">Saved</span>
+          </div>
+        </div>
+
+        {/* Editor toolbar */}
+        <div className="bg-[#2a2a2a] border-b border-[#3a3a3a] px-4 py-2 flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <motion.button 
+              whileHover={{ scale: 1.1 }} 
+              className="w-6 h-6 flex items-center justify-center text-[#888888] hover:text-[#dcddde] hover:bg-[#3a3a3a] rounded"
+            >
+              <span className="font-bold text-sm">B</span>
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.1 }} 
+              className="w-6 h-6 flex items-center justify-center text-[#888888] hover:text-[#dcddde] hover:bg-[#3a3a3a] rounded"
+            >
+              <span className="italic text-sm">I</span>
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Split view editor */}
+        <div className="flex h-[calc(100%-80px)]">
+          {/* Left side - Raw markdown */}
+          <div className="flex-1 bg-[#1e1e1e] p-4 border-r border-[#3a3a3a] font-mono text-sm">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-3 leading-relaxed"
+            >
+              <div className="text-[#7c9cc9]"># Mathematical Concepts</div>
+              <div className="text-[#888888]">
+                <span className="text-[#dcddde]">The quadratic formula: </span>
+                <span className="text-[#ff6b9d]">$x = (-b ± √(b²-4ac))/2a$</span>
+              </div>
+              <div className="text-[#888888]">
+                <span className="text-[#dcddde]">This connects to </span>
+                <span className="text-[#7c3aed]">[[Linear Algebra]]</span>
+                <span className="text-[#dcddde]"> and </span>
+                <span className="text-[#7c3aed]">[[Calculus]]</span>
+                <span className="text-[#888888]">...</span>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right side - Rendered output */}
+          <div className="flex-1 bg-[#1e1e1e] p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="space-y-4"
+            >
+              {/* Header */}
+              <h1 className="text-xl font-bold text-[#dcddde] border-b border-[#3a3a3a] pb-2">
+                Mathematical Concepts
+              </h1>
+
+              {/* Content */}
+              <div className="space-y-3">
+                <p className="text-[#dcddde] text-sm">
+                  The quadratic formula: 
+                </p>
+                
+                {/* KaTeX Math Rendering */}
+                <div className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg p-3 my-3">
+                  <div className="text-xs text-[#888888] mb-2">⟨⟩ KaTeX Math Rendering</div>
+                  <div className="text-center text-[#dcddde] font-serif text-lg">
+                    x = (-b ± √(b²-4ac))/2a
+                  </div>
+                </div>
+
+                <p className="text-[#888888] text-sm">
+                  This connects to <span className="text-[#7c3aed] cursor-pointer hover:underline">Linear Algebra</span> and <span className="text-[#7c3aed] cursor-pointer hover:underline">Calculus</span>...
+                </p>
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -69,57 +111,114 @@ const features = [
     title: "Universal Search",
     description: "Find anything instantly with fuzzy search across all your notes, tags, and content. Search by title, content, or connections.",
     visual: (
-      <div className="relative h-full w-full p-8">
-        <div className="space-y-4">
-          {/* Search interface */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <div className="flex items-center gap-2 mb-3">
-              <Search className="w-4 h-4 text-gray-500" />
+      <div className="relative h-full w-full overflow-hidden">
+        {/* Blurred background with fake content */}
+        <div className="absolute inset-0 bg-[#1e1e1e] p-4">
+          <div className="space-y-3 text-[#888888] text-sm">
+            <div className="h-4 bg-[#2a2a2a] rounded w-3/4"></div>
+            <div className="h-4 bg-[#2a2a2a] rounded w-1/2"></div>
+            <div className="h-4 bg-[#2a2a2a] rounded w-5/6"></div>
+            <div className="h-4 bg-[#2a2a2a] rounded w-2/3"></div>
+            <div className="space-y-2 mt-6">
+              <div className="h-3 bg-[#2a2a2a] rounded w-full"></div>
+              <div className="h-3 bg-[#2a2a2a] rounded w-4/5"></div>
+              <div className="h-3 bg-[#2a2a2a] rounded w-3/4"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Blur overlay */}
+        <div className="absolute inset-0 backdrop-blur-md bg-black/50"></div>
+
+        {/* Command palette centered */}
+        <div className="absolute inset-0 flex items-center justify-center p-8">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="bg-[#2a2a2a]/95 backdrop-blur-xl border border-[#3a3a3a] rounded-2xl w-full max-w-lg shadow-2xl"
+          >
+            {/* Search input */}
+            <div className="flex items-center gap-3 p-4 border-b border-[#3a3a3a]">
+              <Search className="w-5 h-5 text-[#888888]" />
               <input 
                 type="text" 
-                value="machine learning" 
+                value="machine learn" 
                 readOnly
-                className="bg-gray-900 text-sm text-gray-200 px-3 py-2 rounded border border-gray-700 flex-1"
-                placeholder="Search notes, tags, content..."
+                className="bg-transparent text-[#dcddde] placeholder-[#888888] outline-none flex-1 text-lg font-medium"
+                placeholder="Search anything..."
               />
-            </div>
-            
-            {/* Search results */}
-            <div className="space-y-2">
-              <motion.div 
-                className="bg-gray-900 rounded p-3 border border-gray-800 cursor-pointer"
-                whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.5)" }}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-gray-200">Neural Networks</span>
-                  <span className="text-xs text-gray-500">2 days ago</span>
-                </div>
-                <p className="text-xs text-gray-400">...deep learning and <span className="bg-gray-700 text-gray-200 px-1 rounded">machine learning</span> algorithms...</p>
-              </motion.div>
-              
-              <motion.div 
-                className="bg-gray-900 rounded p-3 border border-gray-800 cursor-pointer"
-                whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.5)" }}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-gray-200">AI Research Notes</span>
-                  <span className="text-xs text-gray-500">1 week ago</span>
-                </div>
-                <p className="text-xs text-gray-400">Latest developments in <span className="bg-gray-700 text-gray-200 px-1 rounded">machine learning</span> and reinforcement...</p>
-              </motion.div>
-            </div>
-          </div>
-          
-          {/* Search stats */}
-          <div className="bg-gray-900 rounded p-3 border border-gray-800">
-            <div className="flex items-center justify-between text-xs text-gray-400">
-              <span>Found 8 results in 2ms</span>
-              <div className="flex items-center gap-1">
-                <Network className="w-3 h-3" />
-                <span>3 connected notes</span>
+              <div className="px-2 py-1 bg-[#3a3a3a] rounded text-xs text-[#888888] font-mono">
+                ⌘K
               </div>
             </div>
-          </div>
+
+            {/* Command results */}
+            <div className="p-2 max-h-80 overflow-auto">
+              <div className="space-y-1">
+                {/* Files section */}
+                <div className="px-3 py-1 text-xs text-[#888888] uppercase tracking-wide">Files</div>
+                <motion.div 
+                  className="flex items-center gap-3 px-3 py-3 rounded-lg bg-[#7c3aed]/20 border border-[#7c3aed]/30 cursor-pointer"
+                  whileHover={{ backgroundColor: "rgba(124, 58, 237, 0.3)" }}
+                >
+                  <FileText className="w-4 h-4 text-[#7c3aed]" />
+                  <div className="flex-1">
+                    <div className="text-[#dcddde] text-sm font-medium">Neural Networks.md</div>
+                    <div className="text-[#888888] text-xs">...deep learning and <span className="text-[#7c3aed]">machine learn</span>ing algorithms</div>
+                  </div>
+                  <div className="text-xs text-[#888888]">⏎</div>
+                </motion.div>
+
+                <motion.div 
+                  className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#3a3a3a]/50 cursor-pointer"
+                  whileHover={{ backgroundColor: "rgba(58, 65, 80, 0.5)" }}
+                >
+                  <FileText className="w-4 h-4 text-[#888888]" />
+                  <div className="flex-1">
+                    <div className="text-[#dcddde] text-sm font-medium">AI Research.md</div>
+                    <div className="text-[#888888] text-xs">Latest <span className="text-[#7c3aed]">machine learn</span>ing developments</div>
+                  </div>
+                </motion.div>
+
+                {/* Commands section */}
+                <div className="px-3 py-1 text-xs text-[#888888] uppercase tracking-wide mt-4">Commands</div>
+                <motion.div 
+                  className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#3a3a3a]/50 cursor-pointer"
+                  whileHover={{ backgroundColor: "rgba(58, 65, 80, 0.5)" }}
+                >
+                  <div className="w-4 h-4 flex items-center justify-center text-[#888888] text-xs">⌘</div>
+                  <div className="flex-1">
+                    <div className="text-[#dcddde] text-sm font-medium">Create New Note</div>
+                    <div className="text-[#888888] text-xs">Start a new markdown document</div>
+                  </div>
+                  <div className="text-xs text-[#888888]">⌘N</div>
+                </motion.div>
+
+                <motion.div 
+                  className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#3a3a3a]/50 cursor-pointer"
+                  whileHover={{ backgroundColor: "rgba(58, 65, 80, 0.5)" }}
+                >
+                  <div className="w-4 h-4 flex items-center justify-center text-[#888888] text-xs">🎨</div>
+                  <div className="flex-1">
+                    <div className="text-[#dcddde] text-sm font-medium">Change Theme</div>
+                    <div className="text-[#888888] text-xs">Switch between color themes</div>
+                  </div>
+                  <div className="text-xs text-[#888888]">⌘T</div>
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-between px-4 py-3 border-t border-[#3a3a3a] text-xs text-[#888888]">
+              <span>8 results</span>
+              <div className="flex items-center gap-4">
+                <span>↑↓ navigate</span>
+                <span>⏎ select</span>
+                <span>esc close</span>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     )
@@ -130,67 +229,106 @@ const features = [
     title: "Native Performance",
     description: "Built with Tauri and Rust for lightning-fast startup, minimal resource usage, and smooth experience even with thousands of notes.",
     visual: (
-      <div className="relative h-full w-full p-8">
-        <div className="space-y-4">
-          {/* Performance metrics */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <h4 className="text-sm font-medium text-gray-200 mb-4">System Performance</h4>
-            <div className="space-y-3">
-              {[
-                { label: "Startup Time", score: "0.8s", color: "bg-green-500" },
-                { label: "Memory Usage", score: "45MB", color: "bg-green-500" },
-                { label: "Search Speed", score: "<10ms", color: "bg-green-500" },
-                { label: "File Operations", score: "Native", color: "bg-green-500" }
-              ].map((metric, i) => (
-                <div key={metric.label} className="flex justify-between items-center">
-                  <span className="text-xs text-gray-400">{metric.label}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-300 font-mono">{metric.score}</span>
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.3, delay: i * 0.1 }}
-                      className="w-2 h-2 bg-green-500 rounded-full"
-                    />
-                  </div>
-                </div>
-              ))}
+      <div className="relative h-full w-full bg-[#0a0a0a] overflow-hidden">
+        {/* Performance Monitor Interface */}
+        <div className="p-6 h-full">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-[#dcddde] text-sm font-medium">System Monitor</span>
+            </div>
+            <div className="text-xs text-[#888888]">Lokus v1.2.0</div>
+          </div>
+
+          {/* Real-time metrics */}
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            {/* CPU Usage */}
+            <div className="bg-gradient-to-br from-[#1e1e1e] to-[#2a2a2a] rounded-lg p-4 border border-[#3a3a3a]">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-[#888888]">CPU</span>
+                <span className="text-xs text-green-400 font-mono">3.2%</span>
+              </div>
+              <div className="w-full bg-[#3a3a3a] rounded-full h-2">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: "3.2%" }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full"
+                />
+              </div>
+            </div>
+
+            {/* Memory Usage */}
+            <div className="bg-gradient-to-br from-[#1e1e1e] to-[#2a2a2a] rounded-lg p-4 border border-[#3a3a3a]">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-[#888888]">Memory</span>
+                <span className="text-xs text-blue-400 font-mono">42MB</span>
+              </div>
+              <div className="w-full bg-[#3a3a3a] rounded-full h-2">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: "8%" }}
+                  transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+                  className="h-full bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full"
+                />
+              </div>
             </div>
           </div>
-          
-          {/* Technology stack */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <h4 className="text-sm font-medium text-gray-200 mb-3">Technology Stack</h4>
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded flex items-center justify-center">
-                  <span className="text-xs font-bold text-white">R</span>
+
+          {/* Performance stats */}
+          <div className="space-y-3">
+            {[
+              { label: "Startup Time", value: "0.8s", icon: "⚡", color: "text-yellow-400" },
+              { label: "Search Index", value: "2,847 notes", icon: "🔍", color: "text-purple-400" },
+              { label: "Response Time", value: "<10ms", icon: "🚀", color: "text-green-400" },
+              { label: "Native APIs", value: "Enabled", icon: "⚙️", color: "text-blue-400" }
+            ].map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="flex items-center justify-between p-3 bg-[#1e1e1e] border border-[#3a3a3a] rounded-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-lg">{stat.icon}</span>
+                  <span className="text-sm text-[#dcddde]">{stat.label}</span>
                 </div>
-                <div>
-                  <p className="text-xs font-medium text-gray-200">Rust Backend</p>
-                  <p className="text-[10px] text-gray-500">Memory safety & performance</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded flex items-center justify-center">
-                  <span className="text-xs font-bold text-white">T</span>
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-gray-200">Tauri Framework</p>
-                  <p className="text-[10px] text-gray-500">Native desktop integration</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-500 rounded flex items-center justify-center">
-                  <span className="text-xs font-bold text-white">R</span>
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-gray-200">React Frontend</p>
-                  <p className="text-[10px] text-gray-500">Modern UI components</p>
-                </div>
-              </div>
+                <span className={`text-sm font-mono ${stat.color}`}>{stat.value}</span>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Technology badges */}
+          <div className="mt-6 flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-full px-3 py-1">
+              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+              <span className="text-xs text-orange-400 font-medium">Rust</span>
+            </div>
+            <div className="flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 rounded-full px-3 py-1">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span className="text-xs text-blue-400 font-medium">Tauri</span>
+            </div>
+            <div className="flex items-center gap-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-full px-3 py-1">
+              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <span className="text-xs text-purple-400 font-medium">Native</span>
+            </div>
+          </div>
+
+          {/* Live graph simulation */}
+          <div className="mt-6 bg-[#1e1e1e] border border-[#3a3a3a] rounded-lg p-4">
+            <div className="text-xs text-[#888888] mb-3">Performance Over Time</div>
+            <div className="flex items-end justify-between h-16 gap-1">
+              {Array.from({ length: 20 }, (_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ height: 0 }}
+                  animate={{ height: `${Math.random() * 60 + 20}%` }}
+                  transition={{ duration: 0.5, delay: i * 0.05 }}
+                  className="bg-gradient-to-t from-green-400/50 to-green-400 rounded-t w-2"
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -201,34 +339,9 @@ const features = [
 
 export function PowerfulFeatures({ className }: { className?: string }) {
   const [activeFeature, setActiveFeature] = useState("editing");
-  const [shaderInView, setShaderInView] = useState(false);
 
   return (
-    <section className={cn("relative py-24 bg-gradient-to-b from-black to-gray-900/20 overflow-hidden", className)}>
-      {/* Dithering Shader Background */}
-      <motion.div
-        className="absolute inset-0"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 0.2 }}
-        onViewportEnter={() => setShaderInView(true)}
-        onViewportLeave={() => setShaderInView(false)}
-        viewport={{ once: false, margin: "-30%" }}
-        transition={{ duration: 2 }}
-      >
-        {shaderInView && (
-          <DitheringShader
-            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
-            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
-            shape="sphere"
-            type="8x8"
-            colorBack="#000000"
-            colorFront="#4a1a1a"
-            pxSize={6}
-            speed={0.3}
-            className="w-full h-full"
-          />
-        )}
-      </motion.div>
+    <section className={cn("relative py-24 bg-black overflow-hidden", className)}>
 
       <div className="container max-w-7xl mx-auto px-4 relative z-10">
         {/* Header */}
@@ -250,59 +363,8 @@ export function PowerfulFeatures({ className }: { className?: string }) {
 
         {/* Interactive Features */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Dynamic Visual (Left on this section) */}
-          <div className="relative lg:sticky lg:top-32 order-2 lg:order-1">
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="relative bg-gradient-to-b from-gray-900 to-black border border-gray-800 rounded-2xl overflow-hidden h-[450px]"
-            >
-              {/* Image container - Replace this with your uploaded image */}
-              <div className="absolute inset-0 bg-gradient-to-bl from-gray-800/20 to-gray-900/40">
-                {/* TODO: Replace with your image:
-                    <Image 
-                      src="/images/sections/powerful-features.png" 
-                      alt="Lokus Powerful Features Interface"
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                */}
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="text-gray-600 text-sm text-center">
-                  </div>
-                </div>
-              </div>
-              <AnimatePresence mode="wait">
-                {features.map((feature) => 
-                  activeFeature === feature.id && (
-                    <motion.div
-                      key={feature.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute inset-0"
-                    >
-                      {feature.visual}
-                    </motion.div>
-                  )
-                )}
-              </AnimatePresence>
-              
-              {/* Decorative elements */}
-              <div className="absolute top-4 left-4">
-                <Layers2 className="w-5 h-5 text-gray-700" />
-              </div>
-              <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-gradient-to-br from-gray-800/20 to-gray-900/20 rounded-full blur-3xl" />
-              <div className="absolute -top-12 -right-12 w-28 h-28 bg-gradient-to-br from-gray-700/20 to-gray-800/20 rounded-full blur-3xl" />
-            </motion.div>
-          </div>
-
-          {/* Feature List (Right on this section) */}
-          <div className="space-y-6 order-1 lg:order-2">
+          {/* Feature List */}
+          <div className="space-y-6">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               const isActive = activeFeature === feature.id;
@@ -310,34 +372,34 @@ export function PowerfulFeatures({ className }: { className?: string }) {
               return (
                 <motion.div
                   key={feature.id}
-                  initial={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   onMouseEnter={() => setActiveFeature(feature.id)}
                   className={cn(
                     "group relative p-6 rounded-xl cursor-pointer transition-all duration-300",
-                    isActive 
-                      ? "bg-gradient-to-l from-gray-800/50 to-gray-900/50 border border-gray-700" 
-                      : "hover:bg-gray-900/30"
+                    isActive
+                      ? "bg-white/5 border border-white/10"
+                      : "hover:bg-white/[0.02]"
                   )}
                 >
                   {/* Active indicator */}
                   {isActive && (
                     <motion.div
                       layoutId="featuresActiveIndicator"
-                      className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-gradient-to-b from-gray-400 to-gray-600 rounded-l"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-white rounded-r"
                     />
                   )}
                   
                   <div className="flex items-start gap-4">
                     <div className={cn(
                       "p-3 rounded-lg transition-colors",
-                      isActive ? "bg-gray-700/50" : "bg-gray-800/50 group-hover:bg-gray-700/50"
+                      isActive ? "bg-white/10" : "bg-white/5 group-hover:bg-white/10"
                     )}>
                       <Icon className={cn(
                         "w-6 h-6 transition-colors",
-                        isActive ? "text-gray-200" : "text-gray-400 group-hover:text-gray-300"
+                        isActive ? "text-white" : "text-gray-400 group-hover:text-gray-300"
                       )} />
                     </div>
                     <div className="flex-1">
@@ -358,6 +420,34 @@ export function PowerfulFeatures({ className }: { className?: string }) {
                 </motion.div>
               );
             })}
+          </div>
+
+          {/* Dynamic Visual */}
+          <div className="relative lg:sticky lg:top-32">
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="relative bg-black border border-white/10 rounded-2xl overflow-hidden h-[500px] shadow-2xl"
+            >
+              <AnimatePresence mode="wait">
+                {features.map((feature) =>
+                  activeFeature === feature.id && (
+                    <motion.div
+                      key={feature.id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3 }}
+                      className="absolute inset-0"
+                    >
+                      {feature.visual}
+                    </motion.div>
+                  )
+                )}
+              </AnimatePresence>
+            </motion.div>
           </div>
         </div>
       </div>

@@ -1,12 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import React, { useRef, useState } from "react";
+import React from "react";
 import { cn } from "@/lib/utils";
 import { Link2, GitBranch, Layers, Puzzle } from "lucide-react";
 import { ForceGraph } from "./force-graph";
 import { DraggableCanvas } from "./draggable-canvas";
-import { DitheringShader } from "./dithering-shader";
 
 const features = [
   {
@@ -147,36 +146,11 @@ const features = [
 ];
 
 export function SparkIdeas({ className }: { className?: string }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isInView, setIsInView] = useState(false);
-
   return (
-    <section ref={containerRef} className={cn("relative py-24 bg-black overflow-hidden", className)}>
-      {/* Animated Dithering Shader Background */}
-      <motion.div
-        className="absolute inset-0"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 0.4 }}
-        onViewportEnter={() => setIsInView(true)}
-        onViewportLeave={() => setIsInView(false)}
-        viewport={{ once: false, margin: "-20%" }}
-        transition={{ duration: 1.5 }}
-      >
-        {isInView && (
-          <DitheringShader
-            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
-            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
-            shape="wave"
-            type="8x8"
-            colorBack="#000000"
-            colorFront="#444444"
-            pxSize={3}
-            speed={0.3}
-            className="w-full h-full"
-          />
-        )}
-      </motion.div>
-      
+    <section className={cn("relative py-24 bg-black overflow-hidden", className)}>
+      {/* Subtle background */}
+      <div className="absolute inset-0 bg-grid-white/[0.01] bg-[size:50px_50px]" />
+
       <div className="container max-w-7xl mx-auto px-4 relative z-10">
         {/* Header */}
         <motion.div

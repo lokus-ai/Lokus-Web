@@ -24,25 +24,23 @@ const universities = [
     logo: "/logos/universities/Princeton_Tigers_logo.svg.png"
   },
   { 
-    name: "UC Santa Cruz",
-    logo: "/logos/universities/UCSC.png"
-  },
-  { 
     name: "UMass Amherst",
     logo: "/logos/universities/UMass_Amherst_athletics_logo.svg.png"
-  },
-  {
-    name: "Santa Cruz",
-    logo: "/logos/universities/santa_cruz_logo.png"
   }
 ];
 
 export function UsedBy({ className }: { className?: string }) {
   const duplicatedUniversities = [...universities, ...universities, ...universities];
   const [shaderInView, setShaderInView] = useState(false);
+  const [sectionInView, setSectionInView] = useState(false);
 
   return (
-    <section className={cn("relative py-24 bg-black overflow-hidden", className)}>
+    <motion.section 
+      className={cn("relative py-24 bg-black overflow-hidden", className)}
+      onViewportEnter={() => setSectionInView(true)}
+      onViewportLeave={() => setSectionInView(false)}
+      viewport={{ once: false, margin: "-20%" }}
+    >
       {/* Dithering Shader Background */}
       <motion.div
         className="absolute inset-0"
@@ -126,7 +124,12 @@ export function UsedBy({ className }: { className?: string }) {
                 transition={{ duration: 0.5, delay: (index % universities.length) * 0.05 }}
               >
                 <div className="relative">
-                  <div className="relative w-24 h-24 grayscale opacity-60 group-hover/item:grayscale-0 group-hover/item:opacity-100 transition-all duration-300">
+                  <div className={cn(
+                    "relative w-24 h-24 transition-all duration-500",
+                    sectionInView 
+                      ? "grayscale-0 opacity-90 group-hover/item:opacity-100 group-hover/item:scale-110" 
+                      : "grayscale opacity-40 group-hover/item:grayscale-0 group-hover/item:opacity-100"
+                  )}>
                     <Image 
                       src={uni.logo} 
                       alt={`${uni.name} logo`}
@@ -150,6 +153,6 @@ export function UsedBy({ className }: { className?: string }) {
           <div className="h-[1px] bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

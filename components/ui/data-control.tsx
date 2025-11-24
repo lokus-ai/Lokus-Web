@@ -3,8 +3,162 @@
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FolderOpen, GitBranch, Shield, Palette, FileText } from "lucide-react";
-import { DitheringShader } from "./dithering-shader";
+import { FolderOpen, FileText, Palette, ChevronRight, Search, Settings, BookOpen, Files, LayoutGrid, Puzzle, Database, Network, Calendar, Mail } from "lucide-react";
+import { Logo } from "./logo";
+
+const folderContents = {
+  "Classes": ["Math 101.md", "Physics Notes.md", "Chemistry Lab.md"],
+  "Daily Notes": ["2024-01-15.md", "2024-01-14.md", "2024-01-13.md"],
+  "Data Structure And Algorithm": ["Binary Trees.md", "Graphs.md", "Sorting.md"],
+  "Hackathon": ["Ideas.md", "Team Notes.md", "Schedule.md"],
+  "Images": ["diagram.png", "screenshot.jpg"]
+};
+
+const generateExplorerVisual = (openFolders: Set<string>, toggleFolder: (folder: string) => void) => (
+  <div className="relative h-full w-full">
+    {/* Lokus-style file explorer */}
+    <div className="h-full bg-[#2c3340] rounded-lg overflow-hidden flex">
+      {/* Full Sidebar */}
+      <div className="w-16 bg-[#262b35] border-r border-[#1a1e27] flex flex-col items-center py-4 gap-2">
+        {/* Logo at top */}
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          className="mb-6 cursor-pointer"
+        >
+          <Logo size={28} animated={false} />
+        </motion.div>
+
+        {/* Navigation Icons */}
+        {[
+          { icon: Files, label: 'Files', id: 'files' },
+          { icon: LayoutGrid, label: 'Dashboard', id: 'dashboard' },
+          { icon: Puzzle, label: 'Extensions', id: 'extensions' },
+          { icon: Database, label: 'Database', id: 'database' },
+          { icon: Network, label: 'Network', id: 'network' },
+          { icon: Calendar, label: 'Calendar', id: 'calendar' },
+          { icon: Mail, label: 'Mail', id: 'mail' },
+        ].map((item, index) => {
+          const Icon = item.icon;
+          const isActive = index === 0; // Make first item active for demo
+          
+          return (
+            <motion.button
+              key={item.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className={`relative w-12 h-10 rounded-lg flex items-center justify-center transition-all group ${
+                isActive
+                  ? 'bg-cyan-400/20 text-cyan-400 shadow-lg'
+                  : 'text-gray-500 hover:bg-[#3a4150] hover:text-gray-300'
+              }`}
+            >
+              {/* Active indicator */}
+              {isActive && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-cyan-400 rounded-r-full" />
+              )}
+              
+              <Icon className="w-4 h-4" />
+            </motion.button>
+          );
+        })}
+
+        {/* Bottom indicator */}
+        <div className="mt-auto pt-4 border-t border-[#1a1e27] w-full flex justify-center">
+          <div className="w-1.5 h-1.5 rounded-full bg-cyan-400/50 animate-pulse" />
+        </div>
+      </div>
+
+      {/* File explorer content */}
+      <div className="flex-1 relative">
+        {/* Custom scrollable area with styled scrollbar */}
+        <div className="h-full overflow-hidden hover:overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-600 hover:scrollbar-thumb-gray-500 scrollbar-thumb-rounded-full">
+          <div className="p-3 border-b border-[#1a1e27] flex items-center justify-between sticky top-0 bg-[#2c3340] z-10 backdrop-blur-sm">
+            <span className="text-xs font-semibold text-gray-300 tracking-wider">EXPLORER</span>
+            <button className="text-gray-500 hover:text-gray-300 hover:bg-[#3a4150]/50 rounded p-1 transition-colors">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="p-3 space-y-1 text-sm">
+          {/* Folders */}
+          {Object.keys(folderContents).map((folder, i) => {
+            const isOpen = openFolders.has(folder);
+            return (
+              <div key={folder}>
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-[#3a4150]/30 rounded-md cursor-pointer group transition-all duration-200"
+                  onClick={() => toggleFolder(folder)}
+                >
+                  <motion.div
+                    animate={{ rotate: isOpen ? 90 : 0 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="flex-shrink-0"
+                  >
+                    <ChevronRight className="w-3 h-3 text-gray-500 group-hover:text-cyan-400 transition-colors" />
+                  </motion.div>
+                  <FolderOpen className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                  <span className="text-sm font-medium truncate group-hover:text-white transition-colors">{folder}</span>
+                </motion.div>
+
+                {/* Folder contents */}
+                {isOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className="ml-6 space-y-0.5 border-l border-[#3a4150]/50 pl-3 py-1"
+                  >
+                    {folderContents[folder as keyof typeof folderContents].map((file, fileIndex) => (
+                      <motion.div
+                        key={file}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: fileIndex * 0.03 }}
+                        className="flex items-center gap-2.5 px-2.5 py-1.5 text-gray-400 hover:bg-[#3a4150]/20 rounded cursor-pointer group transition-all duration-150"
+                      >
+                        <FileText className="w-3 h-3 text-purple-400 flex-shrink-0" />
+                        <span className="text-xs truncate group-hover:text-gray-200 transition-colors">{file}</span>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </div>
+            );
+          })}
+
+          {/* Root-level Files */}
+          {[
+            "AI Tools For University.md",
+            "Claude Research on 100 Profs.md",
+            "Daily_Task_kanban",
+            "Hackathon Guide.md",
+            "Meeting Notes - Product Review.md"
+          ].map((file, i) => (
+            <motion.div
+              key={file}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: (i + Object.keys(folderContents).length) * 0.05 }}
+              className="flex items-center gap-3 px-3 py-2 text-gray-400 hover:bg-[#3a4150]/20 rounded-md cursor-pointer group transition-all duration-150"
+            >
+              <FileText className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
+              <span className="text-sm truncate group-hover:text-gray-200 transition-colors font-medium">{file}</span>
+            </motion.div>
+          ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 const features = [
   {
@@ -12,131 +166,86 @@ const features = [
     icon: FolderOpen,
     title: "Local-First Architecture",
     description: "Your notes are stored as markdown files on your device. No cloud, no tracking - just you and your data.",
-    visual: (
-      <div className="relative h-full w-full p-6">
-        <div className="h-full flex flex-col">
-          {/* File explorer mockup */}
-          <div className="bg-gray-800 rounded-lg border border-gray-700 flex-1 overflow-hidden">
-            <div className="bg-gray-900 px-4 py-2 border-b border-gray-700">
-              <div className="flex items-center gap-2">
-                <FolderOpen className="w-4 h-4 text-gray-500" />
-                <span className="text-xs text-gray-400">~/Documents/Lokus-Notes</span>
-              </div>
-            </div>
-            <div className="p-4 space-y-2">
-              {/* Folder structure */}
-              <div className="flex items-center gap-2 text-gray-400 hover:text-gray-300 cursor-pointer">
-                <motion.div whileHover={{ x: 2 }}>
-                  <FolderOpen className="w-4 h-4" />
-                </motion.div>
-                <span className="text-sm">Projects/</span>
-              </div>
-              <div className="ml-6 space-y-2">
-                <motion.div 
-                  className="flex items-center gap-2 text-gray-400 hover:text-gray-300 cursor-pointer"
-                  whileHover={{ x: 2 }}
-                >
-                  <FileText className="w-4 h-4" />
-                  <span className="text-sm">project-overview.md</span>
-                </motion.div>
-                <motion.div 
-                  className="flex items-center gap-2 text-gray-400 hover:text-gray-300 cursor-pointer"
-                  whileHover={{ x: 2 }}
-                >
-                  <FileText className="w-4 h-4" />
-                  <span className="text-sm">[[meeting-notes]].md</span>
-                </motion.div>
-              </div>
-              <div className="flex items-center gap-2 text-gray-400 hover:text-gray-300 cursor-pointer">
-                <motion.div whileHover={{ x: 2 }}>
-                  <FolderOpen className="w-4 h-4" />
-                </motion.div>
-                <span className="text-sm">Daily Notes/</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-400 hover:text-gray-300 cursor-pointer">
-                <motion.div whileHover={{ x: 2 }}>
-                  <FolderOpen className="w-4 h-4" />
-                </motion.div>
-                <span className="text-sm">Templates/</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Git integration hint */}
-          <div className="mt-4 bg-gray-800/50 rounded p-3 border border-gray-700/50">
-            <div className="flex items-center gap-2 text-xs text-gray-400">
-              <GitBranch className="w-3 h-3" />
-              <span>Works perfectly with Git version control</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    visual: null // Will be generated dynamically
   },
   {
-    id: "privacy",
-    icon: Shield,
-    title: "Complete Privacy",
-    description: "No telemetry, no analytics, no cloud sync unless you want it. Your notes never leave your device.",
+    id: "editor",
+    icon: FileText,
+    title: "Beautiful Editor",
+    description: "Rich markdown editor with live preview, outline view, and backlinks. Write in comfort with a distraction-free interface.",
     visual: (
-      <div className="relative h-full w-full p-6">
-        <div className="space-y-4">
-          {/* Privacy shield */}
-          <div className="flex justify-center">
-            <div className="relative">
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.1, 1],
-                  opacity: [0.3, 0.5, 0.3]
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-                className="absolute inset-0 bg-gradient-to-r from-gray-600/20 to-gray-700/20 rounded-full blur-xl"
-              />
-              <Shield className="w-24 h-24 text-gray-400 relative z-10" />
-            </div>
+      <div className="relative h-full w-full bg-[#2b2d30] rounded-lg overflow-hidden">
+        {/* Tab bar */}
+        <div className="bg-[#1e1e1e] border-b border-[#3a3a3a] px-3 py-2 flex items-center">
+          <div className="flex items-center gap-2 px-3 py-1 bg-[#2b2d30] rounded-t text-xs text-gray-300">
+            <span>Mermaid.md</span>
           </div>
-          
-          {/* Privacy features */}
-          <div className="space-y-3">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-gray-800 rounded p-3 border border-gray-700 flex items-center gap-3"
+        </div>
+
+        <div className="flex h-[calc(100%-40px)]">
+          {/* Editor content */}
+          <div className="flex-1 p-6 overflow-auto">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
             >
-              <div className="w-2 h-2 bg-green-500 rounded-full" />
-              <span className="text-sm text-gray-300">No cloud storage required</span>
+              <h1 className="text-3xl font-bold text-white mb-6">Mermaid</h1>
+
+              <div className="space-y-4 text-gray-300">
+                <h2 className="text-xl font-semibold text-white border-b border-gray-700 pb-2">
+                  Complete Markdown & Mermaid Test Document
+                </h2>
+
+                <p className="text-sm leading-relaxed">
+                  This document contains <span className="font-semibold text-white">ALL</span> markdown syntax examples and various mermaid diagram types for testing purposes.
+                </p>
+
+                <h3 className="text-lg font-semibold text-white mt-6">1. Headers (H1 through H6)</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="font-semibold text-white">H1 - Largest Header</div>
+                  <div className="text-base">H2 - Second Level</div>
+                  <div className="text-sm">H3 - Third Level</div>
+                </div>
+              </div>
             </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-gray-800 rounded p-3 border border-gray-700 flex items-center gap-3"
-            >
-              <div className="w-2 h-2 bg-green-500 rounded-full" />
-              <span className="text-sm text-gray-300">No telemetry or tracking</span>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-gray-800 rounded p-3 border border-gray-700 flex items-center gap-3"
-            >
-              <div className="w-2 h-2 bg-green-500 rounded-full" />
-              <span className="text-sm text-gray-300">Your data stays on your device</span>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-              className="bg-gray-800 rounded p-3 border border-gray-700 flex items-center gap-3"
-            >
-              <div className="w-2 h-2 bg-green-500 rounded-full" />
-              <span className="text-sm text-gray-300">Open source and auditable</span>
-            </motion.div>
+          </div>
+
+          {/* Right sidebar */}
+          <div className="w-56 bg-[#252628] border-l border-[#3a3a3a] p-3 space-y-4">
+            <div>
+              <div className="text-xs font-semibold text-gray-400 mb-2">EDITOR MODE</div>
+              <div className="flex gap-1">
+                <button className="flex-1 px-3 py-1.5 bg-cyan-400 text-black text-xs font-medium rounded">
+                  Edit
+                </button>
+                <button className="flex-1 px-3 py-1.5 bg-transparent text-gray-400 text-xs rounded hover:bg-[#3a3a3a]">
+                  Live
+                </button>
+                <button className="flex-1 px-3 py-1.5 bg-transparent text-gray-400 text-xs rounded hover:bg-[#3a3a3a]">
+                  Read
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div className="text-xs font-semibold text-gray-400 mb-2">OUTLINE</div>
+              <div className="space-y-1 text-xs text-gray-400">
+                <div className="hover:text-gray-300 cursor-pointer">1. Headers (H1 through H6)</div>
+                <div className="pl-3 hover:text-gray-300 cursor-pointer">H1 - Largest Header</div>
+                <div className="pl-3 hover:text-gray-300 cursor-pointer">H2 - Second Level</div>
+                <div className="pl-3 hover:text-gray-300 cursor-pointer">H3 - Third Level</div>
+              </div>
+            </div>
+
+            <div>
+              <div className="text-xs font-semibold text-gray-400 mb-2">BACKLINKS</div>
+              <input
+                type="text"
+                placeholder="Filter backlinks..."
+                className="w-full bg-[#1e1e1e] border border-[#3a3a3a] rounded px-2 py-1 text-xs text-gray-400 placeholder-gray-600"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -146,76 +255,77 @@ const features = [
     id: "customization",
     icon: Palette,
     title: "Live Theme Editor",
-    description: "Real-time theme customization with instant preview. Change colors, fonts, and spacing on the fly.",
+    description: "Real-time theme customization with instant preview. Change colors, fonts, and spacing on the fly with our powerful theme engine.",
     visual: (
-      <div className="relative h-full w-full p-6">
-        <div className="bg-gray-800 rounded-lg border border-gray-700 p-4 h-full">
-          {/* Theme editor mockup */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium text-gray-200">Theme Editor</h4>
-            
-            {/* Color pickers */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-400">Background</span>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-gray-900 rounded border border-gray-600" />
-                  <code className="text-xs text-gray-500">#0A0A0A</code>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-400">Text Color</span>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-gray-300 rounded border border-gray-600" />
-                  <code className="text-xs text-gray-500">#E5E5E5</code>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-400">Accent</span>
-                <div className="flex items-center gap-2">
-                  <motion.div 
-                    className="w-6 h-6 bg-gray-500 rounded border border-gray-600"
-                    animate={{ backgroundColor: ["#6B7280", "#8B92A0", "#6B7280"] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  />
-                  <code className="text-xs text-gray-500">#6B7280</code>
-                </div>
-              </div>
-            </div>
-            
-            {/* Font settings */}
-            <div className="pt-3 border-t border-gray-700">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-400">Font Family</span>
-                  <select className="bg-gray-900 text-xs text-gray-300 px-2 py-1 rounded border border-gray-700">
-                    <option>Inter</option>
-                    <option>JetBrains Mono</option>
-                    <option>SF Pro</option>
-                  </select>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-400">Font Size</span>
-                  <div className="flex items-center gap-2">
-                    <input 
-                      type="range" 
-                      className="w-20 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                      defaultValue="16"
-                    />
-                    <span className="text-xs text-gray-500">16px</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Live preview hint */}
-            <div className="bg-gray-900 rounded p-2 text-center">
-              <span className="text-xs text-gray-500">Changes apply instantly</span>
+      <div className="relative h-full w-full bg-gradient-to-br from-[#1a1e27] to-[#0d1117] rounded-lg overflow-hidden">
+        <div className="h-full flex flex-col p-4">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-white">THEME</h3>
+            <div className="flex gap-2">
+              <button className="px-3 py-1 bg-transparent border border-[#30363d] text-[#7c9cc9] text-xs rounded hover:bg-[#30363d]/20 transition-colors">
+                Upload
+              </button>
+              <button className="px-3 py-1 bg-transparent border border-[#30363d] text-[#7c9cc9] text-xs rounded hover:bg-[#30363d]/20 transition-colors">
+                Export
+              </button>
             </div>
           </div>
+
+          <select className="w-full bg-[#21262d] border border-[#30363d] text-[#f0f6fc] rounded px-3 py-2 text-sm mb-3 focus:border-[#58a6ff] transition-colors">
+            <option className="bg-[#21262d] text-[#f0f6fc]">Nord</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">Dracula</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">Tokyo Night</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">Catppuccin</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">Gruvbox</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">One Dark</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">Material</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">GitHub Dark</option>
+          </select>
+
+          <div className="text-xs text-[#7c9cc9] mb-3">Edit colors and save changes to the theme file</div>
+
+          <div className="border border-[#30363d] rounded overflow-hidden flex-1 flex flex-col">
+            <div className="grid grid-cols-3 gap-px bg-[#30363d]">
+              <div className="bg-[#21262d] px-2 py-1.5 text-xs font-semibold text-[#f0f6fc]">TOKEN</div>
+              <div className="bg-[#21262d] px-2 py-1.5 text-xs font-semibold text-[#f0f6fc]">PREVIEW</div>
+              <div className="bg-[#21262d] px-2 py-1.5 text-xs font-semibold text-[#f0f6fc]">VALUE</div>
+            </div>
+
+            <div className="flex-1 overflow-auto">
+              <div className="space-y-px bg-[#30363d]">
+                {[
+                  { name: "--primary", color: "bg-[#58a6ff]", value: "88 166 255" },
+                  { name: "--background", color: "bg-[#0d1117]", value: "13 17 23" },
+                  { name: "--surface", color: "bg-[#21262d]", value: "33 38 45" },
+                  { name: "--border", color: "bg-[#30363d]", value: "48 54 61" },
+                  { name: "--success", color: "bg-[#238636]", value: "35 134 54" },
+                  { name: "--warning", color: "bg-[#d29922]", value: "210 153 34" },
+                ].map((item, i) => (
+                  <motion.div
+                    key={item.name}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.06 }}
+                    className="grid grid-cols-3 gap-px bg-[#30363d]"
+                  >
+                    <div className="bg-[#21262d] px-2 py-2 text-xs text-[#7c9cc9] font-mono">{item.name}</div>
+                    <div className="bg-[#21262d] px-2 py-2 flex items-center justify-center">
+                      <div className={`w-5 h-5 rounded ${item.color} border border-[#30363d]`} />
+                    </div>
+                    <div className="bg-[#21262d] px-2 py-2">
+                      <div className="border border-[#30363d] rounded px-2 py-1 text-xs text-[#58a6ff] font-mono bg-[#0d1117]/50">
+                        {item.value}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <button className="w-full mt-3 px-4 py-2 bg-[#238636] text-white text-sm font-semibold rounded hover:bg-[#2ea043] transition-colors">
+            Save Changes
+          </button>
         </div>
       </div>
     )
@@ -224,34 +334,22 @@ const features = [
 
 export function DataControl({ className }: { className?: string }) {
   const [activeFeature, setActiveFeature] = useState("local");
-  const [shaderInView, setShaderInView] = useState(false);
+  const [openFolders, setOpenFolders] = useState<Set<string>>(new Set(["Classes", "Daily Notes"]));
+
+  const toggleFolder = (folder: string) => {
+    const newOpenFolders = new Set(openFolders);
+    if (newOpenFolders.has(folder)) {
+      newOpenFolders.delete(folder);
+    } else {
+      newOpenFolders.add(folder);
+    }
+    setOpenFolders(newOpenFolders);
+  };
 
   return (
     <section className={cn("relative py-24 bg-black overflow-hidden", className)}>
-      {/* Dithering Shader Background */}
-      <motion.div
-        className="absolute inset-0"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 0.35 }}
-        onViewportEnter={() => setShaderInView(true)}
-        onViewportLeave={() => setShaderInView(false)}
-        viewport={{ once: false, margin: "-30%" }}
-        transition={{ duration: 2 }}
-      >
-        {shaderInView && (
-          <DitheringShader
-            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
-            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
-            shape="swirl"
-            type="4x4"
-            colorBack="#000000"
-            colorFront="#1a4a1a"
-            pxSize={3}
-            speed={0.5}
-            className="w-full h-full"
-          />
-        )}
-      </motion.div>
+      {/* Subtle background */}
+      <div className="absolute inset-0 bg-grid-white/[0.01] bg-[size:50px_50px]" />
 
       <div className="container max-w-7xl mx-auto px-4 relative z-10">
         {/* Header */}
@@ -262,11 +360,11 @@ export function DataControl({ className }: { className?: string }) {
           transition={{ duration: 0.8 }}
           className="text-center mb-16 pt-16"
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent">
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">
             Your data, your control.
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Local-first architecture means your notes never leave your device. 
+            Local-first architecture means your notes never leave your device.
             Complete privacy, zero tracking, full ownership.
           </p>
         </motion.div>
@@ -278,7 +376,7 @@ export function DataControl({ className }: { className?: string }) {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               const isActive = activeFeature === feature.id;
-              
+
               return (
                 <motion.div
                   key={feature.id}
@@ -289,27 +387,27 @@ export function DataControl({ className }: { className?: string }) {
                   onMouseEnter={() => setActiveFeature(feature.id)}
                   className={cn(
                     "group relative p-6 rounded-xl cursor-pointer transition-all duration-300",
-                    isActive 
-                      ? "bg-gradient-to-r from-gray-800/50 to-gray-900/50 border border-gray-700" 
-                      : "hover:bg-gray-900/30"
+                    isActive
+                      ? "bg-white/5 border border-white/10"
+                      : "hover:bg-white/[0.02]"
                   )}
                 >
                   {/* Active indicator */}
                   {isActive && (
                     <motion.div
                       layoutId="activeIndicator"
-                      className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-gradient-to-b from-gray-400 to-gray-600 rounded-r"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-white rounded-r"
                     />
                   )}
-                  
+
                   <div className="flex items-start gap-4">
                     <div className={cn(
                       "p-3 rounded-lg transition-colors",
-                      isActive ? "bg-gray-700/50" : "bg-gray-800/50 group-hover:bg-gray-700/50"
+                      isActive ? "bg-white/10" : "bg-white/5 group-hover:bg-white/10"
                     )}>
                       <Icon className={cn(
                         "w-6 h-6 transition-colors",
-                        isActive ? "text-gray-200" : "text-gray-400 group-hover:text-gray-300"
+                        isActive ? "text-white" : "text-gray-400 group-hover:text-gray-300"
                       )} />
                     </div>
                     <div className="flex-1">
@@ -339,37 +437,23 @@ export function DataControl({ className }: { className?: string }) {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="relative bg-gradient-to-b from-gray-900 to-black border border-gray-800 rounded-2xl overflow-hidden h-[400px]"
+              className="relative bg-black border border-white/10 rounded-2xl overflow-hidden h-[500px] shadow-2xl"
             >
-              {/* Image container - Replace this with your uploaded image */}
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-800/20 to-gray-900/40">
-                {/* TODO: Replace with your image:
-                    <Image 
-                      src="/images/sections/data-control.png" 
-                      alt="Lokus Data Control Interface"
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                */}
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="text-gray-600 text-sm text-center">
-
-                  </div>
-                </div>
-              </div>
               <AnimatePresence mode="wait">
-                {features.map((feature) => 
+                {features.map((feature) =>
                   activeFeature === feature.id && (
                     <motion.div
                       key={feature.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ duration: 0.3 }}
                       className="absolute inset-0"
                     >
-                      {feature.visual}
+                      {feature.id === "local"
+                        ? generateExplorerVisual(openFolders, toggleFolder)
+                        : feature.visual
+                      }
                     </motion.div>
                   )
                 )}
