@@ -13,7 +13,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@radix-ui/react-slot": "^1.2.3",
+    "@number-flow/react": "^0.5.10",
+    "@radix-ui/react-slot": "^1.2.4",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
     "@react-three/postprocessing": "^3.0.4",
@@ -23,6 +24,7 @@
     "@supabase/supabase-js": "^2.57.4",
     "@types/d3": "^7.4.3",
     "@types/three": "^0.180.0",
+    "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "d3": "^7.9.0",
@@ -33,7 +35,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-error-boundary": "^6.0.0",
-    "tailwind-merge": "^3.3.1",
+    "tailwind-merge": "^3.4.0",
     "three": "^0.180.0"
   },
   "devDependencies": {

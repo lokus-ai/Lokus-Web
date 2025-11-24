@@ -3,7 +3,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FolderOpen, FileText, Palette, ChevronRight, Search, Settings, BookOpen, Files } from "lucide-react";
+import { FolderOpen, FileText, Palette, ChevronRight, Search, Settings, BookOpen, Files, LayoutGrid, Puzzle, Database, Network, Calendar, Mail } from "lucide-react";
+import { Logo } from "./logo";
 
 const folderContents = {
   "Classes": ["Math 101.md", "Physics Notes.md", "Chemistry Lab.md"],
@@ -17,42 +18,72 @@ const generateExplorerVisual = (openFolders: Set<string>, toggleFolder: (folder:
   <div className="relative h-full w-full">
     {/* Lokus-style file explorer */}
     <div className="h-full bg-[#2c3340] rounded-lg overflow-hidden flex">
-      {/* Sidebar */}
-      <div className="w-12 bg-[#262b35] border-r border-[#1a1e27] flex flex-col items-center py-4 gap-3">
-        {/* Lokus App Icon */}
-        <div className="w-7 h-7 rounded bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-black font-bold text-sm cursor-pointer hover:scale-110 transition-transform">
-          L
-        </div>
-
-        <div className="w-full h-px bg-[#1a1e27] my-1" />
+      {/* Full Sidebar */}
+      <div className="w-16 bg-[#262b35] border-r border-[#1a1e27] flex flex-col items-center py-4 gap-2">
+        {/* Logo at top */}
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          className="mb-6 cursor-pointer"
+        >
+          <Logo size={28} animated={false} />
+        </motion.div>
 
         {/* Navigation Icons */}
-        <button className="w-7 h-7 text-gray-500 hover:text-gray-300 flex items-center justify-center hover:bg-[#3a4150] rounded transition-colors">
-          <Files className="w-4 h-4" />
-        </button>
-        <button className="w-7 h-7 text-gray-500 hover:text-gray-300 flex items-center justify-center hover:bg-[#3a4150] rounded transition-colors">
-          <Search className="w-4 h-4" />
-        </button>
-        <button className="w-7 h-7 text-gray-500 hover:text-gray-300 flex items-center justify-center hover:bg-[#3a4150] rounded transition-colors">
-          <BookOpen className="w-4 h-4" />
-        </button>
-        <button className="w-7 h-7 text-gray-500 hover:text-gray-300 flex items-center justify-center hover:bg-[#3a4150] rounded transition-colors">
-          <Settings className="w-4 h-4" />
-        </button>
+        {[
+          { icon: Files, label: 'Files', id: 'files' },
+          { icon: LayoutGrid, label: 'Dashboard', id: 'dashboard' },
+          { icon: Puzzle, label: 'Extensions', id: 'extensions' },
+          { icon: Database, label: 'Database', id: 'database' },
+          { icon: Network, label: 'Network', id: 'network' },
+          { icon: Calendar, label: 'Calendar', id: 'calendar' },
+          { icon: Mail, label: 'Mail', id: 'mail' },
+        ].map((item, index) => {
+          const Icon = item.icon;
+          const isActive = index === 0; // Make first item active for demo
+          
+          return (
+            <motion.button
+              key={item.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className={`relative w-12 h-10 rounded-lg flex items-center justify-center transition-all group ${
+                isActive
+                  ? 'bg-cyan-400/20 text-cyan-400 shadow-lg'
+                  : 'text-gray-500 hover:bg-[#3a4150] hover:text-gray-300'
+              }`}
+            >
+              {/* Active indicator */}
+              {isActive && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-cyan-400 rounded-r-full" />
+              )}
+              
+              <Icon className="w-4 h-4" />
+            </motion.button>
+          );
+        })}
+
+        {/* Bottom indicator */}
+        <div className="mt-auto pt-4 border-t border-[#1a1e27] w-full flex justify-center">
+          <div className="w-1.5 h-1.5 rounded-full bg-cyan-400/50 animate-pulse" />
+        </div>
       </div>
 
       {/* File explorer content */}
-      <div className="flex-1 overflow-auto">
-        <div className="p-3 border-b border-[#1a1e27] flex items-center justify-between sticky top-0 bg-[#2c3340] z-10">
-          <span className="text-xs font-semibold text-gray-300 tracking-wider">EXPLORER</span>
-          <button className="text-gray-500 hover:text-gray-300">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
-        </div>
+      <div className="flex-1 relative">
+        {/* Custom scrollable area with styled scrollbar */}
+        <div className="h-full overflow-hidden hover:overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-600 hover:scrollbar-thumb-gray-500 scrollbar-thumb-rounded-full">
+          <div className="p-3 border-b border-[#1a1e27] flex items-center justify-between sticky top-0 bg-[#2c3340] z-10 backdrop-blur-sm">
+            <span className="text-xs font-semibold text-gray-300 tracking-wider">EXPLORER</span>
+            <button className="text-gray-500 hover:text-gray-300 hover:bg-[#3a4150]/50 rounded p-1 transition-colors">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+          </div>
 
-        <div className="p-2 space-y-0.5 text-sm">
+          <div className="p-3 space-y-1 text-sm">
           {/* Folders */}
           {Object.keys(folderContents).map((folder, i) => {
             const isOpen = openFolders.has(folder);
@@ -62,17 +93,18 @@ const generateExplorerVisual = (openFolders: Set<string>, toggleFolder: (folder:
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="flex items-center gap-2 px-2 py-1 text-gray-300 hover:bg-[#3a4150] rounded cursor-pointer group"
+                  className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-[#3a4150]/30 rounded-md cursor-pointer group transition-all duration-200"
                   onClick={() => toggleFolder(folder)}
                 >
                   <motion.div
                     animate={{ rotate: isOpen ? 90 : 0 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="flex-shrink-0"
                   >
-                    <ChevronRight className="w-3 h-3 text-gray-500" />
+                    <ChevronRight className="w-3 h-3 text-gray-500 group-hover:text-cyan-400 transition-colors" />
                   </motion.div>
-                  <FolderOpen className="w-3 h-3 text-gray-500" />
-                  <span className="text-sm">{folder}</span>
+                  <FolderOpen className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                  <span className="text-sm font-medium truncate group-hover:text-white transition-colors">{folder}</span>
                 </motion.div>
 
                 {/* Folder contents */}
@@ -81,17 +113,20 @@ const generateExplorerVisual = (openFolders: Set<string>, toggleFolder: (folder:
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="ml-5 space-y-0.5"
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className="ml-6 space-y-0.5 border-l border-[#3a4150]/50 pl-3 py-1"
                   >
-                    {folderContents[folder as keyof typeof folderContents].map((file) => (
-                      <div
+                    {folderContents[folder as keyof typeof folderContents].map((file, fileIndex) => (
+                      <motion.div
                         key={file}
-                        className="flex items-center gap-2 px-2 py-1 text-gray-400 hover:bg-[#3a4150] rounded cursor-pointer"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: fileIndex * 0.03 }}
+                        className="flex items-center gap-2.5 px-2.5 py-1.5 text-gray-400 hover:bg-[#3a4150]/20 rounded cursor-pointer group transition-all duration-150"
                       >
-                        <FileText className="w-3 h-3 text-purple-400" />
-                        <span className="text-xs truncate">{file}</span>
-                      </div>
+                        <FileText className="w-3 h-3 text-purple-400 flex-shrink-0" />
+                        <span className="text-xs truncate group-hover:text-gray-200 transition-colors">{file}</span>
+                      </motion.div>
                     ))}
                   </motion.div>
                 )}
@@ -112,12 +147,13 @@ const generateExplorerVisual = (openFolders: Set<string>, toggleFolder: (folder:
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: (i + Object.keys(folderContents).length) * 0.05 }}
-              className="flex items-center gap-2 px-2 py-1 text-gray-400 hover:bg-[#3a4150] rounded cursor-pointer group"
+              className="flex items-center gap-3 px-3 py-2 text-gray-400 hover:bg-[#3a4150]/20 rounded-md cursor-pointer group transition-all duration-150"
             >
-              <FileText className="w-3 h-3 text-purple-400" />
-              <span className="text-sm truncate">{file}</span>
+              <FileText className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
+              <span className="text-sm truncate group-hover:text-gray-200 transition-colors font-medium">{file}</span>
             </motion.div>
           ))}
+          </div>
         </div>
       </div>
     </div>
@@ -221,63 +257,73 @@ const features = [
     title: "Live Theme Editor",
     description: "Real-time theme customization with instant preview. Change colors, fonts, and spacing on the fly with our powerful theme engine.",
     visual: (
-      <div className="relative h-full w-full bg-gradient-to-br from-purple-900 to-purple-950 rounded-lg overflow-hidden">
-        <div className="h-full p-4">
+      <div className="relative h-full w-full bg-gradient-to-br from-[#1a1e27] to-[#0d1117] rounded-lg overflow-hidden">
+        <div className="h-full flex flex-col p-4">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-white">THEME</h3>
             <div className="flex gap-2">
-              <button className="px-3 py-1 bg-transparent border border-pink-500 text-pink-400 text-xs rounded hover:bg-pink-500/10">
+              <button className="px-3 py-1 bg-transparent border border-[#30363d] text-[#7c9cc9] text-xs rounded hover:bg-[#30363d]/20 transition-colors">
                 Upload
               </button>
-              <button className="px-3 py-1 bg-transparent border border-pink-500 text-pink-400 text-xs rounded hover:bg-pink-500/10">
+              <button className="px-3 py-1 bg-transparent border border-[#30363d] text-[#7c9cc9] text-xs rounded hover:bg-[#30363d]/20 transition-colors">
                 Export
               </button>
             </div>
           </div>
 
-          <select className="w-full bg-transparent border-2 border-pink-500 text-pink-400 rounded px-3 py-2 text-sm mb-4">
-            <option>Funky Neon</option>
+          <select className="w-full bg-[#21262d] border border-[#30363d] text-[#f0f6fc] rounded px-3 py-2 text-sm mb-3 focus:border-[#58a6ff] transition-colors">
+            <option className="bg-[#21262d] text-[#f0f6fc]">Nord</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">Dracula</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">Tokyo Night</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">Catppuccin</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">Gruvbox</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">One Dark</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">Material</option>
+            <option className="bg-[#21262d] text-[#f0f6fc]">GitHub Dark</option>
           </select>
 
-          <div className="text-xs text-pink-400 mb-3">Edit colors and save changes to the theme file</div>
+          <div className="text-xs text-[#7c9cc9] mb-3">Edit colors and save changes to the theme file</div>
 
-          <div className="border-2 border-pink-500 rounded overflow-hidden">
-            <div className="grid grid-cols-3 gap-px bg-pink-500">
-              <div className="bg-purple-950 px-2 py-1 text-xs font-semibold text-white">TOKEN</div>
-              <div className="bg-purple-950 px-2 py-1 text-xs font-semibold text-white">PREVIEW</div>
-              <div className="bg-purple-950 px-2 py-1 text-xs font-semibold text-white">VALUE</div>
+          <div className="border border-[#30363d] rounded overflow-hidden flex-1 flex flex-col">
+            <div className="grid grid-cols-3 gap-px bg-[#30363d]">
+              <div className="bg-[#21262d] px-2 py-1.5 text-xs font-semibold text-[#f0f6fc]">TOKEN</div>
+              <div className="bg-[#21262d] px-2 py-1.5 text-xs font-semibold text-[#f0f6fc]">PREVIEW</div>
+              <div className="bg-[#21262d] px-2 py-1.5 text-xs font-semibold text-[#f0f6fc]">VALUE</div>
             </div>
 
-            <div className="space-y-px bg-pink-500">
-              {[
-                { name: "--accent", color: "bg-cyan-400", value: "0 255 255" },
-                { name: "--accent-fg", color: "bg-black", value: "0 0 0" },
-                { name: "--bg", color: "bg-[#200040]", value: "20 0 40" },
-                { name: "--border", color: "bg-pink-500", value: "255 0 255" },
-                { name: "--danger", color: "bg-red-500", value: "255 0 0" },
-              ].map((item, i) => (
-                <motion.div
-                  key={item.name}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="grid grid-cols-3 gap-px bg-pink-500"
-                >
-                  <div className="bg-purple-950 px-2 py-2 text-xs text-gray-400 font-mono">{item.name}</div>
-                  <div className="bg-purple-950 px-2 py-2 flex items-center justify-center">
-                    <div className={`w-6 h-6 rounded ${item.color} border border-pink-500`} />
-                  </div>
-                  <div className="bg-purple-950 px-2 py-2">
-                    <div className="border border-pink-500 rounded px-2 py-1 text-xs text-pink-400 font-mono">
-                      {item.value}
+            <div className="flex-1 overflow-auto">
+              <div className="space-y-px bg-[#30363d]">
+                {[
+                  { name: "--primary", color: "bg-[#58a6ff]", value: "88 166 255" },
+                  { name: "--background", color: "bg-[#0d1117]", value: "13 17 23" },
+                  { name: "--surface", color: "bg-[#21262d]", value: "33 38 45" },
+                  { name: "--border", color: "bg-[#30363d]", value: "48 54 61" },
+                  { name: "--success", color: "bg-[#238636]", value: "35 134 54" },
+                  { name: "--warning", color: "bg-[#d29922]", value: "210 153 34" },
+                ].map((item, i) => (
+                  <motion.div
+                    key={item.name}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.06 }}
+                    className="grid grid-cols-3 gap-px bg-[#30363d]"
+                  >
+                    <div className="bg-[#21262d] px-2 py-2 text-xs text-[#7c9cc9] font-mono">{item.name}</div>
+                    <div className="bg-[#21262d] px-2 py-2 flex items-center justify-center">
+                      <div className={`w-5 h-5 rounded ${item.color} border border-[#30363d]`} />
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="bg-[#21262d] px-2 py-2">
+                      <div className="border border-[#30363d] rounded px-2 py-1 text-xs text-[#58a6ff] font-mono bg-[#0d1117]/50">
+                        {item.value}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
 
-          <button className="w-full mt-3 px-4 py-2 bg-cyan-400 text-black text-sm font-semibold rounded hover:bg-cyan-300">
+          <button className="w-full mt-3 px-4 py-2 bg-[#238636] text-white text-sm font-semibold rounded hover:bg-[#2ea043] transition-colors">
             Save Changes
           </button>
         </div>

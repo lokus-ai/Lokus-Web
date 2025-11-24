@@ -11,6 +11,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { DownloadSection } from "@/components/ui/download-section";
 import { VideoShowcase } from "@/components/ui/video-showcase";
+import { SupportSection } from "@/components/ui/support-section";
 
 export default function LandingPage() {
   const ref = React.useRef(null);
@@ -51,6 +52,7 @@ export default function LandingPage() {
         <SparkIdeas />
         <DataControl />
         <PowerfulFeatures />
+        <SupportSection />
         <DownloadSection />
       </div>
       <Footer />

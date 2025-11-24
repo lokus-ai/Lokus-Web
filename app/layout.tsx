@@ -205,10 +205,7 @@ export default function RootLayout({
       <body className="font-sans antialiased" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
         <ThemeProvider>
           <AuthProvider>
-            <MiniSidebar />
-            <div className="pl-16">
-              {children}
-            </div>
+            {children}
             <ThemeEditor />
           </AuthProvider>
         </ThemeProvider>
