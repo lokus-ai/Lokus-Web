@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import Script from "next/script"
 import { AuthProvider } from "@/components/auth/AuthProvider"
 import "./globals.css"
 
@@ -26,6 +27,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
+      <head>
+        {/* Umami Analytics */}
+        <Script
+          src="https://analytics.lokusmd.com/script.js"
+          data-website-id="1299d78a-7f04-411f-9fa2-22ffbbc3258c"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={`${inter.variable} font-sans antialiased`}>
         <AuthProvider>
           {children}
