@@ -1,0 +1,25 @@
+  name: Deploy to Production
+
+  on:
+    push:
+      branches:
+        - main
+    workflow_dispatch:
+
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      name: Deploy to Lokus Server
+
+      steps:
+        - name: Deploy via SSH
+          uses: appleboy/ssh-action@v1.0.3
+          with:
+            host: ${{ secrets.DEPLOY_HOST }}
+            username: ${{ secrets.DEPLOY_USER }}
+            key: ${{ secrets.DEPLOY_KEY }}
+            port: 22
+            script: |
+              echo "Starting deployment..."
+              /opt/Lokus-Prod/scripts/deploy-website.sh
+              echo "Deployment complete!"
