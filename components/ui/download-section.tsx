@@ -55,8 +55,8 @@ const platforms: Platform[] = [
     size: "9.7 MB",
     version: "v1.3.3",
     features: ["macOS 11+", "Apple Silicon native", "Native performance", "Spotlight search"],
-    gradient: "from-gray-500 via-gray-300 to-gray-500",
-    iconColor: "text-gray-300"
+    gradient: "from-zinc-500 via-zinc-300 to-zinc-500",
+    iconColor: "text-zinc-300"
   },
   {
     id: "windows",
@@ -66,8 +66,8 @@ const platforms: Platform[] = [
     size: "7.33 MB",
     version: "v1.3.3",
     features: ["Windows 10/11", "Auto-updates", "Native performance", "System tray support"],
-    gradient: "from-gray-600 via-gray-400 to-gray-600",
-    iconColor: "text-gray-400"
+    gradient: "from-blue-600 via-blue-400 to-blue-600",
+    iconColor: "text-blue-400"
   },
   {
     id: "linux",
@@ -77,8 +77,8 @@ const platforms: Platform[] = [
     size: "85.8 MB",
     version: "v1.3.3",
     features: ["AppImage universal", "Most distributions", "Native performance", "Desktop integration"],
-    gradient: "from-gray-700 via-gray-500 to-gray-700", 
-    iconColor: "text-gray-500"
+    gradient: "from-orange-600 via-orange-400 to-orange-600",
+    iconColor: "text-orange-400"
   }
 ];
 
@@ -87,7 +87,7 @@ export function DownloadSection({ className }: { className?: string }) {
   const [hoveredPlatform, setHoveredPlatform] = useState<string | null>(null);
   const [shaderInView, setShaderInView] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"]
@@ -140,9 +140,9 @@ export function DownloadSection({ className }: { className?: string }) {
   };
 
   return (
-    <motion.section 
+    <motion.section
       ref={sectionRef}
-      id="download" 
+      id="download"
       className={cn("relative py-32 bg-black overflow-hidden", className)}
       style={{ opacity }}
     >
@@ -173,32 +173,32 @@ export function DownloadSection({ className }: { className?: string }) {
 
       {/* Animated background */}
       <div className="absolute inset-0 overflow-hidden z-10">
-        <FloatingOrb 
-          delay={0} 
-          size="w-96 h-96" 
-          className="bg-gradient-to-br from-gray-800 to-gray-900 -top-48 -left-48" 
+        <FloatingOrb
+          delay={0}
+          size="w-96 h-96"
+          className="bg-gradient-to-br from-indigo-500/20 to-purple-500/20 -top-48 -left-48"
         />
-        <FloatingOrb 
-          delay={5} 
-          size="w-80 h-80" 
-          className="bg-gradient-to-br from-gray-700 to-gray-800 -top-32 -right-32" 
+        <FloatingOrb
+          delay={5}
+          size="w-80 h-80"
+          className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 -top-32 -right-32"
         />
-        <FloatingOrb 
-          delay={10} 
-          size="w-64 h-64" 
-          className="bg-gradient-to-br from-gray-600 to-gray-700 -bottom-32 -left-32" 
+        <FloatingOrb
+          delay={10}
+          size="w-64 h-64"
+          className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 -bottom-32 -left-32"
         />
-        <FloatingOrb 
-          delay={15} 
-          size="w-72 h-72" 
-          className="bg-gradient-to-br from-gray-800 to-gray-900 -bottom-48 -right-48" 
+        <FloatingOrb
+          delay={15}
+          size="w-72 h-72"
+          className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 -bottom-48 -right-48"
         />
-        
+
         {/* Grid pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black_40%,transparent_100%)]" />
       </div>
 
-      <motion.div 
+      <motion.div
         className="container max-w-7xl mx-auto px-4 relative z-10"
         style={{ y }}
       >
@@ -211,25 +211,23 @@ export function DownloadSection({ className }: { className?: string }) {
           className="text-center mb-20"
         >
           <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full mb-8 shadow-lg shadow-indigo-500/10"
             whileHover={{ scale: 1.05 }}
           >
-            <Sparkles className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-300">Ready to experience the future?</span>
+            <Sparkles className="w-4 h-4 text-indigo-400" />
+            <span className="text-sm text-zinc-300">Ready to experience the future?</span>
           </motion.div>
-          
-          <motion.h2 
-            className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent"
-            animate={{
-              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-            }}
-            transition={{ duration: 5, repeat: Infinity }}
-            style={{ backgroundSize: "200% 200%" }}
+
+          <motion.h2
+            className="text-6xl md:text-8xl font-bold mb-8 text-white tracking-tight"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
             Download Lokus
           </motion.h2>
-          <motion.p 
-            className="text-xl text-gray-400 max-w-2xl mx-auto"
+          <motion.p
+            className="text-xl text-zinc-400 max-w-2xl mx-auto"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -253,24 +251,26 @@ export function DownloadSection({ className }: { className?: string }) {
               whileTap={{ scale: 0.95 }}
             >
               {/* Button */}
-              <div className="relative px-12 py-6 bg-black border border-white/20 rounded-2xl backdrop-blur-xl">
-                <div className="flex items-center gap-4">
-                  <div className="relative">
+              <div className="relative px-12 py-6 bg-zinc-950 border border-white/10 rounded-2xl backdrop-blur-xl shadow-2xl shadow-indigo-500/20 group-hover:border-indigo-500/50 transition-colors duration-500">
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="flex items-center gap-6 relative z-10">
+                  <div className="relative p-3 bg-white/5 rounded-xl border border-white/10 group-hover:bg-indigo-500/20 group-hover:border-indigo-500/30 transition-colors duration-300">
                     <selectedPlatform.icon className="w-8 h-8 text-white" />
                   </div>
                   <div className="text-left">
-                    <div className="text-xl font-bold text-white">
+                    <div className="text-xl font-bold text-white group-hover:text-indigo-200 transition-colors">
                       Download for {selectedPlatform.name}
                     </div>
-                    <div className="text-sm text-gray-400">
+                    <div className="text-sm text-zinc-400 group-hover:text-zinc-300 transition-colors">
                       {selectedPlatform.size} • {selectedPlatform.version}
                     </div>
                   </div>
                   <motion.div
                     animate={{ x: [0, 5, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
+                    className="pl-4 border-l border-white/10"
                   >
-                    <ArrowRight className="w-6 h-6 text-white" />
+                    <ArrowRight className="w-6 h-6 text-white group-hover:text-indigo-400 transition-colors" />
                   </motion.div>
                 </div>
               </div>
@@ -284,7 +284,7 @@ export function DownloadSection({ className }: { className?: string }) {
             const Icon = platform.icon;
             const isHovered = hoveredPlatform === platform.id;
             const isSelected = selectedPlatform?.id === platform.id;
-            
+
             return (
               <motion.div
                 key={platform.id}
@@ -298,54 +298,57 @@ export function DownloadSection({ className }: { className?: string }) {
               >
                 <motion.div
                   className={cn(
-                    "relative p-8 rounded-2xl border-2 transition-all duration-300 cursor-pointer overflow-hidden",
-                    "bg-gradient-to-br from-gray-900/50 via-gray-800/30 to-gray-900/50 backdrop-blur-xl",
-                    isSelected 
-                      ? "border-gray-500/50 shadow-2xl shadow-gray-500/20" 
-                      : "border-white/10 hover:border-white/20"
+                    "relative p-8 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col",
+                    "bg-zinc-900/40 backdrop-blur-xl",
+                    isSelected
+                      ? "border-indigo-500/50 shadow-2xl shadow-indigo-500/10 bg-zinc-900/60"
+                      : "border-white/5 hover:border-white/10 hover:bg-zinc-900/60"
                   )}
                   whileHover={{ y: -8 }}
                   onClick={() => handleDownload(platform)}
                 >
                   {/* Animated background pattern */}
                   <motion.div
-                    className="absolute inset-0 opacity-5"
+                    className="absolute inset-0 opacity-[0.03]"
                     animate={{
                       backgroundPosition: isHovered ? ["0% 0%", "100% 100%"] : "0% 0%",
                     }}
                     transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
                     style={{
-                      backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)",
+                      backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px)",
                       backgroundSize: "20px 20px"
                     }}
                   />
 
-                  <div className="relative z-10">
+                  <div className="relative z-10 flex flex-col h-full">
                     {/* Header */}
                     <div className="flex items-center justify-between mb-6">
                       <motion.div
-                        className="p-4 rounded-xl bg-gray-800/50"
+                        className={cn(
+                          "p-4 rounded-xl transition-colors duration-300",
+                          isSelected ? "bg-indigo-500/20 border border-indigo-500/30" : "bg-zinc-800/50 border border-white/5"
+                        )}
                         whileHover={{ rotate: 5, scale: 1.1 }}
                       >
                         <Icon className={`w-8 h-8 ${platform.iconColor}`} />
                       </motion.div>
-                      
+
                       {isSelected && (
                         <motion.div
                           initial={{ opacity: 0, scale: 0 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="px-3 py-1 bg-gray-500/20 border border-gray-500/30 rounded-full"
+                          className="px-3 py-1 bg-indigo-500/20 border border-indigo-500/30 rounded-full"
                         >
-                          <span className="text-xs text-gray-300 font-medium">Detected</span>
+                          <span className="text-xs text-indigo-300 font-medium">Detected</span>
                         </motion.div>
                       )}
                     </div>
-                    
+
                     <h3 className="text-2xl font-bold text-white mb-2">{platform.name}</h3>
-                    <p className="text-gray-400 text-sm mb-6">{platform.size} • {platform.version}</p>
-                    
+                    <p className="text-zinc-400 text-sm mb-8">{platform.size} • {platform.version}</p>
+
                     {/* Features */}
-                    <div className="space-y-3 mb-8">
+                    <div className="space-y-4 mb-8 flex-1">
                       {platform.features.slice(0, 3).map((feature, featureIndex) => (
                         <motion.div
                           key={feature}
@@ -354,17 +357,23 @@ export function DownloadSection({ className }: { className?: string }) {
                           whileInView={{ opacity: 1, x: 0 }}
                           transition={{ delay: featureIndex * 0.1 }}
                         >
-                          <div className="p-1 rounded bg-gray-700/50">
+                          <div className={cn(
+                            "p-1.5 rounded-lg",
+                            isSelected ? "bg-indigo-500/10 text-indigo-400" : "bg-zinc-800 text-zinc-400"
+                          )}>
                             <FeatureIcon feature={feature} />
                           </div>
-                          <span className="text-sm text-gray-300">{feature}</span>
+                          <span className="text-sm text-zinc-300">{feature}</span>
                         </motion.div>
                       ))}
                     </div>
 
                     {/* Download button */}
                     <motion.div
-                      className="flex items-center gap-3 text-white group-hover:text-gray-200 transition-colors"
+                      className={cn(
+                        "flex items-center gap-3 transition-colors mt-auto pt-6 border-t border-white/5",
+                        isSelected ? "text-indigo-400" : "text-zinc-400 group-hover:text-white"
+                      )}
                       animate={{
                         x: isHovered ? 5 : 0,
                       }}
@@ -395,10 +404,10 @@ export function DownloadSection({ className }: { className?: string }) {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="text-center"
         >
-          <div className="inline-flex flex-col items-center gap-6 p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+          <div className="inline-flex flex-col items-center gap-6 p-8 rounded-2xl bg-zinc-900/40 backdrop-blur-xl border border-white/5">
             <h3 className="text-lg font-semibold text-white">Looking for other options?</h3>
-            
-            <div className="flex flex-wrap justify-center gap-6">
+
+            <div className="flex flex-wrap justify-center gap-4">
               {[
                 { label: "All v1.3.3 downloads", url: "https://github.com/lokus-ai/lokus/releases/tag/v1.3.3" },
                 { label: "Linux (.deb)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.3.3/Lokus_1.3.3_amd64.deb" },
@@ -412,25 +421,25 @@ export function DownloadSection({ className }: { className?: string }) {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/20 text-gray-300 hover:text-white hover:border-white/40 transition-all group"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all group"
                   whileHover={{ scale: 1.05, y: -2 }}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
                   <span className="text-sm">{link.label}</span>
-                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform opacity-50 group-hover:opacity-100" />
                 </motion.a>
               ))}
             </div>
-            
-            <p className="text-xs text-gray-500">
+
+            <p className="text-xs text-zinc-500">
               Latest release: v1.3.3 •
-              <a 
-                href="https://github.com/lokus-ai/lokus/releases" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-gray-400 hover:text-white transition-colors ml-1"
+              <a
+                href="https://github.com/lokus-ai/lokus/releases"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-zinc-400 hover:text-white transition-colors ml-1 hover:underline"
               >
                 View all releases
               </a>
