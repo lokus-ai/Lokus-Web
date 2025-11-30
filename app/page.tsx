@@ -1,52 +1,30 @@
 "use client";
 
-import { useScroll, useTransform } from "framer-motion";
 import React from "react";
-import { GoogleGeminiEffect } from "@/components/ui/google-gemini-effect";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { HeroSection } from "@/components/ui/hero-section";
 import { UsedBy } from "@/components/ui/used-by";
 import { SparkIdeas } from "@/components/ui/spark-ideas";
 import { DataControl } from "@/components/ui/data-control";
 import { PowerfulFeatures } from "@/components/ui/publish-instantly";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { SupportSection } from "@/components/ui/support-section";
 import { DownloadSection } from "@/components/ui/download-section";
 import { VideoShowcase } from "@/components/ui/video-showcase";
-import { SupportSection } from "@/components/ui/support-section";
+import { LatestUpdate } from "@/components/ui/latest-update";
 
 export default function LandingPage() {
-  const ref = React.useRef(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const pathLengthFirst = useTransform(scrollYProgress, [0, 0.8], [0.2, 1.2]);
-  const pathLengthSecond = useTransform(scrollYProgress, [0, 0.8], [0.15, 1.2]);
-  const pathLengthThird = useTransform(scrollYProgress, [0, 0.8], [0.1, 1.2]);
-  const pathLengthFourth = useTransform(scrollYProgress, [0, 0.8], [0.05, 1.2]);
-  const pathLengthFifth = useTransform(scrollYProgress, [0, 0.8], [0, 1.2]);
-
   return (
-    <>
+    <main className="min-h-screen bg-black text-white selection:bg-indigo-500/30">
       <Navbar />
-      <div className="bg-black">
-        <div
-          className="h-[260vh] bg-black w-full dark:border dark:border-white/[0.1] rounded-md relative pt-40 overflow-clip"
-          ref={ref}
-        >
-          <GoogleGeminiEffect
-            pathLengths={[
-              pathLengthFirst,
-              pathLengthSecond,
-              pathLengthThird,
-              pathLengthFourth,
-              pathLengthFifth,
-            ]}
-            title="Welcome to Lokus"
-            description="Experience lightning-fast note-taking with intelligent linking and native macOS performance. Crafted for developers who think in connections."
-          />
-        </div>
+
+      <div className="pt-24 pb-4">
+        <LatestUpdate />
+      </div>
+
+      <HeroSection />
+
+      <div className="relative z-10 space-y-12 pb-24">
         <VideoShowcase />
         <UsedBy />
         <SparkIdeas />
@@ -55,7 +33,8 @@ export default function LandingPage() {
         <SupportSection />
         <DownloadSection />
       </div>
+
       <Footer />
-    </>
+    </main>
   );
 }

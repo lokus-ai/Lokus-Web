@@ -1,9 +1,10 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { Heart, Check, ExternalLink, MessageCircle } from "lucide-react"
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion"
+import { Heart, Check, ExternalLink, Sparkles } from "lucide-react"
+import { MouseEvent } from "react"
 
-// Lokus support plans - first 2 fixed, 3rd custom
+// Lokus support plans
 const lokusPlans = [
   {
     name: "Supporter",
@@ -13,11 +14,13 @@ const lokusPlans = [
       "Support open-source development",
       "Help keep Lokus free forever",
       "Community recognition",
-      "Feel good about supporting privacy-first tools"
+      "Feel good about supporting privacy"
     ],
     description: "Show your appreciation for Lokus",
     buttonText: "Support Once",
     href: "https://opencollective.com/lokus/contribute/supporter-70862/checkout",
+    gradient: "from-blue-500/20 to-cyan-500/20",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)]"
   },
   {
     name: "Backer",
@@ -34,194 +37,195 @@ const lokusPlans = [
     buttonText: "Become a Backer",
     href: "https://opencollective.com/lokus/contribute/backer-70863/checkout",
     popular: true,
+    gradient: "from-purple-500/20 to-pink-500/20",
+    glow: "group-hover:shadow-[0_0_40px_-10px_rgba(168,85,247,0.5)]"
   }
 ]
 
-function Star({ index }: { index: number }) {
-  // Use seeded random based on index to ensure consistent SSR/client rendering
-  const seedRandom = (seed: number) => {
-    const x = Math.sin(seed) * 10000
-    return x - Math.floor(x)
-  }
-  
-  const topPos = seedRandom(index * 1) * 100
-  const leftPos = seedRandom(index * 2) * 100
-  const size = 1 + seedRandom(index * 3) * 2
-  const duration = 2 + seedRandom(index * 4) * 3
-  const delay = seedRandom(index * 5) * 5
+function CardPattern({ mouseX, mouseY }: { mouseX: any, mouseY: any }) {
+  let maskImage = useMotionTemplate`radial-gradient(300px at ${mouseX}px ${mouseY}px, white, transparent)`
+  let style = { maskImage, WebkitMaskImage: maskImage }
 
   return (
-    <motion.div
-      className="absolute bg-white rounded-full"
-      style={{
-        top: `${topPos}%`,
-        left: `${leftPos}%`,
-        width: `${size}px`,
-        height: `${size}px`,
-      }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: [0, 1, 0] }}
-      transition={{
-        duration,
-        repeat: Infinity,
-        delay,
-      }}
-    />
+    <div className="pointer-events-none">
+      <div className="absolute inset-0 rounded-2xl transition duration-300 [mask-image:linear-gradient(white,transparent)] group-hover:opacity-50">
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 transition duration-300 group-hover:opacity-100 backdrop-blur-xl" />
+      </div>
+      <motion.div
+        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 backdrop-blur-xl transition duration-300 group-hover:opacity-100"
+        style={style}
+      />
+      <motion.div
+        className="absolute inset-0 rounded-2xl opacity-0 mix-blend-overlay transition duration-300 group-hover:opacity-100"
+        style={style}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      </motion.div>
+    </div>
+  )
+}
+
+function PremiumCard({ plan, custom = false }: { plan?: any, custom?: boolean }) {
+  let mouseX = useMotionValue(0)
+  let mouseY = useMotionValue(0)
+
+  function onMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
+    let { left, top } = currentTarget.getBoundingClientRect()
+    mouseX.set(clientX - left)
+    mouseY.set(clientY - top)
+  }
+
+  if (custom) {
+    return (
+      <div
+        onMouseMove={onMouseMove}
+        className="group relative flex flex-col rounded-2xl border border-white/10 bg-black/40 p-8 shadow-2xl backdrop-blur-md transition-all duration-500 hover:border-white/20 hover:scale-[1.02]"
+      >
+        <CardPattern mouseX={mouseX} mouseY={mouseY} />
+
+        <div className="relative z-10 flex h-full flex-col">
+          <div className="mb-8">
+            <div className="mb-4 inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+              <Sparkles className="mr-1 h-3 w-3" /> Flexible
+            </div>
+            <h3 className="mb-2 text-2xl font-bold text-white">Custom Amount</h3>
+            <div className="mb-2 flex items-baseline gap-1">
+              <span className="text-4xl font-bold text-white">$</span>
+              <span className="text-xl text-white/60">Any</span>
+            </div>
+            <p className="text-sm text-zinc-400">Choose what works for you</p>
+          </div>
+
+          <ul className="mb-8 flex-1 space-y-4">
+            {[
+              "Support at your comfort level",
+              "Every contribution matters",
+              "Flexible payment options",
+              "Help sustain development"
+            ].map((feature, i) => (
+              <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
+                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
+                  <Check className="h-3.5 w-3.5" />
+                </div>
+                {feature}
+              </li>
+            ))}
+          </ul>
+
+          <a
+            href="https://opencollective.com/lokus"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative flex w-full items-center justify-center rounded-xl bg-white/5 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-white/10 hover:shadow-lg hover:shadow-emerald-500/20 border border-white/10"
+          >
+            Choose Amount
+          </a>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div
+      onMouseMove={onMouseMove}
+      className={`group relative flex flex-col rounded-2xl border border-white/10 bg-black/40 p-8 shadow-2xl backdrop-blur-md transition-all duration-500 hover:border-white/20 hover:scale-[1.02] ${plan.glow}`}
+    >
+      <CardPattern mouseX={mouseX} mouseY={mouseY} />
+
+      {plan.popular && (
+        <div className="absolute -top-4 left-0 right-0 mx-auto w-fit rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-1 text-xs font-bold text-white shadow-lg shadow-purple-500/20">
+          MOST POPULAR
+        </div>
+      )}
+
+      <div className="relative z-10 flex h-full flex-col">
+        <div className="mb-8">
+          <h3 className="mb-2 text-2xl font-bold text-white">{plan.name}</h3>
+          <div className="mb-2 flex items-baseline gap-1">
+            <span className="text-4xl font-bold text-white">{plan.price}</span>
+            <span className="text-xl text-white/60">/{plan.period}</span>
+          </div>
+          <p className="text-sm text-zinc-400">{plan.description}</p>
+        </div>
+
+        <ul className="mb-8 flex-1 space-y-4">
+          {plan.features.map((feature: string, i: number) => (
+            <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
+              <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 ${plan.popular ? 'text-purple-400' : 'text-blue-400'}`}>
+                <Check className="h-3.5 w-3.5" />
+              </div>
+              {feature}
+            </li>
+          ))}
+        </ul>
+
+        <a
+          href={plan.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`relative flex w-full items-center justify-center rounded-xl py-4 text-sm font-semibold text-white transition-all duration-300 hover:shadow-lg ${plan.popular
+              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 hover:shadow-purple-500/25'
+              : 'bg-white/5 hover:bg-white/10 border border-white/10 hover:shadow-blue-500/20'
+            }`}
+        >
+          {plan.buttonText}
+        </a>
+      </div>
+    </div>
   )
 }
 
 export function SupportSection() {
   return (
-    <section className="relative py-24 bg-black overflow-hidden">
-      {/* Starfield background matching your site */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-grid-white/[0.01] bg-[size:50px_50px]" />
-        {Array.from({ length: 150 }).map((_, i) => (
-          <Star key={`star-${i}`} index={i} />
-        ))}
-      </div>
+    <section className="relative overflow-hidden bg-black py-32">
+      {/* Ambient Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none" />
 
-      <div className="container max-w-7xl mx-auto px-4 relative z-10">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            Support Lokus
-          </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Help us build the future of note-taking. Your support enables us to keep Lokus 
-            <span className="text-white font-medium"> free, open-source, and privacy-focused</span> forever.
-          </p>
-        </motion.div>
-
-        {/* Support cards - 2 fixed + 1 custom */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          {/* First 2 fixed plans */}
-          {lokusPlans.map((plan, index) => (
-            <motion.div
-              key={plan.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`relative bg-white/5 border rounded-2xl p-10 hover:bg-white/10 transition-all duration-300 flex flex-col min-h-[520px] ${
-                plan.popular 
-                  ? 'border-white/20 ring-1 ring-white/20' 
-                  : 'border-white/10'
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <div className="bg-white text-black px-4 py-1 rounded-full text-sm font-medium">
-                    Most Popular
-                  </div>
-                </div>
-              )}
-              
-              <div className="text-center mb-10">
-                <h3 className="text-2xl font-semibold text-white mb-4">{plan.name}</h3>
-                <div className="mb-4">
-                  <span className="text-5xl font-bold text-white">{plan.price}</span>
-                  <span className="text-gray-400 ml-2 text-lg">/{plan.period}</span>
-                </div>
-                <p className="text-gray-400 text-base">{plan.description}</p>
-              </div>
-
-              <ul className="space-y-4 mb-10 flex-grow">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-300 text-base leading-relaxed">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <a 
-                href={plan.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`block w-full py-4 px-6 rounded-xl font-medium text-center transition-all duration-300 text-base ${
-                  plan.popular
-                    ? 'bg-white text-black hover:bg-gray-200'
-                    : 'bg-white/10 text-white border border-white/20 hover:bg-white/20'
-                }`}
-              >
-                {plan.buttonText}
-              </a>
-            </motion.div>
-          ))}
-
-          {/* Custom 3rd card */}
-          <motion.div
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="mb-20 text-center">
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="relative bg-white/5 border border-white/10 rounded-2xl p-10 hover:bg-white/10 transition-all duration-300 flex flex-col min-h-[520px]"
+            className="mb-6 text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl"
           >
-            <div className="text-center mb-10">
-              <h3 className="text-2xl font-semibold text-white mb-4">Custom Amount</h3>
-              <div className="mb-4">
-                <span className="text-5xl font-bold text-white">$</span>
-                <span className="text-xl text-gray-400 ml-2">Any amount</span>
-              </div>
-              <p className="text-gray-400 text-base">Choose what works for you</p>
-            </div>
-
-            <ul className="space-y-4 mb-10 flex-grow">
-              {[
-                "Support at your comfort level",
-                "Every contribution matters",
-                "Flexible payment options",
-                "Help sustain development"
-              ].map((feature, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-300 text-base leading-relaxed">{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            <a 
-              href="https://opencollective.com/lokus"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full py-4 px-6 rounded-xl font-medium text-center bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 text-base"
-            >
-              Choose Amount
-            </a>
-          </motion.div>
+            Support <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Lokus</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="mx-auto max-w-2xl text-lg text-zinc-400"
+          >
+            Help us build the future of knowledge management. Your support keeps Lokus free, open-source, and privacy-focused forever.
+          </motion.p>
         </div>
 
-        {/* CTA */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+          {lokusPlans.map((plan, i) => (
+            <PremiumCard key={i} plan={plan} />
+          ))}
+          <PremiumCard custom />
+        </div>
+
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-center"
+          transition={{ delay: 0.4 }}
+          className="mt-20 text-center"
         >
-          <motion.a
+          <a
             href="https://opencollective.com/lokus"
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black hover:bg-gray-200 font-semibold rounded-xl transition-all duration-300 group"
+            className="group inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
           >
-            <Heart className="w-5 h-5" />
-            <span>View on OpenCollective</span>
-            <ExternalLink className="w-4 h-4" />
-          </motion.a>
-          
-          <p className="text-sm text-gray-500 mt-4">
-            Join our community of supporters building the future of knowledge management
-          </p>
+            <Heart className="h-4 w-4 transition-transform group-hover:scale-110 group-hover:text-red-500" />
+            <span>View full transparency on OpenCollective</span>
+            <ExternalLink className="h-4 w-4" />
+          </a>
         </motion.div>
       </div>
     </section>
