@@ -29,6 +29,7 @@ export function Footer() {
       {
         title: "Resources",
         links: [
+          { href: "/resources", label: "Brand Resources" },
           { href: "/changelog", label: "Changelog" },
           { href: "https://docs.lokusmd.com/getting-started", label: "Getting Started", external: true },
           { href: "https://docs.lokusmd.com/user-guide", label: "User Guide", external: true },
