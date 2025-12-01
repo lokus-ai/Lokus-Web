@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(git checkout:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(unzip:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx tsc:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": []
   }
