@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/'
-  
+
   // OAuth parameters from the desktop app flow
   const redirectUri = searchParams.get('redirect_uri')
   const state = searchParams.get('state')
@@ -16,13 +16,13 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = await createClient()
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
-    
+
     if (!error && data.session) {
       // Check if this is an OAuth flow from the desktop app
       if (redirectUri && state && codeChallenge) {
         // Generate authorization code for OAuth flow
         const authCode = crypto.randomUUID()
-        
+
         try {
           // Store the authorization code with user data
           const storeResponse = await fetch(`${origin}/api/auth/store-code`, {
@@ -50,14 +50,14 @@ export async function GET(request: Request) {
             code: authCode,
             state: state
           })
-          
+
           return NextResponse.redirect(`${redirectUri}?${params.toString()}`)
         } catch (error) {
           console.error('OAuth callback error:', error)
           return NextResponse.redirect(`${origin}/auth/auth-code-error`)
         }
       }
-      
+
       // Regular web redirect
       return NextResponse.redirect(`${origin}${next}`)
     }
