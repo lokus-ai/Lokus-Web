@@ -1,25 +1,38 @@
-  name: Deploy to Production
+name: Deploy Website to Production
 
-  on:
-    push:
-      branches:
-        - main
-    workflow_dispatch:
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
-  jobs:
-    deploy:
-      runs-on: ubuntu-latest
-      name: Deploy to Lokus Server
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy Website
 
-      steps:
-        - name: Deploy via SSH
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: ${{ secrets.DEPLOY_HOST }}
-            username: ${{ secrets.DEPLOY_USER }}
-            key: ${{ secrets.DEPLOY_KEY }}
-            port: 22
-            script: |
-              echo "Starting deployment..."
-              /opt/Lokus-Prod/scripts/deploy-website.sh
-              echo "Deployment complete!"
+    steps:
+      - name: Deploy to Primary Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: 22
+          script: |
+            echo "Starting deployment..."
+            /opt/Lokus-Prod/scripts/deploy-website.sh
+            echo "Deployment complete!"
+
+      - name: Discord Notification
+        if: always()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "Website Deployment"
+          description: |
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref_name }}
+            By: ${{ github.actor }}
+          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
