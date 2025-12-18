@@ -6,7 +6,20 @@
       "Bash(unzip:*)",
       "Bash(npm run dev:*)",
       "Bash(npx tsc:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(ls:*)",
+      "Bash(rm:*)",
+      "Bash(grep:*)",
+      "Bash(npm install)",
+      "Bash(find:*)",
+      "Bash(curl:*)",
+      "Bash(du:*)",
+      "Bash(npm audit:*)",
+      "Bash(gh api:*)",
+      "Bash(cat:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill -9)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
