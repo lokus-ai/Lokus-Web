@@ -1,10 +1,8 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
 import { Download, ArrowRight, Sparkles, Zap, Shield, Cpu } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { DitheringShader } from "./dithering-shader";
 
 // Custom icon components
 const AppleIcon = ({ className }: { className?: string }) => (
@@ -85,16 +83,6 @@ const platforms: Platform[] = [
 export function DownloadSection({ className }: { className?: string }) {
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(null);
   const [hoveredPlatform, setHoveredPlatform] = useState<string | null>(null);
-  const [shaderInView, setShaderInView] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
   // Auto-detect platform
   useEffect(() => {
@@ -114,23 +102,6 @@ export function DownloadSection({ className }: { className?: string }) {
     window.open(platform.downloadUrl, '_blank');
   };
 
-  // Floating orbs animation
-  const FloatingOrb = ({ delay = 0, size = "w-96 h-96", className = "" }) => (
-    <motion.div
-      className={`absolute rounded-full blur-3xl opacity-20 ${size} ${className}`}
-      animate={{
-        x: [0, 100, -50, 0],
-        y: [0, -100, 50, 0],
-        scale: [1, 1.2, 0.8, 1],
-      }}
-      transition={{
-        duration: 20,
-        delay,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-    />
-  );
 
   const FeatureIcon = ({ feature }: { feature: string }) => {
     if (feature.includes("native") || feature.includes("Native")) return <Cpu className="w-4 h-4" />;
@@ -140,121 +111,47 @@ export function DownloadSection({ className }: { className?: string }) {
   };
 
   return (
-    <motion.section
-      ref={sectionRef}
+    <section
       id="download"
       className={cn("relative py-32 bg-black overflow-hidden", className)}
-      style={{ opacity }}
     >
-      {/* Dithering Shader Background */}
-      <motion.div
-        className="absolute inset-0"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 0.15 }}
-        onViewportEnter={() => setShaderInView(true)}
-        onViewportLeave={() => setShaderInView(false)}
-        viewport={{ once: false, margin: "-30%" }}
-        transition={{ duration: 2 }}
-      >
-        {shaderInView && (
-          <DitheringShader
-            width={typeof window !== 'undefined' ? window.innerWidth : 1920}
-            height={typeof window !== 'undefined' ? window.innerHeight : 1080}
-            shape="warp"
-            type="2x2"
-            colorBack="#000000"
-            colorFront="#1a1a3a"
-            pxSize={4}
-            speed={0.6}
-            className="w-full h-full"
-          />
-        )}
-      </motion.div>
+      {/* Simple gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/5 to-transparent" />
 
-      {/* Animated background */}
-      <div className="absolute inset-0 overflow-hidden z-10">
-        <FloatingOrb
-          delay={0}
-          size="w-96 h-96"
-          className="bg-gradient-to-br from-indigo-500/20 to-purple-500/20 -top-48 -left-48"
-        />
-        <FloatingOrb
-          delay={5}
-          size="w-80 h-80"
-          className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 -top-32 -right-32"
-        />
-        <FloatingOrb
-          delay={10}
-          size="w-64 h-64"
-          className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 -bottom-32 -left-32"
-        />
-        <FloatingOrb
-          delay={15}
-          size="w-72 h-72"
-          className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 -bottom-48 -right-48"
-        />
-
+      {/* Static background */}
+      <div className="absolute inset-0 overflow-hidden">
         {/* Grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black_40%,transparent_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] opacity-50" />
       </div>
 
-      <motion.div
-        className="container max-w-7xl mx-auto px-4 relative z-10"
-        style={{ y }}
-      >
+      <div className="container max-w-7xl mx-auto px-4 relative z-10">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
-        >
-          <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full mb-8 shadow-lg shadow-indigo-500/10"
-            whileHover={{ scale: 1.05 }}
-          >
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full mb-8 shadow-lg shadow-indigo-500/10">
             <Sparkles className="w-4 h-4 text-indigo-400" />
             <span className="text-sm text-zinc-300">Ready to experience the future?</span>
-          </motion.div>
+          </div>
 
-          <motion.h2
-            className="text-6xl md:text-8xl font-bold mb-8 text-white tracking-tight"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+          <h2 className="text-6xl md:text-8xl font-bold mb-8 text-white tracking-tight">
             Download Lokus
-          </motion.h2>
-          <motion.p
-            className="text-xl text-zinc-400 max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
+          </h2>
+          <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
             Choose your platform and unlock the power of connected thinking
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
 
         {/* Hero download button */}
         {selectedPlatform && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="flex justify-center mb-16"
-          >
-            <motion.button
+          <div className="flex justify-center mb-16">
+            <button
               onClick={() => handleDownload(selectedPlatform)}
               className="group relative"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
               {/* Button */}
-              <div className="relative px-12 py-6 bg-zinc-950 border border-white/10 rounded-2xl backdrop-blur-xl shadow-2xl shadow-indigo-500/20 group-hover:border-indigo-500/50 transition-colors duration-500">
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative px-12 py-6 bg-zinc-950 border border-white/10 rounded-2xl backdrop-blur-xl shadow-2xl shadow-indigo-500/20 hover:border-indigo-500/50 transition-colors">
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="flex items-center gap-6 relative z-10">
-                  <div className="relative p-3 bg-white/5 rounded-xl border border-white/10 group-hover:bg-indigo-500/20 group-hover:border-indigo-500/30 transition-colors duration-300">
+                  <div className="relative p-3 bg-white/5 rounded-xl border border-white/10 group-hover:bg-indigo-500/20 group-hover:border-indigo-500/30 transition-colors">
                     <selectedPlatform.icon className="w-8 h-8 text-white" />
                   </div>
                   <div className="text-left">
@@ -265,17 +162,13 @@ export function DownloadSection({ className }: { className?: string }) {
                       {selectedPlatform.size} • {selectedPlatform.version}
                     </div>
                   </div>
-                  <motion.div
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                    className="pl-4 border-l border-white/10"
-                  >
+                  <div className="pl-4 border-l border-white/10">
                     <ArrowRight className="w-6 h-6 text-white group-hover:text-indigo-400 transition-colors" />
-                  </motion.div>
+                  </div>
                 </div>
               </div>
-            </motion.button>
-          </motion.div>
+            </button>
+          </div>
         )}
 
         {/* Platform cards */}
@@ -286,34 +179,25 @@ export function DownloadSection({ className }: { className?: string }) {
             const isSelected = selectedPlatform?.id === platform.id;
 
             return (
-              <motion.div
+              <div
                 key={platform.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2, duration: 0.6 }}
                 onMouseEnter={() => setHoveredPlatform(platform.id)}
                 onMouseLeave={() => setHoveredPlatform(null)}
                 className="relative group"
               >
-                <motion.div
+                <div
                   className={cn(
-                    "relative p-8 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col",
+                    "relative p-8 rounded-2xl border transition-all cursor-pointer overflow-hidden h-full flex flex-col hover:-translate-y-2",
                     "bg-zinc-900/40 backdrop-blur-xl",
                     isSelected
                       ? "border-indigo-500/50 shadow-2xl shadow-indigo-500/10 bg-zinc-900/60"
                       : "border-white/5 hover:border-white/10 hover:bg-zinc-900/60"
                   )}
-                  whileHover={{ y: -8 }}
                   onClick={() => handleDownload(platform)}
                 >
-                  {/* Animated background pattern */}
-                  <motion.div
+                  {/* Static background pattern */}
+                  <div
                     className="absolute inset-0 opacity-[0.03]"
-                    animate={{
-                      backgroundPosition: isHovered ? ["0% 0%", "100% 100%"] : "0% 0%",
-                    }}
-                    transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
                     style={{
                       backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px)",
                       backgroundSize: "20px 20px"
@@ -323,24 +207,19 @@ export function DownloadSection({ className }: { className?: string }) {
                   <div className="relative z-10 flex flex-col h-full">
                     {/* Header */}
                     <div className="flex items-center justify-between mb-6">
-                      <motion.div
+                      <div
                         className={cn(
-                          "p-4 rounded-xl transition-colors duration-300",
+                          "p-4 rounded-xl transition-all hover:rotate-2 hover:scale-110",
                           isSelected ? "bg-indigo-500/20 border border-indigo-500/30" : "bg-zinc-800/50 border border-white/5"
                         )}
-                        whileHover={{ rotate: 5, scale: 1.1 }}
                       >
                         <Icon className={`w-8 h-8 ${platform.iconColor}`} />
-                      </motion.div>
+                      </div>
 
                       {isSelected && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className="px-3 py-1 bg-indigo-500/20 border border-indigo-500/30 rounded-full"
-                        >
+                        <div className="px-3 py-1 bg-indigo-500/20 border border-indigo-500/30 rounded-full">
                           <span className="text-xs text-indigo-300 font-medium">Detected</span>
-                        </motion.div>
+                        </div>
                       )}
                     </div>
 
@@ -349,13 +228,10 @@ export function DownloadSection({ className }: { className?: string }) {
 
                     {/* Features */}
                     <div className="space-y-4 mb-8 flex-1">
-                      {platform.features.slice(0, 3).map((feature, featureIndex) => (
-                        <motion.div
+                      {platform.features.slice(0, 3).map((feature) => (
+                        <div
                           key={feature}
                           className="flex items-center gap-3"
-                          initial={{ opacity: 0, x: -20 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          transition={{ delay: featureIndex * 0.1 }}
                         >
                           <div className={cn(
                             "p-1.5 rounded-lg",
@@ -364,46 +240,32 @@ export function DownloadSection({ className }: { className?: string }) {
                             <FeatureIcon feature={feature} />
                           </div>
                           <span className="text-sm text-zinc-300">{feature}</span>
-                        </motion.div>
+                        </div>
                       ))}
                     </div>
 
                     {/* Download button */}
-                    <motion.div
+                    <div
                       className={cn(
                         "flex items-center gap-3 transition-colors mt-auto pt-6 border-t border-white/5",
                         isSelected ? "text-indigo-400" : "text-zinc-400 group-hover:text-white"
                       )}
-                      animate={{
-                        x: isHovered ? 5 : 0,
-                      }}
                     >
                       <Download className="w-5 h-5" />
                       <span className="font-medium">Download</span>
-                      <motion.div
-                        animate={{
-                          x: isHovered ? 5 : 0,
-                          opacity: isHovered ? 1 : 0.7,
-                        }}
-                      >
-                        <ArrowRight className="w-4 h-4" />
-                      </motion.div>
-                    </motion.div>
+                      <div className={isHovered ? "translate-x-1 opacity-100" : "opacity-70"}>
+                        <ArrowRight className="w-4 h-4 transition-all" />
+                      </div>
+                    </div>
                   </div>
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
             );
           })}
         </div>
 
         {/* Alternative downloads */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-center"
-        >
+        <div className="text-center">
           <div className="inline-flex flex-col items-center gap-6 p-8 rounded-2xl bg-zinc-900/40 backdrop-blur-xl border border-white/5">
             <h3 className="text-lg font-semibold text-white">Looking for other options?</h3>
 
@@ -415,21 +277,17 @@ export function DownloadSection({ className }: { className?: string }) {
                 { label: "Windows (.msi)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.3.3/Lokus_1.3.3_x64_en-US.msi" },
                 { label: "macOS (Universal .app.tar.gz)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.3.3/Lokus_aarch64.app.tar.gz" },
                 { label: "Installation guide", url: "https://github.com/lokus-ai/lokus/releases" }
-              ].map((link, index) => (
-                <motion.a
+              ].map((link) => (
+                <a
                   key={link.label}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all group"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 hover:border-white/20 hover:scale-105 hover:-translate-y-0.5 transition-all group"
                 >
                   <span className="text-sm">{link.label}</span>
                   <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform opacity-50 group-hover:opacity-100" />
-                </motion.a>
+                </a>
               ))}
             </div>
 
@@ -445,8 +303,8 @@ export function DownloadSection({ className }: { className?: string }) {
               </a>
             </p>
           </div>
-        </motion.div>
-      </motion.div>
-    </motion.section>
+        </div>
+      </div>
+    </section>
   );
 }

@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import Link from "next/link"
 import { Github, Heart, ArrowUp } from "lucide-react"
 import { Logo } from "@/components/ui/logo"
@@ -10,6 +9,16 @@ export function Footer() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('#')) {
+      e.preventDefault()
+      const element = document.querySelector(href)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }
+  }
+
   const footerSections: Array<{
     title: string;
     links: Array<{ href: string; label: string; external?: boolean }>;
@@ -17,11 +26,8 @@ export function Footer() {
       {
         title: "Product",
         links: [
-          { href: "#download", label: "Download", external: false },
+          { href: "#download", label: "Download" },
           { href: "/blog", label: "Blog" },
-          { href: "/features/markdown-editor", label: "Markdown Editor" },
-          { href: "/features/local-first", label: "Local First" },
-          { href: "/features/knowledge-graph", label: "Knowledge Graph" },
           { href: "https://docs.lokusmd.com", label: "Documentation", external: true },
           { href: "https://github.com/lokus-ai/lokus", label: "GitHub", external: true },
         ]
@@ -55,64 +61,28 @@ export function Footer() {
 
   return (
     <footer className="relative bg-zinc-950 border-t border-white/5">
-      {/* Background Effects */}
+      {/* Background Effects - CSS animated */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute -top-60 -left-60 w-96 h-96 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3]
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute -bottom-60 -right-60 w-96 h-96 bg-gradient-to-tl from-purple-500/5 to-pink-500/5 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.5, 0.3, 0.5]
-          }}
-          transition={{ duration: 8, repeat: Infinity, delay: 4 }}
-        />
+        <div className="absolute -top-60 -left-60 w-96 h-96 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute -bottom-60 -right-60 w-96 h-96 bg-gradient-to-tl from-purple-500/5 to-pink-500/5 rounded-full blur-3xl animate-pulse-slow animation-delay-4000" />
       </div>
 
       <div className="relative z-10">
         {/* Main Footer Content */}
-        <motion.section
-          className="py-16"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
+        <section className="py-16">
           <div className="container max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
               {/* Brand Section */}
-              <motion.div
-                className="lg:col-span-2"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-              >
+              <div className="lg:col-span-2">
                 <Link href="/" className="flex items-center gap-3 group mb-6">
-                  <motion.div
-                    className="relative"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/10 rounded-xl blur-lg"
-                      animate={{
-                        opacity: [0.4, 0.7, 0.4]
-                      }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    />
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/10 rounded-xl blur-lg animate-pulse-slow" />
                     <Logo
                       size={48}
                       className="relative z-10 drop-shadow-lg"
                       animated={false}
                     />
-                  </motion.div>
+                  </div>
 
                   <div className="flex flex-col">
                     <span className="font-bold text-2xl text-white tracking-tight">
@@ -135,131 +105,122 @@ export function Footer() {
                   {socialLinks.map((social) => {
                     const Icon = social.icon
                     return (
-                      <motion.a
+                      <a
                         key={social.label}
                         href={social.href}
-                        className="w-10 h-10 bg-zinc-900 hover:bg-zinc-800 border border-white/5 hover:border-white/10 rounded-xl flex items-center justify-center group transition-all duration-300"
-                        whileHover={{ scale: 1.1, y: -2 }}
-                        whileTap={{ scale: 0.9 }}
+                        className="w-10 h-10 bg-zinc-900 hover:bg-zinc-800 border border-white/5 hover:border-white/10 rounded-xl flex items-center justify-center group transition-all duration-300 hover:scale-110 hover:-translate-y-0.5 active:scale-95"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         <Icon className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
-                      </motion.a>
+                      </a>
                     )
                   })}
                 </div>
-              </motion.div>
+              </div>
 
               {/* Footer Links */}
-              {footerSections.map((section, sectionIndex) => (
-                <motion.div
-                  key={section.title}
-                  className="space-y-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: sectionIndex * 0.1 + 0.3 }}
-                >
+              {footerSections.map((section) => (
+                <div key={section.title} className="space-y-4">
                   <h3 className="font-semibold text-white text-lg mb-4">
                     {section.title}
                   </h3>
                   <ul className="space-y-3">
-                    {section.links.map((link, linkIndex) => (
-                      <motion.li
-                        key={link.href}
-                        initial={{ opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: linkIndex * 0.05 }}
-                      >
+                    {section.links.map((link) => (
+                      <li key={link.href}>
                         {link.external ? (
                           <a
                             href={link.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-zinc-400 hover:text-indigo-400 transition-colors duration-300 group flex items-center"
+                            className="text-zinc-400 hover:text-indigo-400 transition-all duration-300 hover:translate-x-1 inline-block"
                           >
-                            <motion.span
-                              whileHover={{ x: 4 }}
-                              transition={{ duration: 0.2 }}
-                            >
-                              {link.label}
-                            </motion.span>
+                            {link.label}
+                          </a>
+                        ) : link.href.startsWith('#') ? (
+                          <a
+                            href={link.href}
+                            onClick={(e) => handleAnchorClick(e, link.href)}
+                            className="text-zinc-400 hover:text-indigo-400 transition-all duration-300 hover:translate-x-1 inline-block cursor-pointer"
+                          >
+                            {link.label}
                           </a>
                         ) : (
                           <Link
                             href={link.href}
-                            className="text-zinc-400 hover:text-indigo-400 transition-colors duration-300 group flex items-center"
+                            className="text-zinc-400 hover:text-indigo-400 transition-all duration-300 hover:translate-x-1 inline-block"
                           >
-                            <motion.span
-                              whileHover={{ x: 4 }}
-                              transition={{ duration: 0.2 }}
-                            >
-                              {link.label}
-                            </motion.span>
+                            {link.label}
                           </Link>
                         )}
-                      </motion.li>
+                      </li>
                     ))}
                   </ul>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
-        </motion.section>
+        </section>
 
 
         {/* Bottom Section */}
-        <motion.section
-          className="py-8 border-t border-white/5"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
+        <section className="py-8 border-t border-white/5">
           <div className="container max-w-7xl mx-auto px-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <motion.div
-                className="flex items-center gap-2 text-zinc-500 text-sm"
-                whileInView={{ scale: [0.9, 1] }}
-                transition={{ duration: 0.6 }}
-              >
+              <div className="flex items-center gap-2 text-zinc-500 text-sm">
                 <span>© 2024 Lokus. Made with</span>
-                <motion.div
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    rotate: [0, 10, -10, 0]
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 3
-                  }}
-                >
-                  <Heart className="w-3.5 h-3.5 text-red-500 fill-current" />
-                </motion.div>
+                <Heart className="w-3.5 h-3.5 text-red-500 fill-current animate-heartbeat" />
                 <span>in the digital realm.</span>
-              </motion.div>
+              </div>
 
-              <motion.button
+              <button
                 onClick={scrollToTop}
-                className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors group text-sm"
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 text-zinc-400 hover:text-white transition-all duration-300 hover:-translate-y-0.5 active:scale-95 text-sm group"
               >
                 <span>Back to top</span>
-                <motion.div
-                  whileHover={{ y: -2 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <ArrowUp className="w-4 h-4 group-hover:animate-bounce" />
-                </motion.div>
-              </motion.button>
+                <ArrowUp className="w-4 h-4 group-hover:animate-bounce" />
+              </button>
             </div>
           </div>
-        </motion.section>
+        </section>
       </div>
+
+      <style jsx>{`
+        @keyframes pulse-slow {
+          0%, 100% {
+            opacity: 0.3;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.5;
+            transform: scale(1.1);
+          }
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 8s ease-in-out infinite;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+        @keyframes heartbeat {
+          0%, 100% {
+            transform: scale(1);
+          }
+          25% {
+            transform: scale(1.2);
+          }
+          50% {
+            transform: scale(1);
+          }
+          75% {
+            transform: scale(1.2);
+          }
+        }
+        .animate-heartbeat {
+          animation: heartbeat 2s ease-in-out infinite;
+          animation-delay: 3s;
+        }
+      `}</style>
     </footer>
   )
 }

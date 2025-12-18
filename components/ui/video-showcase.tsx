@@ -1,109 +1,38 @@
 "use client";
 
-import { motion, useScroll, useTransform, useMotionValue } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { Play } from "lucide-react";
 
 export function VideoShowcase({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-
-  // Smooth mouse tracking
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  // Parallax effects
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        setMousePosition({ x, y });
-        mouseX.set(x);
-        mouseY.set(y);
-      }
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   return (
     <section
       ref={containerRef}
       className={cn("relative py-12 overflow-hidden bg-black", className)}
     >
-      {/* Animated Grid Background */}
+      {/* Static Grid Background */}
       <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
 
-      {/* Gradient Orbs */}
-      <motion.div
-        style={{ opacity }}
-        className="absolute top-1/4 -left-48 w-96 h-96 bg-indigo-500/20 rounded-full blur-[120px]"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-      <motion.div
-        style={{ opacity }}
-        className="absolute bottom-1/4 -right-48 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px]"
-        animate={{
-          scale: [1.2, 1, 1.2],
-          opacity: [0.5, 0.3, 0.5],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1
-        }}
-      />
+      {/* Static Gradient Orbs */}
+      <div className="absolute top-1/4 -left-48 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px]" />
 
       <div className="container max-w-7xl mx-auto px-4 relative z-10">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
-        >
+        <div className="text-center mb-20">
           <h2 className="text-5xl md:text-7xl font-bold mb-6 text-white tracking-tight">
             Experience <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Lokus</span>
           </h2>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
             A beautiful, fast, and intelligent note-taking app designed for modern workflows
           </p>
-        </motion.div>
+        </div>
 
         {/* Main Demo Card with Modern Browser Frame */}
-        <motion.div
-          style={{ y }}
-          className="relative max-w-6xl mx-auto mb-24"
-        >
-          {/* Spotlight Effect */}
-          <motion.div
-            className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
-            style={{
-              background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(99, 102, 241, 0.15), transparent 40%)`,
-            }}
-          />
+        <div className="relative max-w-6xl mx-auto mb-24">
 
           {/* Browser Frame */}
           <div className="relative group">
@@ -129,25 +58,48 @@ export function VideoShowcase({ className }: { className?: string }) {
               {/* Video Content */}
               <div className="relative aspect-[16/10] bg-zinc-950">
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5" />
-                <iframe
-                  src="https://app.supademo.com/embed/cmh0jxcz91u6r6nxt6ychgkcg?embed_v=2&utm_source=embed&autoplay=1&muted=1"
-                  title="Lokus product walkthrough"
-                  loading="eager"
-                  className="relative h-full w-full border-0"
-                  allow="autoplay; clipboard-write"
-                  allowFullScreen={false}
-                />
+
+                {!isVideoLoaded ? (
+                  // Thumbnail with play button
+                  <div
+                    className="relative h-full w-full flex items-center justify-center cursor-pointer group/play"
+                    onClick={() => setIsVideoLoaded(true)}
+                  >
+                    {/* Thumbnail placeholder */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 via-zinc-900 to-purple-900/20" />
+
+                    {/* Play button */}
+                    <div className="relative z-10 flex flex-col items-center gap-4">
+                      <div className="w-20 h-20 rounded-full bg-indigo-500/20 border-2 border-indigo-500/50 flex items-center justify-center group-hover/play:bg-indigo-500/30 group-hover/play:scale-110 transition-all">
+                        <Play className="w-8 h-8 text-indigo-400 ml-1" fill="currentColor" />
+                      </div>
+                      <p className="text-zinc-400 text-sm group-hover/play:text-white transition-colors">Click to watch demo</p>
+                    </div>
+
+                    {/* Preview text */}
+                    <div className="absolute bottom-8 left-8 right-8">
+                      <div className="bg-zinc-900/80 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+                        <p className="text-xs text-zinc-400 mb-2">Interactive Demo</p>
+                        <h3 className="text-lg font-semibold text-white">See how Lokus works</h3>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  // Actual iframe - only loads when clicked
+                  <iframe
+                    src="https://app.supademo.com/embed/cmh0jxcz91u6r6nxt6ychgkcg?embed_v=2&utm_source=embed&autoplay=1&muted=1"
+                    title="Lokus product walkthrough"
+                    className="relative h-full w-full border-0"
+                    allow="autoplay; clipboard-write"
+                    allowFullScreen={false}
+                  />
+                )}
               </div>
             </div>
           </div>
 
           {/* Floating Stats - Redesigned to look like app UI elements */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="absolute -left-4 md:-left-16 top-1/4 hidden lg:block"
-          >
+          <div className="absolute -left-4 md:-left-16 top-1/4 hidden lg:block">
             <div className="bg-zinc-950/90 backdrop-blur-xl rounded-lg p-3 border border-white/10 shadow-2xl shadow-black/50 ring-1 ring-white/5 min-w-[180px]">
               <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2">
                 <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">Performance</span>
@@ -173,14 +125,9 @@ export function VideoShowcase({ className }: { className?: string }) {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="absolute -right-4 md:-right-16 bottom-1/4 hidden lg:block"
-          >
+          <div className="absolute -right-4 md:-right-16 bottom-1/4 hidden lg:block">
             <div className="bg-zinc-950/90 backdrop-blur-xl rounded-lg p-3 border border-white/10 shadow-2xl shadow-black/50 ring-1 ring-white/5 min-w-[160px]">
               <div className="flex items-center gap-2 mb-3 border-b border-white/5 pb-2">
                 <div className="w-2 h-2 rounded-full bg-indigo-500" />
@@ -197,13 +144,13 @@ export function VideoShowcase({ className }: { className?: string }) {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 pt-1 border-t border-white/5 mt-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   <span className="text-[10px] text-zinc-400">Metal Accelerated</span>
                 </div>
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );

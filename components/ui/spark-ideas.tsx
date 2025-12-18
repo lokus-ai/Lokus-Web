@@ -1,58 +1,14 @@
 "use client";
 
-import { motion, useMotionValue, useTransform } from "framer-motion";
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Link2, GitBranch, Layers, Puzzle, Sparkles, Share2, Box, Bold, Italic, List, Image as ImageIcon, MoreHorizontal, ArrowRight, FileText, Search } from "lucide-react";
-import { ForceGraph } from "./force-graph";
-import { DraggableCanvas } from "./draggable-canvas";
+import { Link2, GitBranch, Layers, Puzzle, Sparkles, Share2, Bold, Italic, List, Search } from "lucide-react";
+import { StaticGraph } from "./static-graph";
 
 function InteractiveFlowchart() {
-  // Drag offsets
-  const x1 = useMotionValue(0);
-  const y1 = useMotionValue(0);
-  const x2 = useMotionValue(0);
-  const y2 = useMotionValue(0);
-  const x3 = useMotionValue(0);
-  const y3 = useMotionValue(0);
-
-  // Node dimensions and initial positions
-  const nodeW = 128; // w-32
-  const nodeH = 80;  // approx height, based on content
-
-  // Centers relative to initial positions
-  // Node 1: left 60, top 60
-  const c1 = { x: 60 + nodeW / 2, y: 60 + nodeH / 2 };
-  // Node 2: left 160, top 160
-  const c2 = { x: 160 + nodeW / 2, y: 160 + nodeH / 2 };
-  // Node 3: left 300, top 60
-  const c3 = { x: 300 + nodeW / 2, y: 60 + nodeH / 2 };
-
-  // Dynamic paths
-  const path1 = useTransform(
-    [x1, y1, x2, y2],
-    ([dx1, dy1, dx2, dy2]) => {
-      const sx = c1.x + (dx1 as number);
-      const sy = c1.y + (dy1 as number);
-      const ex = c2.x + (dx2 as number);
-      const ey = c2.y + (dy2 as number);
-      // Adjust control points for a smoother curve, potentially based on relative positions
-      // For simplicity, using fixed offsets from start/end points
-      return `M ${sx} ${sy} C ${sx} ${sy + 50}, ${ex} ${ey - 50}, ${ex} ${ey}`;
-    }
-  );
-
-  const path2 = useTransform(
-    [x2, y2, x3, y3],
-    ([dx2, dy2, dx3, dy3]) => {
-      const sx = c2.x + (dx2 as number);
-      const sy = c2.y + (dy2 as number);
-      const ex = c3.x + (dx3 as number);
-      const ey = c3.y + (dy3 as number);
-      // Adjust control points for a smoother curve
-      return `M ${sx} ${sy} C ${sx} ${sy - 50}, ${ex} ${ey + 50}, ${ex} ${ey}`;
-    }
-  );
+  // Static paths without animation
+  const path1 = "M 124 100 C 124 150, 224 170, 224 200";
+  const path2 = "M 224 200 C 224 150, 364 110, 364 100";
 
   return (
     <div className="relative h-full w-full bg-zinc-950 rounded-xl border border-white/10 overflow-hidden shadow-2xl group/canvas">
@@ -65,14 +21,14 @@ function InteractiveFlowchart() {
             <polygon points="0 0, 10 3.5, 0 7" fill="#52525b" />
           </marker>
         </defs>
-        <motion.path
+        <path
           d={path1}
           stroke="#52525b"
           strokeWidth="2"
           fill="none"
           markerEnd="url(#arrowhead)"
         />
-        <motion.path
+        <path
           d={path2}
           stroke="#52525b"
           strokeWidth="2"
@@ -81,16 +37,9 @@ function InteractiveFlowchart() {
         />
       </svg>
 
-      {/* Draggable Nodes */}
+      {/* Nodes */}
       {/* Node 1: Brainstorm */}
-      <motion.div
-        className="absolute top-[60px] left-[60px] w-32 bg-zinc-900 border border-indigo-500/30 rounded-lg shadow-lg shadow-indigo-500/5 p-3 cursor-grab active:cursor-grabbing hover:border-indigo-500/60 transition-colors z-10"
-        style={{ x: x1, y: y1 }}
-        drag
-        dragMomentum={false}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
+      <div className="absolute top-[60px] left-[60px] w-32 bg-zinc-900 border border-indigo-500/30 rounded-lg shadow-lg shadow-indigo-500/5 p-3 hover:border-indigo-500/60 transition-colors z-10">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-2 h-2 rounded-full bg-indigo-500" />
           <span className="text-xs font-semibold text-zinc-200">Brainstorm</span>
@@ -99,17 +48,10 @@ function InteractiveFlowchart() {
           <div className="h-1.5 w-full bg-zinc-800 rounded-full" />
           <div className="h-1.5 w-2/3 bg-zinc-800 rounded-full" />
         </div>
-      </motion.div>
+      </div>
 
       {/* Node 2: Research */}
-      <motion.div
-        className="absolute top-[160px] left-[160px] w-32 bg-zinc-900 border border-emerald-500/30 rounded-lg shadow-lg shadow-emerald-500/5 p-3 cursor-grab active:cursor-grabbing hover:border-emerald-500/60 transition-colors z-10"
-        style={{ x: x2, y: y2 }}
-        drag
-        dragMomentum={false}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
+      <div className="absolute top-[160px] left-[160px] w-32 bg-zinc-900 border border-emerald-500/30 rounded-lg shadow-lg shadow-emerald-500/5 p-3 hover:border-emerald-500/60 transition-colors z-10">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-2 h-2 rounded-full bg-emerald-500" />
           <span className="text-xs font-semibold text-zinc-200">Research</span>
@@ -124,17 +66,10 @@ function InteractiveFlowchart() {
             <div className="h-1.5 w-1/2 bg-zinc-800 rounded-full" />
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Node 3: Structure */}
-      <motion.div
-        className="absolute top-[60px] left-[300px] w-32 bg-zinc-900 border border-amber-500/30 rounded-lg shadow-lg shadow-amber-500/5 p-3 cursor-grab active:cursor-grabbing hover:border-amber-500/60 transition-colors z-10"
-        style={{ x: x3, y: y3 }}
-        drag
-        dragMomentum={false}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
+      <div className="absolute top-[60px] left-[300px] w-32 bg-zinc-900 border border-amber-500/30 rounded-lg shadow-lg shadow-amber-500/5 p-3 hover:border-amber-500/60 transition-colors z-10">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-2 h-2 rounded-full bg-amber-500" />
           <span className="text-xs font-semibold text-zinc-200">Structure</span>
@@ -153,7 +88,7 @@ function InteractiveFlowchart() {
             <div className="h-1 w-3/4 bg-zinc-800 rounded-full" />
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Canvas Controls */}
       <div className="absolute bottom-3 right-3 bg-zinc-900/90 backdrop-blur border border-white/10 rounded-lg p-1 flex gap-1 shadow-lg z-20">
@@ -243,12 +178,17 @@ const features = [
     title: "Graph",
     description: "Visualize the relationships between your notes. Find hidden patterns in your thinking through a visually engaging and interactive graph.",
     demo: (
-      <div className="relative h-full w-full bg-zinc-900/50 backdrop-blur-xl rounded-lg p-1 overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <ForceGraph width={200} height={200} />
+      <div className="relative h-full w-full bg-zinc-950 rounded-xl border border-white/10 overflow-hidden">
+        {/* Ambient background glow */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl" />
+
+        <div className="absolute inset-0 flex items-center justify-center p-4">
+          <StaticGraph width={200} height={200} />
         </div>
+
         <div className="absolute bottom-4 left-4 right-4 flex justify-center">
-          <div className="bg-zinc-950/80 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 shadow-xl">
+          <div className="bg-zinc-950/90 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 shadow-xl">
             <p className="text-xs text-zinc-300 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               14 notes • 17 connections
@@ -274,10 +214,7 @@ const features = [
       <div className="relative h-full w-full bg-zinc-900/50 backdrop-blur-xl rounded-lg p-6 overflow-hidden flex flex-col justify-center">
         <div className="space-y-3 relative z-10">
           {/* Plugin items */}
-          <motion.div
-            className="flex items-center gap-3 bg-zinc-800/80 backdrop-blur-sm rounded-xl p-3 border border-white/5 shadow-lg group/plugin cursor-pointer"
-            whileHover={{ x: 5, backgroundColor: "rgba(39, 39, 42, 0.9)" }}
-          >
+          <div className="flex items-center gap-3 bg-zinc-800/80 backdrop-blur-sm rounded-xl p-3 border border-white/5 shadow-lg group/plugin cursor-pointer hover:translate-x-1 transition-all">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
@@ -288,12 +225,9 @@ const features = [
             <div className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-medium border border-emerald-500/20">
               Active
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="flex items-center gap-3 bg-zinc-800/80 backdrop-blur-sm rounded-xl p-3 border border-white/5 shadow-lg group/plugin cursor-pointer"
-            whileHover={{ x: 5, backgroundColor: "rgba(39, 39, 42, 0.9)" }}
-          >
+          <div className="flex items-center gap-3 bg-zinc-800/80 backdrop-blur-sm rounded-xl p-3 border border-white/5 shadow-lg group/plugin cursor-pointer hover:translate-x-1 transition-all">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
               <Share2 className="w-4 h-4 text-white" />
             </div>
@@ -304,12 +238,9 @@ const features = [
             <div className="w-8 h-4 bg-zinc-700 rounded-full relative">
               <div className="absolute left-0.5 top-0.5 w-3 h-3 bg-zinc-400 rounded-full"></div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="flex items-center gap-3 bg-zinc-800/80 backdrop-blur-sm rounded-xl p-3 border border-white/5 shadow-lg group/plugin cursor-pointer"
-            whileHover={{ x: 5, backgroundColor: "rgba(39, 39, 42, 0.9)" }}
-          >
+          <div className="flex items-center gap-3 bg-zinc-800/80 backdrop-blur-sm rounded-xl p-3 border border-white/5 shadow-lg group/plugin cursor-pointer hover:translate-x-1 transition-all">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
               <Layers className="w-4 h-4 text-white" />
             </div>
@@ -320,7 +251,7 @@ const features = [
             <div className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-medium border border-blue-500/20">
               Update
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Floating elements */}
@@ -339,13 +270,7 @@ export function SparkIdeas({ className }: { className?: string }) {
 
       <div className="container max-w-7xl mx-auto px-4 relative z-10">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
-        >
+        <div className="text-center mb-20">
           <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white tracking-tight">
             Spark <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-yellow-400">ideas.</span>
           </h2>
@@ -353,7 +278,7 @@ export function SparkIdeas({ className }: { className?: string }) {
             From personal notes to research, knowledge bases, and project management,
             Lokus gives you the tools to come up with ideas and organize them.
           </p>
-        </motion.div>
+        </div>
 
         {/* Feature Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -361,15 +286,8 @@ export function SparkIdeas({ className }: { className?: string }) {
             const Icon = feature.icon;
 
             return (
-              <motion.div
-                key={feature.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                className="group"
-              >
-                <div className="relative h-full bg-zinc-900/20 border border-white/5 rounded-3xl overflow-hidden hover:border-white/10 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 flex flex-col">
+              <div key={feature.id} className="group">
+                <div className="relative h-full bg-zinc-900/20 border border-white/5 rounded-3xl overflow-hidden hover:border-white/10 transition-all hover:shadow-2xl hover:shadow-indigo-500/10 flex flex-col">
                   {/* Header */}
                   <div className="p-8 pb-0">
                     <div className="flex items-start gap-5 mb-6">
@@ -384,14 +302,14 @@ export function SparkIdeas({ className }: { className?: string }) {
                   </div>
 
                   {/* Interactive Demo Area */}
-                  <div className="relative flex-1 min-h-[280px] mx-6 mb-6 mt-4 group-hover:scale-[1.02] transition-transform duration-500 ease-out">
+                  <div className="relative flex-1 min-h-[280px] mx-6 mb-6 mt-4 group-hover:scale-[1.02] transition-transform ease-out">
                     {feature.demo}
                   </div>
 
                   {/* Hover glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>

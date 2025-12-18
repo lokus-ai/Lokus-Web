@@ -24,14 +24,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
-    // Theme already applied by inline script in layout, just sync state
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('lokus-theme') || 'default';
-      if (savedTheme !== currentTheme) {
-        setCurrentTheme(savedTheme);
-      }
-    }
-  }, [currentTheme]);
+    // Theme already applied by inline script in layout.tsx
+    // No need to re-apply it here, just sync the state
+  }, []); // Empty dependency array - only run once on mount
 
   const setTheme = (themeName: string) => {
     if (themes[themeName] && typeof window !== 'undefined') {

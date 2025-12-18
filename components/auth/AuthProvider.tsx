@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useRef, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { User, Session } from '@supabase/supabase-js'
 
@@ -22,15 +22,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
+  const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null)
+
+  // Lazy initialize Supabase client
+  const supabase = useMemo(() => {
+    if (!supabaseRef.current) {
+      supabaseRef.current = createClient()
+    }
+    return supabaseRef.current
+  }, [])
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
+    // Defer auth check to not block initial render
+    const timeoutId = setTimeout(() => {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setSession(session)
+        setUser(session?.user ?? null)
+        setLoading(false)
+      })
+    }, 0)
 
     // Listen for auth changes
     const {
@@ -41,8 +51,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false)
     })
 
-    return () => subscription.unsubscribe()
-  }, [supabase.auth])
+    return () => {
+      clearTimeout(timeoutId)
+      subscription.unsubscribe()
+    }
+  }, [supabase])
 
   const signOut = async () => {
     await supabase.auth.signOut()

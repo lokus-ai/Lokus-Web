@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface LogoProps {
@@ -10,16 +9,13 @@ interface LogoProps {
 }
 
 export function Logo({ className, size = 32, animated = true }: LogoProps) {
-  const LogoComponent = animated ? motion.div : "div"
-  const animationProps = animated ? {
-    whileHover: { scale: 1.05 },
-    whileTap: { scale: 0.95 }
-  } : {}
-
   return (
-    <LogoComponent
-      className={cn("inline-flex items-center justify-center", className)}
-      {...animationProps}
+    <div
+      className={cn(
+        "inline-flex items-center justify-center transition-transform duration-200",
+        animated && "hover:scale-105 active:scale-95",
+        className
+      )}
     >
       <svg 
         width={size} 
@@ -35,7 +31,7 @@ export function Logo({ className, size = 32, animated = true }: LogoProps) {
           className="text-white dark:text-white"
         />
       </svg>
-    </LogoComponent>
+    </div>
   )
 }
 
