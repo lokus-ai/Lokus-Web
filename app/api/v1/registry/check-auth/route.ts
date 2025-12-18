@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -8,7 +8,9 @@ export async function GET(req: NextRequest) {
     }
 
     const token = authHeader.split(' ')[1];
-    const supabase = await createClient();
+    
+    // Use admin client to bypass RLS
+    const supabase = createAdminClient();
 
     // Hash the token to compare with stored hash
     const { createHash } = await import('crypto');

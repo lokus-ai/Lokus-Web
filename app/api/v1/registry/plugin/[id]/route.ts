@@ -8,15 +8,31 @@ export async function GET(
     const { id } = await params;
     const supabase = await createClient();
 
-    // Fetch plugin details
-    const { data: plugin, error: pluginError } = await supabase
+    // Try to fetch by slug first, then by id
+    let plugin;
+    let pluginError;
+
+    // First try slug
+    ({ data: plugin, error: pluginError } = await supabase
         .from('plugins')
         .select(`
             *,
             publisher:publishers(display_name, id, owner_id)
         `)
-        .eq('id', id)
-        .single();
+        .eq('slug', id)
+        .single());
+
+    // If not found by slug, try by id
+    if (pluginError || !plugin) {
+        ({ data: plugin, error: pluginError } = await supabase
+            .from('plugins')
+            .select(`
+                *,
+                publisher:publishers(display_name, id, owner_id)
+            `)
+            .eq('id', id)
+            .single());
+    }
 
     if (pluginError || !plugin) {
         return NextResponse.json({ error: 'Plugin not found' }, { status: 404 });
@@ -26,7 +42,7 @@ export async function GET(
     const { data: versions, error: versionsError } = await supabase
         .from('plugin_versions')
         .select('*')
-        .eq('plugin_id', id)
+        .eq('plugin_id', plugin.id)
         .order('created_at', { ascending: false });
 
     if (versionsError) {
@@ -36,6 +52,7 @@ export async function GET(
     // Format response
     const response = {
         id: plugin.id,
+        slug: plugin.slug,
         name: plugin.name,
         description: plugin.description,
         latest_version: plugin.latest_version,
@@ -50,7 +67,7 @@ export async function GET(
             created_at: v.created_at,
             changelog: v.changelog
         })),
-        readme: versions[0]?.readme // Include latest readme
+        readme: versions[0]?.readme
     };
 
     return NextResponse.json(response);

@@ -89,7 +89,9 @@ export default function LoginContent() {
     setError(null)
 
     // Build callback URL with OAuth parameters if coming from app
-    const callbackUrl = new URL(`${window.location.origin}/auth/callback`)
+    // Use env var to avoid localhost redirect when behind Cloudflare Tunnel
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
+    const callbackUrl = new URL(`${baseUrl}/auth/callback`)
     if (isOAuthFlow) {
       callbackUrl.searchParams.set('redirect_uri', redirectUri!)
       callbackUrl.searchParams.set('state', state!)

@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
     // Transform to match expected format if needed
     const formattedPlugins = plugins.map(p => ({
         id: p.id,
+        slug: p.slug,
         name: p.name,
         description: p.description,
         version: p.latest_version,

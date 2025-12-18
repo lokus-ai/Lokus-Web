@@ -26,7 +26,9 @@ export default function SignupContent() {
     setMessage(null)
 
     // Build callback URL with redirect parameter if coming from app
-    const callbackUrl = new URL(`${window.location.origin}/auth/callback`)
+    // Use env var to avoid localhost redirect when behind Cloudflare Tunnel
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
+    const callbackUrl = new URL(`${baseUrl}/auth/callback`)
     if (isAppRedirect) {
       callbackUrl.searchParams.set('redirect', redirectParam!)
     }
@@ -60,7 +62,9 @@ export default function SignupContent() {
     setError(null)
 
     // Build callback URL with redirect parameter if coming from app
-    const callbackUrl = new URL(`${window.location.origin}/auth/callback`)
+    // Use env var to avoid localhost redirect when behind Cloudflare Tunnel
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
+    const callbackUrl = new URL(`${baseUrl}/auth/callback`)
     if (isAppRedirect) {
       callbackUrl.searchParams.set('redirect', redirectParam!)
     }
