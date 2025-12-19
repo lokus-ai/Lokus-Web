@@ -55,10 +55,14 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
                         {children}
                     </a>
                 ),
-                // Style images
-                img: ({ src, alt }) => (
-                    <img src={src} alt={alt || ''} className="max-w-full h-auto rounded my-2" />
-                ),
+                // Style images - filter out relative paths (local assets)
+                img: ({ src, alt }) => {
+                    // Skip images with relative paths (like assets/logo.png)
+                    if (!src || (!src.startsWith('http://') && !src.startsWith('https://'))) {
+                        return null;
+                    }
+                    return <img src={src} alt={alt || ''} className="max-w-full h-auto rounded my-2" />;
+                },
                 // Style code blocks
                 code: ({ className, children, ...props }) => {
                     const isInline = !className;
