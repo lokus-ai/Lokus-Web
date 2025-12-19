@@ -2,6 +2,16 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { NextRequest, NextResponse } from 'next/server';
 
+const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, User-Agent',
+};
+
+export async function OPTIONS() {
+    return NextResponse.json({}, { headers: corsHeaders });
+}
+
 // GET - Fetch ratings for a plugin
 export async function GET(
     request: NextRequest,
@@ -18,7 +28,7 @@ export async function GET(
         .single();
 
     if (!plugin) {
-        return NextResponse.json({ error: 'Plugin not found' }, { status: 404 });
+        return NextResponse.json({ error: 'Plugin not found' }, { status: 404, headers: corsHeaders });
     }
 
     // Fetch ratings with user info
@@ -40,7 +50,7 @@ export async function GET(
         .order('created_at', { ascending: false });
 
     if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: error.message }, { status: 500, headers: corsHeaders });
     }
 
     // Calculate average rating
@@ -60,8 +70,8 @@ export async function GET(
             id: r.id,
             rating: r.rating,
             review: r.review,
-            createdAt: r.created_at,
-            updatedAt: r.updated_at,
+            created_at: r.created_at,
+            updated_at: r.updated_at,
             user: {
                 id: r.user?.id,
                 name: r.user?.raw_user_meta_data?.name || r.user?.raw_user_meta_data?.full_name || 'Anonymous',
@@ -73,7 +83,7 @@ export async function GET(
             total: totalRatings,
             counts: ratingCounts
         }
-    });
+    }, { headers: corsHeaders });
 }
 
 // POST - Submit a rating
