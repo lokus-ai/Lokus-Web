@@ -12,7 +12,7 @@ export default async function MarketplacePage() {
     // Fetch top downloaded plugins
     const { data: featuredPlugins } = await supabase
         .from('plugins')
-        .select('*, publishers(display_name)')
+        .select('*, slug, publishers(display_name)')
         .order('downloads', { ascending: false })
         .limit(3);
 
@@ -43,7 +43,7 @@ export default async function MarketplacePage() {
                     <div className="flex flex-wrap justify-center gap-4 pt-4">
                         {['Productivity', 'Themes', 'Developer Tools', 'Integrations'].map((cat) => (
                             <Button key={cat} variant="outline" className="rounded-full" asChild>
-                                <Link href={`/ marketplace / search ? category = ${cat} `}>{cat}</Link>
+                                <Link href={`/marketplace/search?category=${cat}`}>{cat}</Link>
                             </Button>
                         ))}
                     </div>
@@ -64,7 +64,7 @@ export default async function MarketplacePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {featuredPlugins && featuredPlugins.length > 0 ? (
                         featuredPlugins.map((plugin) => (
-                            <Link href={`/ marketplace / plugin / ${plugin.id} `} key={plugin.id} className="group">
+                            <Link href={`/marketplace/plugin/${plugin.slug}`} key={plugin.id} className="group">
                                 <div className="border rounded-xl p-6 space-y-4 hover:border-primary/50 hover:shadow-lg transition-all h-full bg-card">
                                     <div className="flex items-start justify-between">
                                         <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center">

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,25 +8,21 @@ import { createClient } from '@/lib/supabase/server';
 export default async function SearchPage({
     searchParams,
 }: {
-    searchParams: { q?: string; category?: string };
+    searchParams: Promise<{ q?: string; category?: string }>;
 }) {
-    const query = searchParams.q || '';
-    const category = searchParams.category || 'All';
+    const { q, category: cat } = await searchParams;
+    const query = q || '';
+    const category = cat || 'All';
     const supabase = await createClient();
 
     let dbQuery = supabase
         .from('plugins')
-        .select('*, publishers(display_name)')
+        .select('*, slug, publishers(display_name)')
         .order('downloads', { ascending: false });
 
     if (query) {
-        dbQuery = dbQuery.ilike('name', `% ${query}% `);
+        dbQuery = dbQuery.ilike('name', `%${query}%`);
     }
-
-    // TODO: Add category filtering once we have categories in DB
-    // if (category && category !== 'All') {
-    //   dbQuery = dbQuery.eq('category', category);
-    // }
 
     const { data: plugins } = await dbQuery;
 
@@ -57,15 +52,15 @@ export default async function SearchPage({
                     <div>
                         <h3 className="font-semibold mb-2">Categories</h3>
                         <div className="space-y-1">
-                            {['All', 'Productivity', 'Themes', 'Developer Tools', 'Integrations'].map((cat) => (
+                            {['All', 'Productivity', 'Themes', 'Developer Tools', 'Integrations'].map((c) => (
                                 <Button
-                                    key={cat}
-                                    variant={category === cat ? "secondary" : "ghost"}
+                                    key={c}
+                                    variant={category === c ? "secondary" : "ghost"}
                                     className="w-full justify-start h-8 px-2"
                                     asChild
                                 >
-                                    <Link href={`/ marketplace / search ? category = ${cat}& q=${query} `}>
-                                        {cat}
+                                    <Link href={`/marketplace/search?category=${c}${query ? `&q=${query}` : ''}`}>
+                                        {c}
                                     </Link>
                                 </Button>
                             ))}
@@ -77,7 +72,7 @@ export default async function SearchPage({
                 <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {plugins && plugins.length > 0 ? (
                         plugins.map((plugin) => (
-                            <Link href={`/ marketplace / plugin / ${plugin.id} `} key={plugin.id} className="block group">
+                            <Link href={`/marketplace/plugin/${plugin.slug}`} key={plugin.id} className="block group">
                                 <div className="border rounded-lg p-6 space-y-4 hover:border-primary/50 transition-colors h-full bg-card">
                                     <div className="flex items-start justify-between">
                                         <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center">
@@ -107,7 +102,7 @@ export default async function SearchPage({
                         ))
                     ) : (
                         <div className="col-span-full text-center py-12 text-muted-foreground border border-dashed rounded-lg">
-                            <p>No plugins found matching "{query}".</p>
+                            <p>No plugins found{query ? ` matching "${query}"` : ''}.</p>
                         </div>
                     )}
                 </div>
@@ -115,4 +110,3 @@ export default async function SearchPage({
         </div>
     );
 }
-

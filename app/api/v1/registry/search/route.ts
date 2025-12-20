@@ -1,6 +1,16 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
+const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, User-Agent',
+};
+
+export async function OPTIONS() {
+    return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const query = searchParams.get('q');
@@ -39,12 +49,13 @@ export async function GET(request: NextRequest) {
     const { data: plugins, error } = await dbQuery;
 
     if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: error.message }, { status: 500, headers: corsHeaders });
     }
 
     // Transform to match expected format if needed
     const formattedPlugins = plugins.map(p => ({
         id: p.id,
+        slug: p.slug,
         name: p.name,
         description: p.description,
         version: p.latest_version,
@@ -53,8 +64,9 @@ export async function GET(request: NextRequest) {
         downloads: p.downloads,
         icon: p.icon_url,
         updated_at: p.updated_at,
-        tags: p.tags
+        tags: p.tags,
+        permissions: p.permissions || []
     }));
 
-    return NextResponse.json(formattedPlugins);
+    return NextResponse.json(formattedPlugins, { headers: corsHeaders });
 }

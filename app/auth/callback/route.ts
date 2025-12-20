@@ -2,8 +2,11 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 
+// Use env var to get the correct base URL (avoids localhost when behind Cloudflare Tunnel)
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.lokusmd.com'
+
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
+  const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/'
 
@@ -25,7 +28,7 @@ export async function GET(request: Request) {
 
         try {
           // Store the authorization code with user data
-          const storeResponse = await fetch(`${origin}/api/auth/store-code`, {
+          const storeResponse = await fetch(`${BASE_URL}/api/auth/store-code`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -54,15 +57,15 @@ export async function GET(request: Request) {
           return NextResponse.redirect(`${redirectUri}?${params.toString()}`)
         } catch (error) {
           console.error('OAuth callback error:', error)
-          return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+          return NextResponse.redirect(`${BASE_URL}/auth/auth-code-error`)
         }
       }
 
       // Regular web redirect
-      return NextResponse.redirect(`${origin}${next}`)
+      return NextResponse.redirect(`${BASE_URL}${next}`)
     }
   }
 
   // Return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+  return NextResponse.redirect(`${BASE_URL}/auth/auth-code-error`)
 }
