@@ -79,11 +79,14 @@ export async function GET(
         repository_url: plugin.repository_url,
         homepage_url: plugin.homepage_url,
         rating: plugin.rating,
+        // Include permissions from plugin or latest version
+        permissions: plugin.permissions || versions[0]?.permissions || [],
         versions: versions.map(v => ({
             version: v.version,
             created_at: v.created_at,
             changelog: v.changelog,
-            readme: v.readme
+            readme: v.readme,
+            permissions: v.permissions || []
         })),
         readme: versions[0]?.readme,
         changelog: versions[0]?.changelog

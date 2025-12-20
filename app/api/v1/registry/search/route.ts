@@ -64,7 +64,8 @@ export async function GET(request: NextRequest) {
         downloads: p.downloads,
         icon: p.icon_url,
         updated_at: p.updated_at,
-        tags: p.tags
+        tags: p.tags,
+        permissions: p.permissions || []
     }));
 
     return NextResponse.json(formattedPlugins, { headers: corsHeaders });
