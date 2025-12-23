@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server'
 
+// Use env var to get the correct base URL (avoids localhost when behind Cloudflare Tunnel)
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.lokusmd.com'
+
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url)
-    
+
     // Extract OAuth parameters
     const responseType = searchParams.get('response_type')
     const clientId = searchParams.get('client_id')
@@ -31,7 +34,7 @@ export async function GET(request) {
     }
 
     // Store OAuth state in URL parameters for the login page
-    const loginUrl = new URL('/login', request.url)
+    const loginUrl = new URL('/login', BASE_URL)
     loginUrl.searchParams.set('redirect_uri', redirectUri)
     loginUrl.searchParams.set('state', state)
     loginUrl.searchParams.set('code_challenge', codeChallenge)

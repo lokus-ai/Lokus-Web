@@ -11,21 +11,21 @@ const features = [
     icon: FolderOpen,
     title: "Local-First Architecture",
     description: "Your notes are stored as markdown files on your device. No cloud, no tracking - just you and your data.",
-    imagePlaceholder: "/images/file-explorer-screenshot.png" // Replace with actual path
+    imagePlaceholder: "/images/file-explorer-screenshot.png"
   },
   {
     id: "editor",
     icon: FileText,
     title: "Beautiful Editor",
     description: "Rich markdown editor with live preview, outline view, and backlinks. Write in comfort with a distraction-free interface.",
-    imagePlaceholder: "/images/editor-screenshot.png" // Replace with actual path
+    imagePlaceholder: "/images/editor-screenshot.png"
   },
   {
     id: "customization",
     icon: Palette,
     title: "Live Theme Editor",
     description: "Real-time theme customization with instant preview. Change colors, fonts, and spacing on the fly with our powerful theme engine.",
-    imagePlaceholder: "/images/theme-editor-screenshot.png" // Replace with actual path
+    imagePlaceholder: "/images/theme-editor-screenshot.png"
   }
 ];
 
@@ -102,42 +102,35 @@ export function DataControl({ className }: { className?: string }) {
 
           {/* Dynamic Visual - Now with Images */}
           <div className="relative lg:sticky lg:top-32">
-            <div className="relative bg-black/40 border border-white/10 rounded-3xl overflow-hidden h-[600px] shadow-2xl backdrop-blur-xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+            <div className="relative bg-gradient-to-br from-zinc-900/80 to-black border border-white/10 rounded-3xl overflow-hidden aspect-[16/10] shadow-2xl shadow-black/50">
+              {/* Fancy glass border effect */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/10 via-transparent to-white/5 pointer-events-none" />
+              <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-zinc-900 to-black pointer-events-none" />
 
               {/* Image changes based on hover */}
-              {features.map((feature) => {
-                const Icon = feature.icon;
-                return activeFeature === feature.id && (
-                  <div
-                    key={feature.id}
-                    className="absolute inset-0 p-1 transition-opacity duration-300"
-                  >
-                    <div className="relative h-full w-full bg-zinc-950/50 backdrop-blur-xl rounded-lg overflow-hidden flex items-center justify-center">
-                      {/* Placeholder - Replace with actual Image component once you have screenshots */}
-                      <div className="text-center p-8">
-                        <div className={cn(
-                          "w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center",
-                          "bg-indigo-500/10 border border-indigo-500/20"
-                        )}>
-                          <Icon className="w-8 h-8 text-indigo-400" />
-                        </div>
-                        <p className="text-zinc-500 text-sm mb-2">Screenshot for:</p>
-                        <p className="text-zinc-300 font-medium">{feature.title}</p>
-                        <p className="text-zinc-600 text-xs mt-4">Add image at: {feature.imagePlaceholder}</p>
-                      </div>
-
-                      {/* Uncomment this and remove the placeholder above once you have actual screenshots */}
-                      {/* <Image
-                        src={feature.imagePlaceholder}
-                        alt={feature.title}
-                        fill
-                        className="object-cover"
-                      /> */}
-                    </div>
+              {features.map((feature) => (
+                <div
+                  key={feature.id}
+                  className={cn(
+                    "absolute inset-0 p-3 transition-all duration-500 ease-out",
+                    activeFeature === feature.id
+                      ? "opacity-100 scale-100 z-10"
+                      : "opacity-0 scale-[0.98] z-0"
+                  )}
+                >
+                  <div className="relative h-full w-full rounded-2xl overflow-hidden ring-1 ring-white/10">
+                    <Image
+                      src={feature.imagePlaceholder}
+                      alt={feature.title}
+                      fill
+                      className="object-cover object-top"
+                    />
+                    {/* Cinematic gradient overlays */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 pointer-events-none" />
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           </div>
         </div>

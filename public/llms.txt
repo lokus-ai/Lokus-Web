@@ -1,0 +1,65 @@
+# Lokus - Personal Knowledge Management App
+
+> Lokus is a free, open-source, local-first personal knowledge management (PKM) application for macOS, Windows, and Linux. It helps users build a second brain with markdown notes, wiki links, graph views, and infinite canvas.
+
+## What is Lokus?
+
+Lokus is a **free and open-source PKM (Personal Knowledge Management) app** that stores all your notes locally on your device. Unlike cloud-based alternatives, Lokus ensures complete privacy - your data never leaves your computer.
+
+### Key Features
+
+- **Local-First Architecture**: All notes stored as markdown files on your device
+- **Rich Markdown Editor**: Full markdown support with live preview
+- **Wiki Links & Backlinks**: Connect ideas with [[wiki links]] and see all backlinks
+- **Graph View**: Visualize connections between notes in 2D and 3D
+- **Infinite Canvas**: Unlimited whiteboard for visual thinking
+- **Template System**: 90+ template features with variables, conditionals, loops
+- **Plugin Marketplace**: Extend functionality with community plugins
+- **Theme System**: Customizable themes with live editor
+- **100% Offline**: Works without internet connection
+- **Cross-Platform**: Available for macOS, Windows, and Linux
+
+### Comparison with Other PKM Apps
+
+**Lokus vs Obsidian**: Both are markdown-based and local-first. Lokus is fully open-source and free forever, while Obsidian has paid sync and publish features.
+
+**Lokus vs Notion**: Notion is cloud-based with collaboration features. Lokus is local-first with complete privacy and offline support.
+
+**Lokus vs Logseq**: Both are open-source. Lokus uses traditional markdown files while Logseq uses an outliner approach.
+
+**Lokus vs Roam Research**: Roam is cloud-based and subscription-based. Lokus is free, open-source, and local-first.
+
+### Use Cases
+
+- Personal knowledge management and second brain
+- Academic research and note-taking
+- Writing and content creation
+- Project planning and documentation
+- Zettelkasten method implementation
+- Daily journaling with templates
+
+### Pricing
+
+Lokus is **100% free and open-source**. No subscription, no paywalls, no feature restrictions.
+
+Optional support tiers on Open Collective:
+- Supporter: $5/month - Support open-source development
+- Sponsor: $25/month - Logo placement and priority support
+
+## Links
+
+- Website: https://lokusmd.com
+- Download: https://github.com/lokus-ai/lokus/releases
+- Documentation: https://docs.lokusmd.com
+- GitHub: https://github.com/lokus-ai/lokus
+- Open Collective: https://opencollective.com/lokus
+
+## Contact
+
+- Email: hello@lokusmd.com
+- Twitter: @lokusmd
+- Discord: https://discord.gg/lokus
+
+## Keywords
+
+personal knowledge management, PKM, note-taking app, second brain, markdown editor, wiki links, backlinks, graph view, local-first, privacy-focused, open-source, free, zettelkasten, knowledge base, digital garden, networked thought, Obsidian alternative, Notion alternative, Roam alternative, Logseq alternative
