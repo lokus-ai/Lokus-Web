@@ -26,30 +26,39 @@ export function Footer() {
       {
         title: "Product",
         links: [
-          { href: "#download", label: "Download" },
+          { href: "/features", label: "Features" },
+          { href: "/demo", label: "Try Demo" },
+          { href: "https://github.com/lokus-ai/lokus/releases", label: "Download", external: true },
+          { href: "/marketplace", label: "Plugins" },
           { href: "/blog", label: "Blog" },
+          { href: "/changelog", label: "Changelog" },
+        ]
+      },
+      {
+        title: "Compare",
+        links: [
+          { href: "/compare", label: "All Comparisons" },
+          { href: "/compare/obsidian", label: "Lokus vs Obsidian" },
+          { href: "/compare/notion", label: "Lokus vs Notion" },
           { href: "https://docs.lokusmd.com", label: "Documentation", external: true },
-          { href: "https://github.com/lokus-ai/lokus", label: "GitHub", external: true },
         ]
       },
       {
         title: "Resources",
         links: [
-          { href: "/resources", label: "Brand Resources" },
-          { href: "/changelog", label: "Changelog" },
           { href: "https://docs.lokusmd.com/getting-started", label: "Getting Started", external: true },
           { href: "https://docs.lokusmd.com/user-guide", label: "User Guide", external: true },
-          { href: "https://github.com/lokus-ai/lokus/releases", label: "Releases", external: true },
-          { href: "https://github.com/lokus-ai/lokus/issues", label: "Support", external: true }
+          { href: "/resources", label: "Brand Resources" },
+          { href: "https://opencollective.com/lokus", label: "Support Us", external: true },
         ]
       },
       {
         title: "Community",
         links: [
+          { href: "https://github.com/lokus-ai/lokus", label: "GitHub", external: true },
           { href: "https://github.com/lokus-ai/lokus/discussions", label: "Discussions", external: true },
           { href: "https://github.com/lokus-ai/lokus/issues", label: "Bug Reports", external: true },
           { href: "https://github.com/lokus-ai/lokus/blob/main/CONTRIBUTING.md", label: "Contributing", external: true },
-          { href: "https://github.com/lokus-ai/lokus/blob/main/LICENSE", label: "License", external: true }
         ]
       }
     ]
@@ -71,9 +80,9 @@ export function Footer() {
         {/* Main Footer Content */}
         <section className="py-16">
           <div className="container max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-12">
               {/* Brand Section */}
-              <div className="lg:col-span-2">
+              <div className="col-span-2">
                 <Link href="/" className="flex items-center gap-3 group mb-6">
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/10 rounded-xl blur-lg animate-pulse-slow" />
@@ -95,9 +104,9 @@ export function Footer() {
                 </Link>
 
                 <p className="text-zinc-400 mb-6 leading-relaxed">
-                  The future of knowledge management. Build your personal wiki,
-                  connect ideas, and unleash your creativity with our local-first
-                  note-taking platform.
+                  Free, open-source personal knowledge management (PKM) app.
+                  Local-first note-taking with markdown, wiki links, graph view,
+                  and infinite canvas. The best Obsidian alternative.
                 </p>
 
                 {/* Social Links */}

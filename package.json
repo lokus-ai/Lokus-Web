@@ -15,6 +15,7 @@
   "dependencies": {
     "@number-flow/react": "^0.5.10",
     "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
