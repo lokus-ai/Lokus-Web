@@ -1,0 +1,95 @@
+name: Server Maintenance
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'status'
+        type: choice
+        options:
+          - status
+          - restart-all
+          - restart-analytics
+          - restart-crash
+          - logs-analytics
+          - logs-crash
+          - check-disk
+          - run-custom
+      custom_command:
+        description: 'Custom command (only for run-custom action)'
+        required: false
+        default: ''
+
+jobs:
+  server-maintenance:
+    runs-on: self-hosted
+    steps:
+      - name: Check Docker Status
+        if: inputs.action == 'status'
+        run: |
+          echo "=== Docker Containers ==="
+          docker ps -a
+          echo ""
+          echo "=== Docker Compose Services ==="
+          cd /opt/Lokus-Prod && docker-compose ps 2>/dev/null || echo "No docker-compose found"
+          echo ""
+          echo "=== Disk Usage ==="
+          df -h
+          echo ""
+          echo "=== Memory ==="
+          free -h
+
+      - name: Restart All Services
+        if: inputs.action == 'restart-all'
+        run: |
+          cd /opt/Lokus-Prod
+          docker-compose down
+          docker-compose up -d
+          sleep 5
+          docker-compose ps
+
+      - name: Restart Analytics
+        if: inputs.action == 'restart-analytics'
+        run: |
+          cd /opt/Lokus-Prod
+          docker-compose restart plausible 2>/dev/null || docker restart plausible 2>/dev/null || echo "Trying to find analytics container..."
+          docker ps -a | grep -i analytics || docker ps -a | grep -i plausible || echo "No analytics container found"
+
+      - name: Restart Crash Reporting
+        if: inputs.action == 'restart-crash'
+        run: |
+          cd /opt/Lokus-Prod
+          docker-compose restart glitchtip 2>/dev/null || docker restart glitchtip 2>/dev/null || echo "Trying to find crash container..."
+          docker ps -a | grep -i crash || docker ps -a | grep -i glitchtip || docker ps -a | grep -i sentry || echo "No crash container found"
+
+      - name: Show Analytics Logs
+        if: inputs.action == 'logs-analytics'
+        run: |
+          cd /opt/Lokus-Prod
+          docker-compose logs --tail=100 plausible 2>/dev/null || docker logs --tail=100 plausible 2>/dev/null || echo "No analytics logs found"
+
+      - name: Show Crash Logs
+        if: inputs.action == 'logs-crash'
+        run: |
+          cd /opt/Lokus-Prod
+          docker-compose logs --tail=100 glitchtip 2>/dev/null || docker logs --tail=100 glitchtip 2>/dev/null || echo "No crash logs found"
+
+      - name: Check Disk Space
+        if: inputs.action == 'check-disk'
+        run: |
+          echo "=== Disk Usage ==="
+          df -h
+          echo ""
+          echo "=== Docker Disk Usage ==="
+          docker system df
+          echo ""
+          echo "=== Large Files in /opt ==="
+          du -sh /opt/* 2>/dev/null | sort -h
+
+      - name: Run Custom Command
+        if: inputs.action == 'run-custom' && inputs.custom_command != ''
+        run: |
+          echo "Running: ${{ inputs.custom_command }}"
+          ${{ inputs.custom_command }}
