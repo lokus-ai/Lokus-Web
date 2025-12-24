@@ -49,9 +49,9 @@ const platforms: Platform[] = [
     id: "macos",
     name: "macOS",
     icon: AppleIcon,
-    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.3.3/Lokus_1.3.3_aarch64.dmg",
+    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.0.0/Lokus_1.0.0-beta_aarch64.dmg",
     size: "9.7 MB",
-    version: "v1.3.3",
+    version: "v1.0.0",
     features: ["macOS 11+", "Apple Silicon native", "Native performance", "Spotlight search"],
     gradient: "from-zinc-500 via-zinc-300 to-zinc-500",
     iconColor: "text-zinc-300"
@@ -60,9 +60,9 @@ const platforms: Platform[] = [
     id: "windows",
     name: "Windows",
     icon: WindowsIcon,
-    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.3.3/Lokus_1.3.3_x64-setup.exe",
+    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.0.0/Lokus_1.0.0-beta_x64-setup.exe",
     size: "7.33 MB",
-    version: "v1.3.3",
+    version: "v1.0.0",
     features: ["Windows 10/11", "Auto-updates", "Native performance", "System tray support"],
     gradient: "from-blue-600 via-blue-400 to-blue-600",
     iconColor: "text-blue-400"
@@ -71,9 +71,9 @@ const platforms: Platform[] = [
     id: "linux",
     name: "Linux",
     icon: LinuxIcon,
-    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.3.3/Lokus_1.3.3_amd64.AppImage",
+    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.0.0/Lokus_1.0.0_amd64.AppImage",
     size: "85.8 MB",
-    version: "v1.3.3",
+    version: "v1.0.0",
     features: ["AppImage universal", "Most distributions", "Native performance", "Desktop integration"],
     gradient: "from-orange-600 via-orange-400 to-orange-600",
     iconColor: "text-orange-400"
@@ -271,11 +271,10 @@ export function DownloadSection({ className }: { className?: string }) {
 
             <div className="flex flex-wrap justify-center gap-4">
               {[
-                { label: "All v1.3.3 downloads", url: "https://github.com/lokus-ai/lokus/releases/tag/v1.3.3" },
-                { label: "Linux (.deb)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.3.3/Lokus_1.3.3_amd64.deb" },
-                { label: "Linux (.rpm)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.3.3/Lokus-1.3.3-1.x86_64.rpm" },
-                { label: "Windows (.msi)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.3.3/Lokus_1.3.3_x64_en-US.msi" },
-                { label: "macOS (Universal .app.tar.gz)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.3.3/Lokus_aarch64.app.tar.gz" },
+                { label: "All v1.0.0 downloads", url: "https://github.com/lokus-ai/lokus/releases/tag/v1.0.0" },
+                { label: "Linux (.deb)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.0.0/Lokus_1.0.0_amd64.deb" },
+                { label: "Linux (.rpm)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.0.0/Lokus-1.0.0-1.x86_64.rpm" },
+                { label: "macOS (.app.tar.gz)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.0.0/Lokus_aarch64.app.tar.gz" },
                 { label: "Installation guide", url: "https://github.com/lokus-ai/lokus/releases" }
               ].map((link) => (
                 <a
@@ -292,7 +291,7 @@ export function DownloadSection({ className }: { className?: string }) {
             </div>
 
             <p className="text-xs text-zinc-500">
-              Latest release: v1.3.3 •
+              Latest release: v1.0.0 •
               <a
                 href="https://github.com/lokus-ai/lokus/releases"
                 target="_blank"
