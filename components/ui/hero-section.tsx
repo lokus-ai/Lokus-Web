@@ -6,7 +6,7 @@ import { Command } from "lucide-react";
 function HeroBadge() {
     return (
         <a
-            href="https://testflight.apple.com/join/kn8mRnsD"
+            href="https://github.com/lokus-ai/lokus/releases/tag/v1.0.0"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-zinc-400 backdrop-blur-md transition-all hover:bg-white/10 hover:text-white mb-8 cursor-pointer"
