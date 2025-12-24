@@ -27,7 +27,6 @@ export function Footer() {
         title: "Product",
         links: [
           { href: "/features", label: "Features" },
-          { href: "/demo", label: "Try Demo" },
           { href: "https://github.com/lokus-ai/lokus/releases", label: "Download", external: true },
           { href: "/marketplace", label: "Plugins" },
           { href: "/blog", label: "Blog" },

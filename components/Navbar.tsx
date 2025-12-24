@@ -40,7 +40,6 @@ export function Navbar() {
   const navItems: Array<{ href: string; label: string; external?: boolean }> = [
     { href: "/features", label: "Features" },
     { href: "/compare", label: "Compare" },
-    { href: "/demo", label: "Demo" },
     { href: "https://docs.lokusmd.com", label: "Docs", external: true },
     { href: "https://github.com/lokus-ai/lokus/releases", label: "Download", external: true },
   ]

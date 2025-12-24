@@ -119,13 +119,6 @@ export default function FeaturesPage() {
                 <Download className="w-5 h-5" />
                 Download Free
               </Link>
-              <Link
-                href="/demo"
-                className="inline-flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
-              >
-                Try Demo
-                <ArrowRight className="w-5 h-5" />
-              </Link>
             </div>
           </div>
         </div>
