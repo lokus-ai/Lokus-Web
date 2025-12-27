@@ -3,6 +3,14 @@ name: Server Maintenance
 on:
   workflow_dispatch:
     inputs:
+      server:
+        description: 'Which server to run on'
+        required: true
+        default: 'backup'
+        type: choice
+        options:
+          - backup
+          - production
       action:
         description: 'Action to perform'
         required: true
@@ -24,7 +32,7 @@ on:
 
 jobs:
   server-maintenance:
-    runs-on: self-hosted
+    runs-on: [self-hosted, "${{ inputs.server }}"]
     steps:
       - name: Check Docker Status
         if: inputs.action == 'status'
