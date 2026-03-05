@@ -6,7 +6,7 @@ import { CheckCircle2, XCircle, ArrowRight, Download } from "lucide-react";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "Lokus vs Obsidian 2025 - Best Free Obsidian Alternative",
+  title: "Lokus vs Obsidian 2026 - Best Free Obsidian Alternative",
   description: "Compare Lokus and Obsidian: both are markdown PKM apps with wiki links and graph view. Lokus is 100% free and open source. See the full comparison.",
   keywords: [
     "Lokus vs Obsidian",
@@ -14,13 +14,13 @@ export const metadata: Metadata = {
     "free Obsidian alternative",
     "open source Obsidian",
     "Obsidian comparison",
-    "best Obsidian alternative 2025",
+    "best Obsidian alternative 2026",
     "Obsidian free alternative",
     "markdown note app",
     "local-first PKM"
   ],
   openGraph: {
-    title: "Lokus vs Obsidian - Best Free Obsidian Alternative 2025",
+    title: "Lokus vs Obsidian - Best Free Obsidian Alternative 2026",
     description: "Full comparison of Lokus and Obsidian. Both are markdown-based, local-first PKM apps. See which is right for you.",
     url: "https://lokusmd.com/compare/obsidian",
   },
@@ -60,7 +60,7 @@ export default function LokusVsObsidian() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Lokus vs Obsidian: Best Free Obsidian Alternative 2025",
+            "headline": "Lokus vs Obsidian: Best Free Obsidian Alternative 2026",
             "description": "Compare Lokus and Obsidian PKM apps. Features, pricing, and which is right for you.",
             "author": { "@type": "Organization", "name": "Lokus" },
             "datePublished": "2025-01-01",
@@ -75,7 +75,7 @@ export default function LokusVsObsidian() {
         <div className="container max-w-4xl mx-auto px-4 relative z-10">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-              Lokus vs Obsidian: <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">2025 Comparison</span>
+              Lokus vs Obsidian: <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">2026 Comparison</span>
             </h1>
             <p className="text-xl text-zinc-400 mb-8">
               Both are excellent markdown-based, local-first PKM apps. Here's how they compare

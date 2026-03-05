@@ -6,7 +6,7 @@ import { CheckCircle2, XCircle, ArrowRight, Download, Shield, Cloud, HardDrive }
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "Lokus vs Notion 2025 - Best Privacy-Focused Notion Alternative",
+  title: "Lokus vs Notion 2026 - Best Privacy-Focused Notion Alternative",
   description: "Compare Lokus and Notion: local-first vs cloud-based. Lokus keeps your data on your device. See the full comparison for privacy-focused users.",
   keywords: [
     "Lokus vs Notion",
@@ -15,12 +15,12 @@ export const metadata: Metadata = {
     "local Notion alternative",
     "offline Notion alternative",
     "Notion comparison",
-    "best Notion alternative 2025",
+    "best Notion alternative 2026",
     "self-hosted Notion",
     "private note taking"
   ],
   openGraph: {
-    title: "Lokus vs Notion - Best Privacy-Focused Alternative 2025",
+    title: "Lokus vs Notion - Best Privacy-Focused Alternative 2026",
     description: "Local-first vs cloud-based. Compare Lokus and Notion for privacy, features, and pricing.",
     url: "https://lokusmd.com/compare/notion",
   },
@@ -60,7 +60,7 @@ export default function LokusVsNotion() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Lokus vs Notion: Best Privacy-Focused Alternative 2025",
+            "headline": "Lokus vs Notion: Best Privacy-Focused Alternative 2026",
             "description": "Compare Lokus and Notion. Local-first vs cloud-based note-taking apps.",
             "author": { "@type": "Organization", "name": "Lokus" },
             "datePublished": "2025-01-01",

@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { ArrowRight, CheckCircle2, XCircle, MinusCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Lokus vs Obsidian vs Notion vs Roam - PKM App Comparison 2025",
+  title: "Lokus vs Obsidian vs Notion vs Roam - PKM App Comparison 2026",
   description: "Compare Lokus with Obsidian, Notion, Roam Research, and Logseq. Find the best PKM and note-taking app for your needs. Free, open-source alternative comparison.",
   keywords: [
     "Lokus vs Obsidian",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     "Roam Research alternative",
     "Logseq alternative",
     "best PKM app comparison",
-    "note taking app comparison 2025",
+    "note taking app comparison 2026",
     "personal knowledge management comparison",
     "free Obsidian alternative",
     "open source Notion alternative"
@@ -188,7 +188,7 @@ export default function ComparePage() {
         <div className="container max-w-6xl mx-auto px-4 relative z-10">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-              Best PKM Apps Compared: <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">2025 Edition</span>
+              Best PKM Apps Compared: <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">2026 Edition</span>
             </h1>
             <p className="text-xl text-zinc-400 mb-8">
               Lokus vs Obsidian vs Notion vs Roam Research vs Logseq.

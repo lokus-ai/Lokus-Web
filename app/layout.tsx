@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   description: "Lokus is a free, open-source personal knowledge management (PKM) app. Local-first note-taking with markdown, wiki links, graph view, and infinite canvas. The best Obsidian & Notion alternative for privacy-focused users.",
   keywords: [
     // Primary PKM keywords (matching AI search queries)
-    "best PKM app 2025",
+    "best PKM app 2026",
     "personal knowledge management",
     "PKM tools",
     "best note-taking app",
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://lokusmd.com",
     title: "Lokus - Free Open Source PKM & Note-Taking App",
-    description: "Best free PKM app for 2025. Open-source, local-first note-taking with markdown, wiki links, graph view, and infinite canvas. Obsidian & Notion alternative.",
+    description: "Best free PKM app for 2026. Open-source, local-first note-taking with markdown, wiki links, graph view, and infinite canvas. Obsidian & Notion alternative.",
     siteName: "Lokus",
     images: [
       {
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Lokus - Free Open Source PKM & Note-Taking App",
-    description: "Best free PKM app for 2025. Open-source, local-first note-taking with markdown, wiki links, graph view. Obsidian & Notion alternative.",
+    description: "Best free PKM app for 2026. Open-source, local-first note-taking with markdown, wiki links, graph view. Obsidian & Notion alternative.",
     images: ["/og-image.png"],
     creator: "@lokusmd",
   },
@@ -159,7 +159,7 @@ export default function RootLayout({
                     "Open source and free forever"
                   ],
                   "screenshot": "https://lokusmd.com/og-image.png",
-                  "softwareVersion": "1.0.0",
+                  "softwareVersion": "1.1.0",
                   "downloadUrl": "https://github.com/lokus-ai/lokus/releases",
                   "installUrl": "https://github.com/lokus-ai/lokus/releases",
                   "releaseNotes": "https://lokusmd.com/changelog",
@@ -266,7 +266,7 @@ export default function RootLayout({
                     },
                     {
                       "@type": "Question",
-                      "name": "What is the best PKM app in 2025?",
+                      "name": "What is the best PKM app in 2026?",
                       "acceptedAnswer": {
                         "@type": "Answer",
                         "text": "The best PKM app depends on your needs. For privacy-focused users who want a free, open-source, local-first solution, Lokus is an excellent choice. It offers markdown editing, wiki links, graph view, infinite canvas, and templates - all without any cost or cloud dependency."

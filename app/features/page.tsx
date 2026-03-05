@@ -10,7 +10,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Features - Best PKM App for Personal Knowledge Management",
-  description: "Discover Lokus features: markdown editor, wiki links, backlinks, graph view, infinite canvas, templates, plugins. The best free PKM app and Obsidian alternative for 2025.",
+  description: "Discover Lokus features: markdown editor, wiki links, backlinks, graph view, infinite canvas, templates, plugins. The best free PKM app and Obsidian alternative for 2026.",
   keywords: [
     "PKM app features",
     "personal knowledge management features",
