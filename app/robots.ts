@@ -36,6 +36,11 @@ export default function robots(): MetadataRoute.Robots {
                 disallow: ['/dashboard/', '/api/'],
             },
             {
+                userAgent: 'ClaudeBot',
+                allow: '/',
+                disallow: ['/dashboard/', '/api/'],
+            },
+            {
                 userAgent: 'Google-Extended',
                 allow: '/',
                 disallow: ['/dashboard/', '/api/'],

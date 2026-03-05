@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { AuthProvider } from "@/components/auth/AuthProvider"
 import { ThemeProvider } from "@/contexts/ThemeContext"
+import StaticSEOContent from "@/components/StaticSEOContent"
 import Script from "next/script"
 import "./globals.css"
 
@@ -99,6 +100,7 @@ export const metadata: Metadata = {
   },
   other: {
     "llms.txt": "/llms.txt",
+    "llms-full.txt": "/llms-full.txt",
   },
 }
 
@@ -126,6 +128,7 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider>
           <AuthProvider>
+            <StaticSEOContent />
             {children}
             <Script
               id="json-ld-app"
@@ -166,7 +169,8 @@ export default function RootLayout({
                   "sameAs": [
                     "https://github.com/lokus-ai/lokus",
                     "https://twitter.com/lokusmd",
-                    "https://opencollective.com/lokus"
+                    "https://opencollective.com/lokus",
+                    "https://alternativeto.net/software/lokus/about/"
                   ],
                   "author": {
                     "@type": "Organization",
@@ -190,7 +194,8 @@ export default function RootLayout({
                   "sameAs": [
                     "https://github.com/lokus-ai/lokus",
                     "https://twitter.com/lokusmd",
-                    "https://opencollective.com/lokus"
+                    "https://opencollective.com/lokus",
+                    "https://alternativeto.net/software/lokus/about/"
                   ],
                   "contactPoint": {
                     "@type": "ContactPoint",
@@ -270,6 +275,46 @@ export default function RootLayout({
                       "acceptedAnswer": {
                         "@type": "Answer",
                         "text": "The best PKM app depends on your needs. For privacy-focused users who want a free, open-source, local-first solution, Lokus is an excellent choice. It offers markdown editing, wiki links, graph view, infinite canvas, and templates - all without any cost or cloud dependency."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "What is the best PKM app for privacy in 2026?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Lokus is one of the best PKM apps for privacy in 2026. It uses a local-first architecture where all notes are stored on your device as plain markdown files. The app is fully open-source under the MIT license, so the code is auditable. There is no cloud dependency, no account required, and no data collection. Lokus works 100% offline."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Is there a free open-source alternative to Obsidian?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes, Lokus is a free, open-source alternative to Obsidian. Lokus is MIT licensed, while Obsidian is proprietary. Both use markdown files and wiki links. Lokus includes all features for free, while Obsidian charges for Sync and Publish. Lokus also offers 3D graph view and a 90+ feature template system. Lokus can open existing Obsidian vaults."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Can Lokus open Obsidian vaults?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes, Lokus can open Obsidian vaults. Both apps use the same standard markdown file format with [[wiki link]] syntax. You can point Lokus at your existing Obsidian vault folder and it will read your notes, links, tags, and folder structure without any conversion or import step."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "What is a local-first PKM app?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "A local-first PKM app is a personal knowledge management application that stores all data on the user's own device rather than on remote servers. This means complete data ownership, privacy by default, full offline access, and no dependency on a company's servers or subscription. Lokus is a local-first PKM app that stores notes as plain markdown files in a user-chosen folder."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Does Lokus support the Zettelkasten method?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes, Lokus fully supports the Zettelkasten method. You can create atomic notes and connect them with [[wiki links]]. Backlinks automatically surface connections between notes. The graph view visualizes your entire note network in 2D or 3D. The template system helps maintain consistent note structure for Zettelkasten slips. Tags and folders provide additional organization layers."
                       }
                     }
                   ]

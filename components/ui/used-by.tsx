@@ -49,7 +49,7 @@ export function UsedBy({ className }: { className?: string }) {
         </div>
 
         <div className="text-center mb-16">
-          <p className="text-xs text-indigo-400 font-bold uppercase tracking-[0.3em] mb-4">Trusted by researchers at</p>
+          <p className="text-xs text-indigo-400 font-bold uppercase tracking-[0.3em] mb-4">Loved by knowledge workers at</p>
           <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
             Top Universities Worldwide
           </h3>

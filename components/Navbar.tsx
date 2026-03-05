@@ -162,10 +162,18 @@ export function Navbar() {
                       </Link>
 
                       <Button
-                        onClick={() => router.push('/signup')}
+                        onClick={() => {
+                          const isHomepage = window.location.pathname === '/';
+                          if (isHomepage) {
+                            const el = document.querySelector('#download');
+                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          } else {
+                            router.push('/#download');
+                          }
+                        }}
                         className="relative bg-white text-black hover:bg-zinc-200 font-semibold px-6 py-2 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-indigo-500/20 hover:scale-105 active:scale-95"
                       >
-                        <span className="relative z-10">Get Started</span>
+                        <span className="relative z-10">Download Free</span>
                       </Button>
                     </>
                   )}
@@ -224,12 +232,18 @@ export function Navbar() {
             <div className="pt-8">
               <Button
                 onClick={() => {
-                  router.push('/signup')
-                  setIsMobileMenuOpen(false)
+                  setIsMobileMenuOpen(false);
+                  const isHomepage = window.location.pathname === '/';
+                  if (isHomepage) {
+                    const el = document.querySelector('#download');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  } else {
+                    router.push('/#download');
+                  }
                 }}
                 className="bg-white text-black hover:bg-zinc-200 font-semibold px-8 py-3 rounded-xl shadow-lg shadow-indigo-500/20"
               >
-                Get Started
+                Download Free
               </Button>
             </div>
           </div>

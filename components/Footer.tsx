@@ -176,7 +176,7 @@ export function Footer() {
           <div className="container max-w-7xl mx-auto px-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-2 text-zinc-500 text-sm">
-                <span>© 2024 Lokus. Made with</span>
+                <span>© 2024-{new Date().getFullYear()} Lokus. Made with</span>
                 <Heart className="w-3.5 h-3.5 text-red-500 fill-current animate-heartbeat" />
                 <span>in the digital realm.</span>
               </div>
