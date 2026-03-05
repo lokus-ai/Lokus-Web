@@ -7,56 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-backup:
-    runs-on: [self-hosted, backup]
-    name: Deploy to Backup Server
-
-    steps:
-      - name: Deploy Website to Backup
-        run: |
-          echo "Starting website deployment to BACKUP server..."
-          /opt/Lokus-Prod/scripts/deploy-website.sh
-          echo "Backup deployment complete!"
-
-      - name: Health Check
-        run: |
-          echo "Running health check..."
-          # Wait for container to be healthy
-          for i in {1..30}; do
-            STATUS=$(docker inspect --format='{{.State.Health.Status}}' lokus-website 2>/dev/null || echo "unknown")
-            echo "Attempt $i: Container health status: $STATUS"
-            if [ "$STATUS" = "healthy" ]; then
-              echo "✓ Container is healthy!"
-              # Also verify via nginx (actual traffic path)
-              if curl -sf http://localhost:80 -H "Host: www.lokusmd.com" > /dev/null 2>&1; then
-                echo "✓ Nginx routing works!"
-                exit 0
-              else
-                echo "Warning: Nginx routing check failed, but container is healthy"
-                exit 0
-              fi
-            fi
-            sleep 5
-          done
-          echo "Health check failed after 30 attempts!"
-          docker logs lokus-website --tail 50
-          exit 1
-
-      - name: Discord Notification (Backup)
-        if: failure()
-        uses: sarisia/actions-status-discord@v1
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          status: failure
-          title: "Website Deploy FAILED on Backup"
-          description: |
-            Deploy stopped! Production server NOT updated.
-            Commit: ${{ github.sha }}
-            By: ${{ github.actor }}
-          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
   deploy-production:
-    needs: deploy-backup
     runs-on: [self-hosted, production]
     name: Deploy to Production Server
 
@@ -99,7 +50,7 @@ jobs:
           status: ${{ job.status }}
           title: "Website Deployment"
           description: |
-            Deployed to both servers
+            Deployed to production server
             Commit: ${{ github.sha }}
             Branch: ${{ github.ref_name }}
             By: ${{ github.actor }}
