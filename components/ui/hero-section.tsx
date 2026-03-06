@@ -12,7 +12,7 @@ function HeroBadge() {
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-zinc-400 backdrop-blur-md transition-all hover:bg-white/10 hover:text-white mb-8 cursor-pointer"
         >
             <span className="flex h-2 w-2 rounded-full bg-emerald-500"></span>
-            <span>100% free &amp; open source</span>
+            <span>Open source</span>
         </a>
     );
 }
@@ -22,7 +22,7 @@ function HeroTitle() {
         <h1 className="bg-gradient-to-br from-white via-white/90 to-white/50 bg-clip-text text-transparent text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-center max-w-4xl mx-auto leading-[1.1]">
             Your notes. Your device.{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
-                Free forever.
+                No compromises.
             </span>
         </h1>
     );
@@ -31,13 +31,13 @@ function HeroTitle() {
 function HeroDescription() {
     return (
         <p className="mt-6 text-lg md:text-xl text-zinc-400 text-center max-w-2xl mx-auto leading-relaxed">
-            Free, open-source note-taking for macOS, Windows, and Linux. Markdown, wiki links, graph view, and infinite canvas — all local, all private, no account required.
+            Open-source note-taking for macOS, Windows, and Linux. Markdown, wiki links, graph view, and infinite canvas — all local, all private, no account required.
         </p>
     );
 }
 
 function HeroButtons() {
-    const [osLabel, setOsLabel] = useState("Download Free");
+    const [osLabel, setOsLabel] = useState("Download Now");
 
     useEffect(() => {
         const ua = navigator.userAgent;
@@ -48,7 +48,7 @@ function HeroButtons() {
         } else if (/Linux/i.test(ua)) {
             setOsLabel("Download for Linux");
         } else {
-            setOsLabel("Download Free");
+            setOsLabel("Download Now");
         }
     }, []);
 

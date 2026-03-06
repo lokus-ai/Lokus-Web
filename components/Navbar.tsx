@@ -173,7 +173,7 @@ export function Navbar() {
                         }}
                         className="relative bg-white text-black hover:bg-zinc-200 font-semibold px-6 py-2 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-indigo-500/20 hover:scale-105 active:scale-95"
                       >
-                        <span className="relative z-10">Download Free</span>
+                        <span className="relative z-10">Download</span>
                       </Button>
                     </>
                   )}
@@ -243,7 +243,7 @@ export function Navbar() {
                 }}
                 className="bg-white text-black hover:bg-zinc-200 font-semibold px-8 py-3 rounded-xl shadow-lg shadow-indigo-500/20"
               >
-                Download Free
+                Download
               </Button>
             </div>
           </div>

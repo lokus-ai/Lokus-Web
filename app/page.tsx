@@ -39,24 +39,6 @@ export default function LandingPage() {
           <DataControl />
         </Suspense>
 
-        {/* Mid-page CTA */}
-        <section className="relative py-20 bg-indigo-600/90 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-indigo-700/60 via-indigo-600/60 to-purple-700/60" />
-          <div className="relative z-10 container max-w-3xl mx-auto px-4 text-center">
-            <a
-              href="#download"
-              onClick={(e) => {
-                e.preventDefault();
-                const el = document.querySelector('#download');
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-              className="inline-flex h-14 items-center justify-center rounded-xl bg-white px-10 text-lg font-semibold text-indigo-700 transition-all duration-300 hover:bg-zinc-100 hover:scale-105 active:scale-95 shadow-xl shadow-black/30 cursor-pointer"
-            >
-              Download Free — No Account Required
-            </a>
-          </div>
-        </section>
-
         <Suspense fallback={<SectionLoader />}>
           <PowerfulFeatures />
         </Suspense>
