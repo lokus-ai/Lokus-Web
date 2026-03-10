@@ -34,19 +34,16 @@ export function Footer() {
         ]
       },
       {
-        title: "Compare",
+        title: "Learn",
         links: [
-          { href: "/compare", label: "All Comparisons" },
-          { href: "/compare/obsidian", label: "Lokus vs Obsidian" },
-          { href: "/compare/notion", label: "Lokus vs Notion" },
           { href: "https://docs.lokusmd.com", label: "Documentation", external: true },
+          { href: "https://docs.lokusmd.com/getting-started/installation/", label: "Installation", external: true },
+          { href: "https://docs.lokusmd.com/getting-started/quick-start/", label: "Quick Start", external: true },
         ]
       },
       {
         title: "Resources",
         links: [
-          { href: "https://docs.lokusmd.com/getting-started", label: "Getting Started", external: true },
-          { href: "https://docs.lokusmd.com/user-guide", label: "User Guide", external: true },
           { href: "/resources", label: "Brand Resources" },
           { href: "https://opencollective.com/lokus", label: "Support Us", external: true },
         ]
@@ -57,7 +54,6 @@ export function Footer() {
           { href: "https://github.com/lokus-ai/lokus", label: "GitHub", external: true },
           { href: "https://github.com/lokus-ai/lokus/discussions", label: "Discussions", external: true },
           { href: "https://github.com/lokus-ai/lokus/issues", label: "Bug Reports", external: true },
-          { href: "https://github.com/lokus-ai/lokus/blob/main/CONTRIBUTING.md", label: "Contributing", external: true },
         ]
       }
     ]
@@ -97,15 +93,13 @@ export function Footer() {
                       Lokus
                     </span>
                     <span className="text-sm text-zinc-400 font-medium tracking-wide">
-                      Think. Connect. Create.
+                      Knowledge OS
                     </span>
                   </div>
                 </Link>
 
                 <p className="text-zinc-400 mb-6 leading-relaxed">
-                  Free, open-source personal knowledge management (PKM) app.
-                  Local-first note-taking with markdown, wiki links, graph view,
-                  and infinite canvas. The best Obsidian alternative.
+                  Personal knowledge OS for macOS, Windows, and Linux.
                 </p>
 
                 {/* Social Links */}

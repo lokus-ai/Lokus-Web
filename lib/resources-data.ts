@@ -192,20 +192,20 @@ export const brandDescriptions: BrandDescription[] = [
   {
     variant: 'short',
     title: 'Short Description',
-    content: 'Lokus - Local-first knowledge management for connected thinking.',
-    characterCount: 67
+    content: 'Lokus - The operating system for your ideas.',
+    characterCount: 45
   },
   {
     variant: 'medium',
     title: 'Medium Description',
-    content: 'Lokus is a local-first note-taking and knowledge management platform. Build your personal wiki, connect ideas with a knowledge graph, and unleash your creativity while maintaining full control of your data.',
-    characterCount: 218
+    content: 'Lokus is a personal knowledge OS for macOS, Windows, and Linux. Build your personal wiki, connect ideas with a knowledge graph, and think visually with infinite canvas.',
+    characterCount: 174
   },
   {
     variant: 'long',
     title: 'Long Description',
-    content: 'Lokus is a revolutionary local-first knowledge management platform designed for thinkers, researchers, and creators. With powerful Markdown editing, bi-directional linking, and an interactive knowledge graph, Lokus helps you capture, connect, and explore your ideas while keeping your data private and under your control. Available for macOS, Windows, and Linux.',
-    characterCount: 387
+    content: 'Lokus is a personal knowledge OS designed for thinkers, researchers, and creators. With powerful Markdown editing, bi-directional linking, and an interactive knowledge graph, Lokus helps you capture, connect, and explore your ideas. Your notes live on your device as plain markdown files. Available for macOS, Windows, and Linux.',
+    characterCount: 338
   }
 ];
 
@@ -216,7 +216,7 @@ export const typography: Typography[] = [
     family: 'System Font Stack',
     weights: ['600 (Semibold)', '700 (Bold)'],
     usage: 'Page titles, section headers, emphasis',
-    example: 'Lokus - Think. Connect. Create.'
+    example: 'Lokus - The operating system for your ideas'
   },
   {
     name: 'Body Text',

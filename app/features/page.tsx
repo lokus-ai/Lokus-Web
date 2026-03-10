@@ -4,30 +4,27 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
   FileText, Link2, Network, Infinity, Layout, Puzzle,
-  Palette, Wifi, Shield, Zap, Download, ArrowRight,
-  CheckCircle2, Globe, Lock, Cpu
+  Palette, Wifi, Download
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Features - Best PKM App for Personal Knowledge Management",
-  description: "Discover Lokus features: markdown editor, wiki links, backlinks, graph view, infinite canvas, templates, plugins. The best free PKM app and Obsidian alternative for 2026.",
+  title: "Features - Lokus Knowledge OS",
+  description: "Lokus features: markdown editor, wiki links, backlinks, graph view, infinite canvas, templates, and plugins. Built for how you actually think.",
   keywords: [
     "PKM app features",
-    "personal knowledge management features",
+    "personal knowledge management",
     "markdown note taking",
     "wiki links",
     "backlinks",
     "graph view",
     "infinite canvas",
-    "note taking app features",
+    "knowledge management",
     "second brain app",
-    "best PKM features",
-    "Obsidian features comparison",
-    "Notion alternative features"
+    "knowledge OS",
   ],
   openGraph: {
-    title: "Lokus Features - Best PKM App for Personal Knowledge Management",
-    description: "Discover why Lokus is the best free PKM app. Markdown, wiki links, graph view, infinite canvas, and more.",
+    title: "Lokus Features - Built for How You Actually Think",
+    description: "Markdown, wiki links, graph view, infinite canvas, and more. The knowledge OS for macOS, Windows, and Linux.",
     url: "https://lokusmd.com/features",
   },
 };
@@ -77,22 +74,12 @@ const features = [
   },
   {
     icon: Wifi,
-    title: "100% Offline",
-    description: "Works completely offline. No internet required for any feature. Your notes are always available, even on a plane or in a cabin.",
-    highlights: ["No internet needed", "Local storage", "Always available", "No sync required"]
+    title: "Works Offline",
+    description: "Your notes are always available, even on a plane or in a cabin. Everything runs locally on your device.",
+    highlights: ["Local storage", "Always available", "No internet needed", "Instant access"]
   },
 ];
 
-const comparisonPoints = [
-  { feature: "Free & Open Source", lokus: true, obsidian: "Partial", notion: false, roam: false },
-  { feature: "Local-First Storage", lokus: true, obsidian: true, notion: false, roam: false },
-  { feature: "Infinite Canvas", lokus: true, obsidian: "Plugin", notion: false, roam: false },
-  { feature: "Graph View", lokus: true, obsidian: true, notion: false, roam: true },
-  { feature: "Wiki Links", lokus: true, obsidian: true, notion: "Partial", roam: true },
-  { feature: "Offline Support", lokus: true, obsidian: true, notion: "Limited", roam: false },
-  { feature: "Template System", lokus: "90+ features", obsidian: "Plugin", notion: true, roam: "Limited" },
-  { feature: "Custom Themes", lokus: true, obsidian: true, notion: false, roam: false },
-];
 
 export default function FeaturesPage() {
   return (
@@ -105,11 +92,12 @@ export default function FeaturesPage() {
         <div className="container max-w-6xl mx-auto px-4 relative z-10">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-              The Best <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">PKM App</span> Features
+              Built for how you{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">actually think</span>
             </h1>
             <p className="text-xl text-zinc-400 mb-8">
-              Everything you need for personal knowledge management. Free, open-source, and local-first.
-              The best Obsidian and Notion alternative for privacy-focused users.
+              Everything you need for personal knowledge management.
+              Markdown, wiki links, graph view, infinite canvas, and more.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
@@ -117,40 +105,13 @@ export default function FeaturesPage() {
                 className="inline-flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
               >
                 <Download className="w-5 h-5" />
-                Download Free
+                Download Lokus
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Key Benefits */}
-      <section className="py-16 border-y border-zinc-800">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <Lock className="w-8 h-8 text-indigo-400 mx-auto mb-3" />
-              <div className="font-semibold">Privacy First</div>
-              <div className="text-sm text-zinc-500">Data stays on your device</div>
-            </div>
-            <div>
-              <Globe className="w-8 h-8 text-indigo-400 mx-auto mb-3" />
-              <div className="font-semibold">Open Source</div>
-              <div className="text-sm text-zinc-500">MIT Licensed</div>
-            </div>
-            <div>
-              <Cpu className="w-8 h-8 text-indigo-400 mx-auto mb-3" />
-              <div className="font-semibold">Cross Platform</div>
-              <div className="text-sm text-zinc-500">macOS, Windows, Linux</div>
-            </div>
-            <div>
-              <Zap className="w-8 h-8 text-indigo-400 mx-auto mb-3" />
-              <div className="font-semibold">100% Free</div>
-              <div className="text-sm text-zinc-500">No paywalls ever</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Features Grid */}
       <section className="py-24">
@@ -194,62 +155,6 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* Comparison Table */}
-      <section className="py-24 bg-zinc-900/50">
-        <div className="container max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
-            Lokus vs Other PKM Apps
-          </h2>
-          <p className="text-zinc-400 text-center max-w-2xl mx-auto mb-12">
-            How Lokus compares to Obsidian, Notion, and Roam Research.
-            The best free alternative for personal knowledge management.
-          </p>
-
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b border-zinc-700">
-                  <th className="text-left py-4 px-4 font-semibold">Feature</th>
-                  <th className="text-center py-4 px-4 font-semibold text-indigo-400">Lokus</th>
-                  <th className="text-center py-4 px-4 font-semibold text-zinc-400">Obsidian</th>
-                  <th className="text-center py-4 px-4 font-semibold text-zinc-400">Notion</th>
-                  <th className="text-center py-4 px-4 font-semibold text-zinc-400">Roam</th>
-                </tr>
-              </thead>
-              <tbody>
-                {comparisonPoints.map((row) => (
-                  <tr key={row.feature} className="border-b border-zinc-800">
-                    <td className="py-4 px-4">{row.feature}</td>
-                    <td className="text-center py-4 px-4">
-                      {row.lokus === true ? (
-                        <CheckCircle2 className="w-5 h-5 text-green-400 mx-auto" />
-                      ) : (
-                        <span className="text-green-400">{row.lokus}</span>
-                      )}
-                    </td>
-                    <td className="text-center py-4 px-4 text-zinc-500">
-                      {row.obsidian === true ? "Yes" : row.obsidian === false ? "No" : row.obsidian}
-                    </td>
-                    <td className="text-center py-4 px-4 text-zinc-500">
-                      {row.notion === true ? "Yes" : row.notion === false ? "No" : row.notion}
-                    </td>
-                    <td className="text-center py-4 px-4 text-zinc-500">
-                      {row.roam === true ? "Yes" : row.roam === false ? "No" : row.roam}
-                    </td>
-                  </tr>
-                ))}
-                <tr>
-                  <td className="py-4 px-4 font-semibold">Price</td>
-                  <td className="text-center py-4 px-4 text-green-400 font-semibold">Free Forever</td>
-                  <td className="text-center py-4 px-4 text-zinc-500">Free / $50+</td>
-                  <td className="text-center py-4 px-4 text-zinc-500">Free / $8+/mo</td>
-                  <td className="text-center py-4 px-4 text-zinc-500">$15/mo</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
 
       {/* Use Cases */}
       <section className="py-24">
@@ -290,17 +195,17 @@ export default function FeaturesPage() {
       <section className="py-24 bg-gradient-to-b from-transparent to-indigo-500/10">
         <div className="container max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Build Your Second Brain?
+            Ready to think differently?
           </h2>
           <p className="text-xl text-zinc-400 mb-8">
-            Download Lokus for free. No sign-up required. Your notes, your device, your privacy.
+            Available for macOS, Windows, and Linux.
           </p>
           <Link
             href="https://github.com/lokus-ai/lokus/releases"
             className="inline-flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-colors"
           >
             <Download className="w-6 h-6" />
-            Download Lokus Free
+            Download Lokus
           </Link>
         </div>
       </section>

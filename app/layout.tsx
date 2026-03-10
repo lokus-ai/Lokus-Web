@@ -17,41 +17,26 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://lokusmd.com'),
   title: {
-    default: "Lokus - Free Open Source PKM & Note-Taking App",
+    default: "Lokus - The Operating System for Your Ideas",
     template: "%s | Lokus"
   },
-  description: "Lokus is a free, open-source personal knowledge management (PKM) app. Local-first note-taking with markdown, wiki links, graph view, and infinite canvas. The best Obsidian & Notion alternative for privacy-focused users.",
+  description: "Lokus is a personal knowledge OS for macOS, Windows, and Linux. Markdown, wiki links, graph view, and infinite canvas — your personal system for thinking, researching, and creating.",
   keywords: [
-    // Primary PKM keywords (matching AI search queries)
-    "best PKM app 2026",
     "personal knowledge management",
-    "PKM tools",
-    "best note-taking app",
+    "PKM app",
+    "knowledge OS",
+    "note-taking app",
     "second brain app",
-    // Feature keywords
     "markdown editor",
     "wiki links",
     "backlinks",
     "graph view",
     "infinite canvas",
     "local-first",
-    "offline notes",
-    // Comparison keywords
-    "Obsidian alternative",
-    "Notion alternative",
-    "Roam Research alternative",
-    "Logseq alternative",
-    "free PKM app",
-    "open source note taking",
-    // Method keywords
     "zettelkasten",
     "digital garden",
     "networked thought",
     "knowledge base",
-    // Platform keywords
-    "macOS note app",
-    "Windows PKM",
-    "Linux notes"
   ],
   authors: [{ name: "Lokus Team" }],
   creator: "Lokus Team",
@@ -79,22 +64,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://lokusmd.com",
-    title: "Lokus - Free Open Source PKM & Note-Taking App",
-    description: "Best free PKM app for 2026. Open-source, local-first note-taking with markdown, wiki links, graph view, and infinite canvas. Obsidian & Notion alternative.",
+    title: "Lokus - The Operating System for Your Ideas",
+    description: "Personal knowledge OS for macOS, Windows, and Linux. Markdown, wiki links, graph view, and infinite canvas.",
     siteName: "Lokus",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Lokus - Free Open Source Personal Knowledge Management App",
+        alt: "Lokus - The Operating System for Your Ideas",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lokus - Free Open Source PKM & Note-Taking App",
-    description: "Best free PKM app for 2026. Open-source, local-first note-taking with markdown, wiki links, graph view. Obsidian & Notion alternative.",
+    title: "Lokus - The Operating System for Your Ideas",
+    description: "Personal knowledge OS for macOS, Windows, and Linux. Markdown, wiki links, graph view, and infinite canvas.",
     images: ["/og-image.png"],
     creator: "@lokusmd",
   },
@@ -148,7 +133,7 @@ export default function RootLayout({
                     "priceCurrency": "USD",
                     "availability": "https://schema.org/InStock"
                   },
-                  "description": "Lokus is a free, open-source personal knowledge management (PKM) app with local-first architecture. Features include markdown editing, wiki links, backlinks, graph view, infinite canvas, and a powerful template system.",
+                  "description": "Lokus is a personal knowledge OS for macOS, Windows, and Linux. Local-first architecture with markdown editing, wiki links, backlinks, graph view, infinite canvas, and a powerful template system.",
                   "featureList": [
                     "Local-first architecture - notes stored on your device",
                     "Rich markdown editor with live preview",
@@ -158,8 +143,8 @@ export default function RootLayout({
                     "Template system with 90+ features",
                     "Plugin marketplace",
                     "Custom themes",
-                    "100% offline capable",
-                    "Open source and free forever"
+                    "Works offline",
+                    "Cross-platform: macOS, Windows, Linux"
                   ],
                   "screenshot": "https://lokusmd.com/og-image.png",
                   "softwareVersion": "1.1.0",
@@ -190,7 +175,7 @@ export default function RootLayout({
                   "name": "Lokus",
                   "url": "https://lokusmd.com",
                   "logo": "https://lokusmd.com/lokus-logo.svg",
-                  "description": "Open-source personal knowledge management software",
+                  "description": "Personal knowledge OS for macOS, Windows, and Linux",
                   "sameAs": [
                     "https://github.com/lokus-ai/lokus",
                     "https://twitter.com/lokusmd",
@@ -218,31 +203,7 @@ export default function RootLayout({
                       "name": "What is Lokus?",
                       "acceptedAnswer": {
                         "@type": "Answer",
-                        "text": "Lokus is a free, open-source personal knowledge management (PKM) app for macOS, Windows, and Linux. It helps you build a second brain with markdown notes, wiki links, graph views, and infinite canvas. All your data stays on your device."
-                      }
-                    },
-                    {
-                      "@type": "Question",
-                      "name": "Is Lokus free?",
-                      "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Yes, Lokus is 100% free and open-source. There are no subscriptions, no paywalls, and no feature restrictions. All features are available for free forever."
-                      }
-                    },
-                    {
-                      "@type": "Question",
-                      "name": "How does Lokus compare to Obsidian?",
-                      "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Both Lokus and Obsidian are markdown-based, local-first note-taking apps with wiki links and graph views. The key difference is that Lokus is fully open-source and completely free, while Obsidian has paid sync and publish features. Lokus also includes an infinite canvas and more extensive template system."
-                      }
-                    },
-                    {
-                      "@type": "Question",
-                      "name": "How does Lokus compare to Notion?",
-                      "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Notion is cloud-based with collaboration features, while Lokus is local-first with complete privacy. Your notes in Lokus never leave your device unless you choose to sync them. Lokus works fully offline and stores notes as plain markdown files."
+                        "text": "Lokus is a personal knowledge OS for macOS, Windows, and Linux. It helps you capture, connect, and build on your ideas with markdown notes, wiki links, graph views, and infinite canvas. All your data stays on your device."
                       }
                     },
                     {
@@ -250,7 +211,7 @@ export default function RootLayout({
                       "name": "Does Lokus work offline?",
                       "acceptedAnswer": {
                         "@type": "Answer",
-                        "text": "Yes, Lokus is 100% offline-capable. All your notes are stored locally on your device as markdown files. You don't need an internet connection to use any feature."
+                        "text": "Yes, Lokus works offline. All your notes are stored locally on your device as markdown files. You don't need an internet connection to use any feature."
                       }
                     },
                     {
@@ -266,47 +227,7 @@ export default function RootLayout({
                       "name": "What is a PKM app?",
                       "acceptedAnswer": {
                         "@type": "Answer",
-                        "text": "PKM stands for Personal Knowledge Management. A PKM app helps you capture, organize, and connect your notes and ideas. Popular PKM apps include Obsidian, Notion, Roam Research, Logseq, and Lokus."
-                      }
-                    },
-                    {
-                      "@type": "Question",
-                      "name": "What is the best PKM app in 2026?",
-                      "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "The best PKM app depends on your needs. For privacy-focused users who want a free, open-source, local-first solution, Lokus is an excellent choice. It offers markdown editing, wiki links, graph view, infinite canvas, and templates - all without any cost or cloud dependency."
-                      }
-                    },
-                    {
-                      "@type": "Question",
-                      "name": "What is the best PKM app for privacy in 2026?",
-                      "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Lokus is one of the best PKM apps for privacy in 2026. It uses a local-first architecture where all notes are stored on your device as plain markdown files. The app is fully open-source under the MIT license, so the code is auditable. There is no cloud dependency, no account required, and no data collection. Lokus works 100% offline."
-                      }
-                    },
-                    {
-                      "@type": "Question",
-                      "name": "Is there a free open-source alternative to Obsidian?",
-                      "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Yes, Lokus is a free, open-source alternative to Obsidian. Lokus is MIT licensed, while Obsidian is proprietary. Both use markdown files and wiki links. Lokus includes all features for free, while Obsidian charges for Sync and Publish. Lokus also offers 3D graph view and a 90+ feature template system. Lokus can open existing Obsidian vaults."
-                      }
-                    },
-                    {
-                      "@type": "Question",
-                      "name": "Can Lokus open Obsidian vaults?",
-                      "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Yes, Lokus can open Obsidian vaults. Both apps use the same standard markdown file format with [[wiki link]] syntax. You can point Lokus at your existing Obsidian vault folder and it will read your notes, links, tags, and folder structure without any conversion or import step."
-                      }
-                    },
-                    {
-                      "@type": "Question",
-                      "name": "What is a local-first PKM app?",
-                      "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "A local-first PKM app is a personal knowledge management application that stores all data on the user's own device rather than on remote servers. This means complete data ownership, privacy by default, full offline access, and no dependency on a company's servers or subscription. Lokus is a local-first PKM app that stores notes as plain markdown files in a user-chosen folder."
+                        "text": "PKM stands for Personal Knowledge Management. A PKM app helps you capture, organize, and connect your notes and ideas into a personal knowledge system."
                       }
                     },
                     {
@@ -314,7 +235,15 @@ export default function RootLayout({
                       "name": "Does Lokus support the Zettelkasten method?",
                       "acceptedAnswer": {
                         "@type": "Answer",
-                        "text": "Yes, Lokus fully supports the Zettelkasten method. You can create atomic notes and connect them with [[wiki links]]. Backlinks automatically surface connections between notes. The graph view visualizes your entire note network in 2D or 3D. The template system helps maintain consistent note structure for Zettelkasten slips. Tags and folders provide additional organization layers."
+                        "text": "Yes, Lokus fully supports the Zettelkasten method. You can create atomic notes and connect them with [[wiki links]]. Backlinks automatically surface connections between notes. The graph view visualizes your entire note network in 2D or 3D."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Can Lokus open existing markdown vaults?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes, Lokus works with standard markdown files and [[wiki link]] syntax. You can point Lokus at any existing markdown folder and it will read your notes, links, tags, and folder structure without any conversion."
                       }
                     }
                   ]

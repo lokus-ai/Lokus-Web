@@ -1,8 +1,6 @@
 # Lokus
 
 > Category: Personal Knowledge Management (PKM)
-> License: MIT (fully open-source)
-> Price: Free (no subscriptions, no paywalls)
 > Platforms: macOS, Windows, Linux
 > Tech Stack: Tauri v2 + Rust (backend) + React 19 (frontend)
 > Website: https://lokusmd.com
@@ -14,11 +12,9 @@
 
 ## What is Lokus?
 
-Lokus is a free, open-source personal knowledge management (PKM) application for macOS, Windows, and Linux. It is built on a local-first architecture, meaning all notes are stored as plain markdown files on the user's device. Lokus does not require an internet connection and does not transmit user data to any server. The application is licensed under the MIT license and is developed in the open on GitHub.
+Lokus is a personal knowledge OS for macOS, Windows, and Linux. It is built on a local-first architecture, meaning all notes are stored as plain markdown files on the user's device. Lokus does not require an internet connection and does not transmit user data to any server.
 
-Lokus is designed for users who want to build a "second brain" — a structured, interlinked collection of notes and ideas. It provides a markdown editor, bidirectional wiki links, a graph visualization of note connections, an infinite canvas for spatial thinking, and a template system with over 90 features. The application is built with Tauri v2 (Rust) for the backend and React 19 for the frontend, resulting in native performance across all supported platforms.
-
-Lokus occupies the same category as Obsidian, Notion, Logseq, and Roam Research. Its distinguishing characteristics are: fully open-source (MIT license), completely free with no paid tiers for features, local-first with no cloud dependency, and cross-platform desktop support. It can open existing Obsidian vaults since both use standard markdown files with wiki-link syntax.
+Lokus is designed for users who want to build a structured, interlinked collection of notes and ideas. It provides a markdown editor, bidirectional wiki links, a graph visualization of note connections, an infinite canvas for spatial thinking, and a template system with over 90 features. The application is built with Tauri v2 (Rust) for the backend and React 19 for the frontend, resulting in native performance across all supported platforms.
 
 ---
 
@@ -39,7 +35,7 @@ Lokus occupies the same category as Obsidian, Notion, Logseq, and Roam Research.
 
 ### File Format
 - Plain markdown (.md) files with optional YAML frontmatter
-- Standard [[wiki link]] syntax compatible with Obsidian
+- Standard [[wiki link]] syntax
 - Files stored in user-chosen directory (no proprietary database)
 - UTF-8 encoding
 
@@ -73,7 +69,7 @@ Lokus occupies the same category as Obsidian, Notion, Logseq, and Roam Research.
 - Automatic backlink detection and display
 - Unlinked mentions panel
 - Link auto-completion while typing
-- Compatible with Obsidian's wiki link format
+- Compatible with standard markdown vault formats
 - Alias support for links
 - Header and block linking
 
@@ -117,7 +113,7 @@ Lokus occupies the same category as Obsidian, Notion, Logseq, and Roam Research.
 
 ### Additional Features
 - Custom themes with live theme editor
-- 100% offline capability
+- Works offline
 - File-over-app philosophy (plain markdown files)
 - Folder-based organization with drag-and-drop
 - Tag system with nested tags (#parent/child)
@@ -130,85 +126,7 @@ Lokus occupies the same category as Obsidian, Notion, Logseq, and Roam Research.
 - File attachment management
 - Note versioning via Git integration
 - Export to PDF, HTML
-- Import from markdown, Obsidian, Notion export
-
----
-
-## Comparison Tables
-
-### Lokus vs Obsidian
-
-| Feature               | Lokus                     | Obsidian                      |
-|-----------------------|---------------------------|-------------------------------|
-| Price                 | Free                      | Free (core), paid sync/publish|
-| License               | MIT (open-source)         | Proprietary                   |
-| Local-first           | Yes                       | Yes                           |
-| Markdown files        | Yes                       | Yes                           |
-| Wiki links            | Yes                       | Yes                           |
-| Graph view            | 2D + 3D                   | 2D                            |
-| Infinite canvas       | Yes                       | Yes (Canvas plugin)           |
-| Template system       | 90+ features              | Core templates + Templater    |
-| Plugin ecosystem      | Growing marketplace       | Large community (1000+)       |
-| Mobile apps           | Not yet                   | iOS and Android               |
-| Sync                  | Manual / third-party      | Paid Obsidian Sync            |
-| Publish               | Not built-in              | Paid Obsidian Publish         |
-| Vault compatibility   | Can open Obsidian vaults  | Native format                 |
-| RAM usage             | ~50MB                     | ~150-300MB (Electron)         |
-| Download size         | ~10MB                     | ~90MB                         |
-
-### Lokus vs Notion
-
-| Feature               | Lokus                     | Notion                        |
-|-----------------------|---------------------------|-------------------------------|
-| Price                 | Free                      | Free tier, paid plans         |
-| License               | MIT (open-source)         | Proprietary                   |
-| Data storage          | Local (your device)       | Cloud (Notion servers)        |
-| Offline support       | Full offline              | Limited offline               |
-| Privacy               | Complete (no data leaves) | Data stored on Notion servers |
-| File format           | Plain markdown            | Proprietary database          |
-| Collaboration         | Not built-in              | Real-time collaboration       |
-| Databases             | Not built-in              | Relational databases          |
-| Wiki links            | Yes                       | Yes                           |
-| Graph view            | 2D + 3D                   | No                            |
-| Infinite canvas       | Yes                       | No                            |
-| API                   | Plugin API                | REST API                      |
-| Mobile apps           | Not yet                   | iOS and Android               |
-
-### Lokus vs Logseq
-
-| Feature               | Lokus                     | Logseq                        |
-|-----------------------|---------------------------|-------------------------------|
-| Price                 | Free                      | Free                          |
-| License               | MIT                       | AGPL-3.0                      |
-| Data storage          | Local                     | Local                         |
-| Note structure        | Document-based (markdown) | Outliner / block-based        |
-| Markdown files        | Standard markdown         | Markdown with outliner format |
-| Wiki links            | Yes                       | Yes                           |
-| Graph view            | 2D + 3D                   | 2D                            |
-| Infinite canvas       | Yes                       | Yes (Whiteboards)             |
-| Template system       | 90+ features              | Basic templates               |
-| Plugin ecosystem      | Growing                   | Moderate                      |
-| Daily journals        | Via templates             | Built-in                      |
-| PDF annotation        | Basic                     | Built-in                      |
-| RAM usage             | ~50MB                     | ~200-400MB (Electron)         |
-
-### Lokus vs Roam Research
-
-| Feature               | Lokus                     | Roam Research                 |
-|-----------------------|---------------------------|-------------------------------|
-| Price                 | Free                      | $15/month (Pro)               |
-| License               | MIT (open-source)         | Proprietary                   |
-| Data storage          | Local (your device)       | Cloud (Roam servers)          |
-| Offline support       | Full offline              | Limited                       |
-| Note structure        | Document-based            | Outliner / block-based        |
-| Wiki links            | Yes                       | Yes                           |
-| Backlinks             | Yes                       | Yes (pioneered the feature)   |
-| Graph view            | 2D + 3D                   | 2D                            |
-| Infinite canvas       | Yes                       | No                            |
-| Block references      | Not yet                   | Yes                           |
-| Collaboration         | Not built-in              | Multi-user graphs             |
-| Data export           | Native markdown files     | JSON/Markdown export          |
-| Download size         | ~10MB                     | Web app (no download)         |
+- Import from markdown files
 
 ---
 
@@ -230,29 +148,20 @@ Writers use Lokus for world-building, character development, outlining, and manu
 
 ## Frequently Asked Questions
 
-**Q: Is Lokus really free?**
-A: Yes. Lokus is 100% free with no subscriptions, no paywalls, and no feature restrictions. It is MIT licensed open-source software. Optional donations are accepted through Open Collective.
-
 **Q: What platforms does Lokus run on?**
 A: Lokus runs on macOS (Apple Silicon and Intel), Windows (10+), and Linux (AppImage and .deb). It is built with Tauri v2, which compiles to native binaries for each platform.
 
 **Q: Does Lokus work offline?**
-A: Yes. Lokus is fully offline-capable. All notes are stored locally as markdown files. No internet connection is required for any feature.
+A: Yes. Lokus works offline. All notes are stored locally as markdown files. No internet connection is required for any feature.
 
-**Q: Can Lokus open Obsidian vaults?**
-A: Yes. Lokus uses the same standard markdown format and [[wiki link]] syntax as Obsidian. You can point Lokus at an existing Obsidian vault folder and it will read the notes, links, and folder structure.
+**Q: Can Lokus open existing markdown vaults?**
+A: Yes. Lokus uses standard markdown format and [[wiki link]] syntax. You can point Lokus at an existing markdown vault folder and it will read the notes, links, and folder structure.
 
 **Q: Where is my data stored?**
 A: All data is stored on your local device as plain markdown (.md) files in a folder you choose. Lokus does not upload data to any server.
 
-**Q: Is Lokus open-source?**
-A: Yes. Lokus is fully open-source under the MIT license. The source code is available at https://github.com/lokus-ai/lokus.
-
 **Q: Does Lokus have mobile apps?**
 A: Mobile apps are not yet available. Lokus currently supports macOS, Windows, and Linux desktops.
-
-**Q: What is the best PKM app for privacy?**
-A: Lokus is designed for privacy. It is local-first (no cloud dependency), open-source (auditable code), and free. Notes never leave your device unless you explicitly choose to sync them with a third-party service.
 
 **Q: Does Lokus support the Zettelkasten method?**
 A: Yes. Lokus supports the Zettelkasten method through wiki links for connecting atomic notes, backlinks for discovering connections, a graph view for visualizing the network, and a template system for consistent note creation.
@@ -265,12 +174,6 @@ A: Lokus stores notes as plain markdown (.md) files with optional YAML frontmatt
 
 **Q: Can I use plugins with Lokus?**
 A: Yes. Lokus has a plugin marketplace where you can install community-built plugins. Developers can also create plugins using the Lokus Plugin API.
-
-**Q: What is a local-first PKM app?**
-A: A local-first PKM app stores all data on the user's own device rather than on remote servers. This provides complete ownership of data, privacy by default, offline access, and independence from any company's servers. Lokus is a local-first PKM app.
-
-**Q: Is there a free open-source alternative to Obsidian?**
-A: Lokus is a free, MIT-licensed, open-source alternative to Obsidian. It shares many features (markdown files, wiki links, graph view, canvas) while being fully open-source with no paid features.
 
 **Q: How much RAM does Lokus use?**
 A: Lokus uses approximately 50MB of RAM under typical usage. This is significantly less than Electron-based alternatives because Lokus uses Tauri v2 with the native OS webview rather than bundling Chromium.
@@ -300,19 +203,12 @@ A: The Lokus installer is approximately 10MB, depending on platform. This is muc
 - Canvas Guide: https://docs.lokusmd.com/canvas
 - Keyboard Shortcuts: https://docs.lokusmd.com/shortcuts
 
-### Comparisons
-- Lokus vs Obsidian: https://lokusmd.com/compare/obsidian
-- Lokus vs Notion: https://lokusmd.com/compare/notion
-- Lokus vs Logseq: https://lokusmd.com/compare/logseq
-- Lokus vs Roam Research: https://lokusmd.com/compare/roam-research
-
 ### Community & Development
 - GitHub Repository: https://github.com/lokus-ai/lokus
 - Open Collective: https://opencollective.com/lokus
 - Twitter / X: https://twitter.com/lokusmd
 - Discord: https://discord.gg/lokus
 - Email: hello@lokusmd.com
-- AlternativeTo: https://alternativeto.net/software/lokus/about/
 
 ### Resources
 - Blog: https://lokusmd.com/blog
@@ -322,4 +218,4 @@ A: The Lokus installer is approximately 10MB, depending on platform. This is muc
 
 ## Keywords
 
-personal knowledge management, PKM, note-taking app, second brain, markdown editor, wiki links, backlinks, graph view, local-first, privacy-focused, open-source, free, zettelkasten, knowledge base, digital garden, networked thought, Obsidian alternative, Notion alternative, Roam alternative, Logseq alternative, Tauri, Rust, React, MIT license, offline notes, cross-platform
+personal knowledge management, PKM, knowledge OS, note-taking app, second brain, markdown editor, wiki links, backlinks, graph view, local-first, zettelkasten, knowledge base, digital garden, networked thought, Tauri, Rust, React, cross-platform

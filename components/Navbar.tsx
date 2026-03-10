@@ -39,7 +39,6 @@ export function Navbar() {
 
   const navItems: Array<{ href: string; label: string; external?: boolean }> = [
     { href: "/features", label: "Features" },
-    { href: "/compare", label: "Compare" },
     { href: "https://docs.lokusmd.com", label: "Docs", external: true },
     { href: "https://github.com/lokus-ai/lokus/releases", label: "Download", external: true },
   ]
@@ -97,7 +96,7 @@ export function Navbar() {
                   <span className={`text-xs text-zinc-400 font-medium tracking-wider transition-all duration-300 ${
                     isScrolled ? 'opacity-0 h-0' : 'opacity-100'
                   }`}>
-                    Think. Connect. Create.
+                    Knowledge OS
                   </span>
                 </div>
               </Link>

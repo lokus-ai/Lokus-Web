@@ -3,26 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
-function HeroBadge() {
-    return (
-        <a
-            href="https://github.com/lokus-ai/lokus"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-zinc-400 backdrop-blur-md transition-all hover:bg-white/10 hover:text-white mb-8 cursor-pointer"
-        >
-            <span className="flex h-2 w-2 rounded-full bg-emerald-500"></span>
-            <span>Open source</span>
-        </a>
-    );
-}
-
 function HeroTitle() {
     return (
         <h1 className="bg-gradient-to-br from-white via-white/90 to-white/50 bg-clip-text text-transparent text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-center max-w-4xl mx-auto leading-[1.1]">
-            Your notes. Your device.{" "}
+            The operating system{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
-                No compromises.
+                for your ideas.
             </span>
         </h1>
     );
@@ -31,7 +17,7 @@ function HeroTitle() {
 function HeroDescription() {
     return (
         <p className="mt-6 text-lg md:text-xl text-zinc-400 text-center max-w-2xl mx-auto leading-relaxed">
-            Open-source note-taking for macOS, Windows, and Linux. Markdown, wiki links, graph view, and infinite canvas — all local, all private, no account required.
+            Your personal system for thinking, researching, and creating.
         </p>
     );
 }
@@ -90,7 +76,6 @@ export function HeroSection() {
             <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
 
             <div className="container relative z-10 mx-auto px-4 text-center">
-                <HeroBadge />
                 <HeroTitle />
                 <HeroDescription />
                 <HeroButtons />

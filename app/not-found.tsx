@@ -6,7 +6,7 @@ import { Home, Search, BookOpen, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Page Not Found - Lokus",
-  description: "The page you're looking for doesn't exist. Explore Lokus - the free, open-source PKM app for personal knowledge management.",
+  description: "The page you're looking for doesn't exist. Explore Lokus - the operating system for your ideas.",
   robots: {
     index: false,
     follow: true,
@@ -50,15 +50,6 @@ export default function NotFound() {
             <div className="flex flex-wrap justify-center gap-4 text-sm">
               <Link href="/features" className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
                 Features <ArrowRight className="w-3 h-3" />
-              </Link>
-              <Link href="/compare" className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
-                Compare PKM Apps <ArrowRight className="w-3 h-3" />
-              </Link>
-              <Link href="/compare/obsidian" className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
-                Lokus vs Obsidian <ArrowRight className="w-3 h-3" />
-              </Link>
-              <Link href="/compare/notion" className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
-                Lokus vs Notion <ArrowRight className="w-3 h-3" />
               </Link>
               <Link href="/blog" className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
                 Blog <ArrowRight className="w-3 h-3" />

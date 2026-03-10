@@ -12,7 +12,7 @@ const lokusPlans = [
       "Name in README contributors list",
       "Special Discord badge",
       "Early access to feature announcements",
-      "Support open-source development"
+      "Support Lokus development"
     ],
     description: "Start your journey with Lokus",
     buttonText: "Become a Knowledge Seeker",
@@ -72,17 +72,7 @@ const lokusPlans = [
 ]
 
 function CardPattern() {
-  return (
-    <div className="pointer-events-none">
-      <div className="absolute inset-0 rounded-2xl transition opacity-0 group-hover:opacity-50">
-        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 transition group-hover:opacity-100 backdrop-blur-xl" />
-      </div>
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 backdrop-blur-xl transition group-hover:opacity-100" />
-      <div className="absolute inset-0 rounded-2xl opacity-0 mix-blend-overlay transition group-hover:opacity-100">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      </div>
-    </div>
-  )
+  return null
 }
 
 function PremiumCard({ plan, custom = false }: { plan?: any, custom?: boolean }) {
@@ -90,7 +80,7 @@ function PremiumCard({ plan, custom = false }: { plan?: any, custom?: boolean })
   if (custom) {
     return (
       <div
-        className="group relative flex flex-col rounded-2xl border border-white/10 bg-black/40 p-8 shadow-2xl backdrop-blur-md transition-all hover:border-white/20 hover:scale-[1.02]"
+        className="group relative flex flex-col rounded-2xl border border-white/10 bg-zinc-900/50 p-8 transition-all hover:border-white/20"
       >
         <CardPattern />
 
@@ -127,7 +117,7 @@ function PremiumCard({ plan, custom = false }: { plan?: any, custom?: boolean })
             href="https://opencollective.com/lokus/donate?interval=oneTime&amount=20&contributeAs=me"
             target="_blank"
             rel="noopener noreferrer"
-            className="relative flex w-full items-center justify-center rounded-xl bg-white/5 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-white/10 hover:shadow-lg hover:shadow-emerald-500/20 border border-white/10"
+            className="relative flex w-full items-center justify-center rounded-xl bg-white/5 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-white/10 border border-white/10"
           >
             Choose Amount
           </a>
@@ -138,12 +128,12 @@ function PremiumCard({ plan, custom = false }: { plan?: any, custom?: boolean })
 
   return (
     <div
-      className={`group relative flex flex-col rounded-2xl border border-white/10 bg-black/40 p-8 shadow-2xl backdrop-blur-md transition-all hover:border-white/20 hover:scale-[1.02] ${plan.glow}`}
+      className="group relative flex flex-col rounded-2xl border border-white/10 bg-zinc-900/50 p-8 transition-all hover:border-white/20"
     >
       <CardPattern />
 
       {plan.popular && (
-        <div className="absolute -top-4 left-0 right-0 mx-auto w-fit rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-1 text-xs font-bold text-white shadow-lg shadow-purple-500/20">
+        <div className="absolute -top-4 left-0 right-0 mx-auto w-fit rounded-full bg-indigo-500 px-4 py-1 text-xs font-bold text-white">
           MOST POPULAR
         </div>
       )}
@@ -173,9 +163,9 @@ function PremiumCard({ plan, custom = false }: { plan?: any, custom?: boolean })
           href={plan.href}
           target="_blank"
           rel="noopener noreferrer"
-          className={`relative flex w-full items-center justify-center rounded-xl py-4 text-sm font-semibold text-white transition-all duration-300 hover:shadow-lg ${plan.popular
-              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 hover:shadow-purple-500/25'
-              : 'bg-white/5 hover:bg-white/10 border border-white/10 hover:shadow-blue-500/20'
+          className={`relative flex w-full items-center justify-center rounded-xl py-4 text-sm font-semibold text-white transition-all duration-300 ${plan.popular
+              ? 'bg-indigo-500 hover:bg-indigo-400'
+              : 'bg-white/5 hover:bg-white/10 border border-white/10'
             }`}
         >
           {plan.buttonText}
@@ -188,16 +178,14 @@ function PremiumCard({ plan, custom = false }: { plan?: any, custom?: boolean })
 export function SupportSection() {
   return (
     <section className="relative overflow-hidden bg-black py-32">
-      {/* Ambient Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="container relative z-10 mx-auto px-4">
         <div className="mb-20 text-center">
           <h2 className="mb-6 text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl">
-            Support <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Lokus</span>
+            Support <span className="text-indigo-400">Lokus</span>
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-zinc-400">
-            Help us build the future of knowledge management. Your support keeps Lokus free, open-source, and privacy-focused forever.
+            Help us build the future of knowledge management. Your support keeps Lokus growing.
           </p>
         </div>
 

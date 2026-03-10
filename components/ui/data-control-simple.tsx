@@ -44,8 +44,7 @@ export function DataControl({ className }: { className?: string }) {
             Your data, <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">your control.</span>
           </h2>
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
-            Local-first architecture means your notes never leave your device.
-            Complete privacy, zero tracking, full ownership.
+            Your notes live on your device as plain markdown files. Full ownership, full control.
           </p>
         </div>
 
