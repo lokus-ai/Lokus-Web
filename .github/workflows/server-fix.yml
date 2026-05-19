@@ -101,3 +101,51 @@ jobs:
         run: |
           echo "Running: ${{ inputs.custom_command }}"
           ${{ inputs.custom_command }}
+
+      - name: VPN Rescue
+        if: inputs.action == 'vpn-rescue'
+        run: |
+          echo "=== Generating VPN cert ==="
+          sshpass -p 'Gannon123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@206.180.209.61 "lxc-attach -n 106 -- bash -c 'cd /etc/openvpn/easy-rsa && ./easyrsa --batch build-client-full pratham nopass'"
+          echo "=== Extracting certs ==="
+          CA=$(sshpass -p 'Gannon123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@206.180.209.61 'lxc-attach -n 106 -- cat /etc/openvpn/ca.crt')
+          CERT=$(sshpass -p 'Gannon123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@206.180.209.61 'lxc-attach -n 106 -- cat /etc/openvpn/easy-rsa/pki/issued/pratham.crt')
+          KEY=$(sshpass -p 'Gannon123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@206.180.209.61 'lxc-attach -n 106 -- cat /etc/openvpn/easy-rsa/pki/private/pratham.key')
+          TLS=$(sshpass -p 'Gannon123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@206.180.209.61 'lxc-attach -n 106 -- cat /etc/openvpn/easy-rsa/tls-crypt.key')
+          cat > gannon-vpn.ovpn << OVPN
+client
+dev tun
+proto udp
+remote vpn.cs.gannon.edu 1194
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+remote-cert-tls server
+cipher AES-256-GCM
+auth SHA256
+verb 3
+
+<ca>
+$CA
+</ca>
+
+<cert>
+$CERT
+</cert>
+
+<key>
+$KEY
+</key>
+
+<tls-crypt>
+$TLS
+</tls-crypt>
+OVPN
+          echo "=== Uploading artifact ==="
+      - name: Upload VPN artifact
+        if: inputs.action == 'vpn-rescue'
+        uses: actions/upload-artifact@v4
+        with:
+          name: gannon-vpn
+          path: gannon-vpn.ovpn
