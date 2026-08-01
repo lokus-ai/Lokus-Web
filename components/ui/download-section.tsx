@@ -44,14 +44,35 @@ interface Platform {
   iconColor: string;
 }
 
+// Baseline shipped with the build. The component refreshes these from the
+// GitHub releases API on mount, so the site tracks new releases on its own —
+// these values only have to be right enough to render before that resolves,
+// and to survive the API being unreachable.
+//
+// They were pinned to v1.0.1 for two releases running, which meant the site
+// handed people a build three versions behind.
+const FALLBACK_VERSION = "1.2.0";
+const RELEASES_API = "https://api.github.com/repos/lokus-ai/lokus/releases/latest";
+const RELEASES_PAGE = "https://github.com/lokus-ai/lokus/releases";
+
+// Matches an asset for a platform regardless of the version in its filename.
+const ASSET_PATTERNS: Record<string, RegExp> = {
+  macos: /_aarch64\.dmg$/,
+  windows: /_x64-setup\.exe$/,
+  linux: /_amd64\.AppImage$/,
+};
+
+const dl = (v: string, file: string) =>
+  `https://github.com/lokus-ai/lokus/releases/download/v${v}/${file}`;
+
 const platforms: Platform[] = [
   {
     id: "macos",
     name: "macOS",
     icon: AppleIcon,
-    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.0.1/Lokus_1.0.1_aarch64.dmg",
-    size: "9.7 MB",
-    version: "v1.0.1",
+    downloadUrl: dl(FALLBACK_VERSION, `Lokus_${FALLBACK_VERSION}_aarch64.dmg`),
+    size: "35.2 MB",
+    version: `v${FALLBACK_VERSION}`,
     features: ["macOS 11+", "Apple Silicon native", "Native performance", "Spotlight search"],
     gradient: "from-zinc-500 via-zinc-300 to-zinc-500",
     iconColor: "text-zinc-300"
@@ -60,9 +81,9 @@ const platforms: Platform[] = [
     id: "windows",
     name: "Windows",
     icon: WindowsIcon,
-    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.0.1/Lokus_1.0.1_x64-setup.exe",
-    size: "7.33 MB",
-    version: "v1.0.1",
+    downloadUrl: dl(FALLBACK_VERSION, `Lokus_${FALLBACK_VERSION}_x64-setup.exe`),
+    size: "34.3 MB",
+    version: `v${FALLBACK_VERSION}`,
     features: ["Windows 10/11", "Auto-updates", "Native performance", "System tray support"],
     gradient: "from-blue-600 via-blue-400 to-blue-600",
     iconColor: "text-blue-400"
@@ -71,9 +92,9 @@ const platforms: Platform[] = [
     id: "linux",
     name: "Linux",
     icon: LinuxIcon,
-    downloadUrl: "https://github.com/lokus-ai/lokus/releases/download/v1.0.1/Lokus_1.0.1_amd64.AppImage",
-    size: "85.8 MB",
-    version: "v1.0.1",
+    downloadUrl: dl(FALLBACK_VERSION, `Lokus_${FALLBACK_VERSION}_amd64.AppImage`),
+    size: "109.9 MB",
+    version: `v${FALLBACK_VERSION}`,
     features: ["AppImage universal", "Most distributions", "Native performance", "Desktop integration"],
     gradient: "from-orange-600 via-orange-400 to-orange-600",
     iconColor: "text-orange-400"
@@ -83,20 +104,58 @@ const platforms: Platform[] = [
 export function DownloadSection({ className }: { className?: string }) {
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(null);
   const [hoveredPlatform, setHoveredPlatform] = useState<string | null>(null);
+  const [release, setRelease] = useState<{ version: string; platforms: Platform[] }>({
+    version: FALLBACK_VERSION,
+    platforms,
+  });
+
+  // Track the newest release rather than whatever was true at build time.
+  // Failures are swallowed on purpose: the baseline above still renders a
+  // working download, so a rate-limited or offline API degrades to "slightly
+  // out of date" instead of a broken page.
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch(RELEASES_API, { headers: { Accept: "application/vnd.github+json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((data: { tag_name?: string; assets?: { name: string; size: number; browser_download_url: string }[] }) => {
+        if (cancelled) return;
+        const version = (data.tag_name || "").replace(/^v/, "");
+        const assets = data.assets || [];
+        if (!version || assets.length === 0) return;
+
+        const next = platforms.map((p) => {
+          const pattern = ASSET_PATTERNS[p.id];
+          const asset = pattern && assets.find((a) => pattern.test(a.name));
+          if (!asset) return p;
+          return {
+            ...p,
+            downloadUrl: asset.browser_download_url,
+            size: `${(asset.size / 1024 / 1024).toFixed(1)} MB`,
+            version: `v${version}`,
+          };
+        });
+
+        setRelease({ version, platforms: next });
+      })
+      .catch(() => { /* keep the baseline */ });
+
+    return () => { cancelled = true; };
+  }, []);
 
   // Auto-detect platform
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
     if (userAgent.includes("mac")) {
-      setSelectedPlatform(platforms[0]); // macOS
+      setSelectedPlatform(release.platforms[0]); // macOS
     } else if (userAgent.includes("win")) {
-      setSelectedPlatform(platforms[1]); // Windows
+      setSelectedPlatform(release.platforms[1]); // Windows
     } else if (userAgent.includes("linux")) {
-      setSelectedPlatform(platforms[2]); // Linux
+      setSelectedPlatform(release.platforms[2]); // Linux
     } else {
-      setSelectedPlatform(platforms[0]); // Default to macOS
+      setSelectedPlatform(release.platforms[0]); // Default to macOS
     }
-  }, []);
+  }, [release.platforms]);
 
   const handleDownload = (platform: Platform) => {
     window.open(platform.downloadUrl, '_blank');
@@ -173,7 +232,7 @@ export function DownloadSection({ className }: { className?: string }) {
 
         {/* Platform cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {platforms.map((platform, index) => {
+          {release.platforms.map((platform, index) => {
             const Icon = platform.icon;
             const isHovered = hoveredPlatform === platform.id;
             const isSelected = selectedPlatform?.id === platform.id;
@@ -271,11 +330,11 @@ export function DownloadSection({ className }: { className?: string }) {
 
             <div className="flex flex-wrap justify-center gap-4">
               {[
-                { label: "All v1.0.1 downloads", url: "https://github.com/lokus-ai/lokus/releases/tag/v1.0.1" },
-                { label: "Linux (.deb)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.0.1/Lokus_1.0.1_amd64.deb" },
-                { label: "Linux (.rpm)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.0.1/Lokus-1.0.1-1.x86_64.rpm" },
-                { label: "macOS (.app.tar.gz)", url: "https://github.com/lokus-ai/lokus/releases/download/v1.0.1/Lokus_aarch64.app.tar.gz" },
-                { label: "Installation guide", url: "https://github.com/lokus-ai/lokus/releases" }
+                { label: `All v${release.version} downloads`, url: `https://github.com/lokus-ai/lokus/releases/tag/v${release.version}` },
+                { label: "Linux (.deb)", url: dl(release.version, `Lokus_${release.version}_amd64.deb`) },
+                { label: "Linux (.rpm)", url: dl(release.version, `Lokus-${release.version}-1.x86_64.rpm`) },
+                { label: "macOS (.app.tar.gz)", url: dl(release.version, "Lokus_aarch64.app.tar.gz") },
+                { label: "Installation guide", url: RELEASES_PAGE }
               ].map((link) => (
                 <a
                   key={link.label}
@@ -291,7 +350,7 @@ export function DownloadSection({ className }: { className?: string }) {
             </div>
 
             <p className="text-xs text-zinc-500">
-              Latest release: v1.0.1 •
+              Latest release: v{release.version} •
               <a
                 href="https://github.com/lokus-ai/lokus/releases"
                 target="_blank"
