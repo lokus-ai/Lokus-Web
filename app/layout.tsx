@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Newsreader } from "next/font/google"
 import { AuthProvider } from "@/components/auth/AuthProvider"
 import { ThemeProvider } from "@/contexts/ThemeContext"
 import StaticSEOContent from "@/components/StaticSEOContent"
@@ -14,13 +14,21 @@ const inter = Inter({
   preload: true,
 })
 
+const serif = Newsreader({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["italic"],
+  variable: "--font-serif",
+  display: "swap",
+})
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://lokusmd.com'),
   title: {
-    default: "Lokus - The Operating System for Your Ideas",
+    default: "Lokus - The workspace that tells you what needs doing",
     template: "%s | Lokus"
   },
-  description: "Lokus is a personal knowledge OS for macOS, Windows, and Linux. Markdown, wiki links, graph view, and infinite canvas — your personal system for thinking, researching, and creating.",
+  description: "Lokus is one open source app you shape into a lead tracker, a customer desk, an investor pipeline or a study planner. It reads your notes and connected tools, then tells you what needs doing.",
   keywords: [
     "personal knowledge management",
     "PKM app",
@@ -64,22 +72,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://lokusmd.com",
-    title: "Lokus - The Operating System for Your Ideas",
-    description: "Personal knowledge OS for macOS, Windows, and Linux. Markdown, wiki links, graph view, and infinite canvas.",
+    title: "Lokus - The workspace that tells you what needs doing",
+    description: "A workspace you shape to your work, that reads your notes and tools and tells you what needs doing. Open source, for Mac, Windows and Linux.",
     siteName: "Lokus",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Lokus - The Operating System for Your Ideas",
+        alt: "Lokus - The workspace that tells you what needs doing",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lokus - The Operating System for Your Ideas",
-    description: "Personal knowledge OS for macOS, Windows, and Linux. Markdown, wiki links, graph view, and infinite canvas.",
+    title: "Lokus - The workspace that tells you what needs doing",
+    description: "A workspace you shape to your work, that reads your notes and tools and tells you what needs doing. Open source, for Mac, Windows and Linux.",
     images: ["/og-image.png"],
     creator: "@lokusmd",
   },
@@ -110,7 +118,7 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
       </head>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${serif.variable} font-sans antialiased`}>
         <ThemeProvider>
           <AuthProvider>
             <StaticSEOContent />
