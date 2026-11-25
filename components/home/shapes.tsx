@@ -70,12 +70,11 @@ export function Shapes() {
           <h2 className={`${DISPLAY} max-w-2xl text-4xl leading-[1.1] text-[#f4f4f2] md:text-5xl`}>
             One app. <span className={ACCENT}>Shaped to your work.</span>
           </h2>
-          <div className="mt-10 flex flex-wrap items-center gap-2" role="tablist" aria-label="What Lokus can be">
+          <div className="mt-10 flex flex-wrap items-center gap-2" role="group" aria-label="What Lokus can be">
             {SHAPES.map((s, i) => (
               <button
                 key={s.label}
-                role="tab"
-                aria-selected={i === active}
+                aria-pressed={i === active}
                 onClick={() => {
                   setActive(i);
                   setShot(0);

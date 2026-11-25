@@ -117,6 +117,9 @@ export default function RootLayout({
           data-website-id="1299d78a-7f04-411f-9fa2-22ffbbc3258c"
           strategy="afterInteractive"
         />
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
       </head>
       <body className={`${inter.variable} ${serif.variable} font-sans antialiased`}>
         <ThemeProvider>

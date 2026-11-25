@@ -98,7 +98,7 @@ export function Navbar() {
       </nav>
 
       {open && (
-        <div className="border-t border-white/10 px-3 pb-4 pt-2 md:hidden">
+        <div className="max-h-[calc(100dvh-3.5rem)] overflow-y-auto border-t border-white/10 px-3 pb-4 pt-2 md:hidden">
           <div className="flex flex-col">
             {NAV_ITEMS.map((item) =>
               item.external ? (

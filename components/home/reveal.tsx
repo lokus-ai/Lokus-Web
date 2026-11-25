@@ -10,6 +10,7 @@ export function Reveal({ children, delay = 0, className }: { children: ReactNode
   const still = useReducedMotion();
   return (
     <motion.div
+      data-reveal
       className={className}
       initial={still ? false : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}

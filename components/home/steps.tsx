@@ -53,12 +53,11 @@ export function Steps() {
           <h2 className={`${DISPLAY} max-w-md text-4xl leading-[1.1] text-[#f4f4f2] md:text-5xl`}>
             From what you do to <span className={ACCENT}>what to do next.</span>
           </h2>
-          <div className="mt-10" role="tablist" aria-label="How Lokus works">
+          <div className="mt-10" role="group" aria-label="How Lokus works">
             {STEPS.map((step, i) => (
               <button
                 key={step.title}
-                role="tab"
-                aria-selected={i === active}
+                aria-pressed={i === active}
                 onClick={() => setActive(i)}
                 className="relative block w-full border-t border-white/10 py-5 text-left"
               >
